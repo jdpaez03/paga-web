@@ -1,30 +1,74 @@
 ---
 import Base from '../layouts/Base.astro';
-import Figures from '../components/Figures.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { type Lang, company, tx, t, paths, projects } from '../lib/data';
+import YearStrip from '../components/YearStrip.astro';
+import { type Lang, company, tx, t, paths, projects, figures, area, asOf } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const seo = company.seo.home;
-const featuredSlugs = ['torre-pietra', 'los-corales', 'parkview-pitic', 'jardin-secreto', 'cinnamon-shore-ten-town-center', 'torre-acqua'];
-const featured = featuredSlugs.map((s) => projects.find((p) => p.slug === s)!).filter(Boolean);
-const hero = projects.find((p) => p.slug === 'torre-fiori')!;
-const [line1, line2] = tx(company.tagline, lang).replace(/\.$/, '').split(es ? ' desarrollando ' : ' developing ');
+const f = figures();
+const bySlug = (s: string) => projects.find((p) => p.slug === s)!;
+// first screen: delivered work across both countries and every business line
+const tiles = ['via-puerta-de-hierro', 'los-corales', 'torre-pietra', 'parkview-pitic', 'cinnamon-shore-five-town-center'].map(bySlug);
+const featured = ['torre-acqua', 'jardin-secreto', 'aurum', 'las-dunas', 'balcones-300', 'cinnamon-shore-sunset-cottages'].map(bySlug);
+const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
+const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="home" alt={paths.home(es ? 'en' : 'es')}>
-  <section class="hero">
-    <img src={hero.image} alt="" width={hero.imageSize[0]} height={hero.imageSize[1]} fetchpriority="high" />
-    <div class="wrap">
-      <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas' : 'Mexico and Texas'}</p>
-      <h1>{line1} <span class="accent">{es ? 'desarrollando' : 'developing'} {line2}.</span></h1>
+  <section class="intro">
+    <div class="intro-text">
+      <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas, desde 2001' : 'Mexico and Texas, since 2001'}</p>
+      <h1>{es ? '25 años' : '25 years'} <span class="accent">{es ? 'desarrollando valor.' : 'developing value.'}</span></h1>
       <p class="lead">{tx(company.heroLead, lang)}</p>
+      <div class="ctas">
+        <a class="btn solid arrow" href={paths.projects(lang)}>{ui.viewProjects}</a>
+        <a class="btn" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
+      </div>
+      <div class="kpis num">
+        <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>
+        <div><strong>{f.developments}</strong><span>{es ? 'desarrollos' : 'developments'}</span></div>
+        <div><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
+        <div><strong>{areaShort}</strong><span>{es ? 'm² construidos y en desarrollo' : 'ft² built and in development'}</span></div>
+      </div>
+      <p class="kpis-note">{es ? `Cifras a ${asOfLabel}.` : `Figures as of ${asOfLabel}.`}</p>
+    </div>
+    <div class="mosaic">
+      {tiles.map((p, i) => (
+        <a class:list={['tile', `t${i + 1}`]} href={paths.project(lang, p.slug)}>
+          <img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={i < 3 ? 'eager' : 'lazy'} decoding="async" />
+          <figcaption><b>{p.name}</b>{p.city}, {p.state} · {p.completionYear}</figcaption>
+        </a>
+      ))}
     </div>
   </section>
 
-  <section class="section tight on-white">
-    <div class="wrap"><Figures lang={lang} /></div>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{ui.nav.projects}</p>
+          <h2>{es ? 'Una trayectoria construida' : 'A track record, built'}</h2>
+        </div>
+        <p>{es ? 'Vivienda, comercio, oficinas y usos mixtos en Monterrey, Hermosillo, Nuevo Vallarta y la costa de Texas.' : 'Residential, retail, office and mixed-use work in Monterrey, Hermosillo, Nuevo Vallarta and the Texas coast.'}</p>
+      </div>
+      <div class="grid">
+        {featured.map((p) => <ProjectCard p={p} lang={lang} />)}
+      </div>
+      <p style="margin-top:56px"><a class="btn arrow" href={paths.projects(lang)}>{es ? `Ver los ${f.developments} desarrollos` : `See all ${f.developments} developments`}</a></p>
+    </div>
+  </section>
+
+  <section class="section tight on-deep">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{ui.timeline}</p><h2>{es ? 'De 2001 a hoy' : 'From 2001 to today'}</h2></div>
+        <p>{es ? 'Desliza para recorrer cada año. La línea completa, con México y Texas lado a lado, está en Proyectos.' : 'Scroll through each year. The full timeline, Mexico and Texas side by side, is under Projects.'}</p>
+      </div>
+    </div>
+    <div class="wrap"><YearStrip lang={lang} /></div>
+    <div class="wrap"><p style="margin-top:32px"><a class="btn arrow" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a></p></div>
   </section>
 
   <section class="section">
@@ -48,22 +92,6 @@ const [line1, line2] = tx(company.tagline, lang).replace(/\.$/, '').split(es ? '
           <div class="unique"><b>0{i + 1}</b><h3>{tx(u.name, lang)}</h3><p>{tx(u.text, lang)}</p></div>
         ))}
       </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head split">
-        <div>
-          <p class="eyebrow">{ui.nav.projects}</p>
-          <h2>{es ? 'Una trayectoria construida' : 'A track record, built'}</h2>
-        </div>
-        <p>{es ? 'Una selección de desarrollos entregados y en curso. La trayectoria completa, año por año, está en la línea del tiempo.' : 'A selection of delivered and ongoing developments. The full track record, year by year, is on the timeline.'}</p>
-      </div>
-      <div class="grid">
-        {featured.map((p) => <ProjectCard p={p} lang={lang} />)}
-      </div>
-      <p style="margin-top:56px"><a class="btn arrow" href={paths.projects(lang)}>{ui.viewProjects}</a></p>
     </div>
   </section>
 

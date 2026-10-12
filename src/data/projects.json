@@ -23,7 +23,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-dunas",
@@ -40,14 +41,15 @@
       "partners": [],
       "image": "/img/projects/las-dunas.jpg",
       "imageSize": [
-        1327,
-        956
+        1310,
+        946
       ],
       "logo": "/img/logos/las-dunas.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "los-rincones",
@@ -71,7 +73,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-villas",
@@ -88,14 +91,15 @@
       "partners": [],
       "image": "/img/projects/las-villas.jpg",
       "imageSize": [
-        1310,
-        946
+        1327,
+        956
       ],
       "logo": "/img/logos/las-villas.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-verandas",
@@ -112,14 +116,15 @@
       "partners": [],
       "image": "/img/projects/las-verandas.jpg",
       "imageSize": [
-        1282,
-        926
+        1323,
+        956
       ],
       "logo": "/img/logos/las-verandas.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-marinas",
@@ -136,14 +141,15 @@
       "partners": [],
       "image": "/img/projects/las-marinas.jpg",
       "imageSize": [
-        1323,
-        956
+        1282,
+        926
       ],
       "logo": "/img/logos/las-marinas.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "los-corales",
@@ -167,7 +173,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-costas",
@@ -191,7 +198,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "aurum",
@@ -215,7 +223,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-velas",
@@ -239,7 +248,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "via-puerta-de-hierro",
@@ -256,14 +266,15 @@
       "partners": [],
       "image": "/img/projects/via-puerta-de-hierro.jpg",
       "imageSize": [
-        1581,
-        1600
+        1779,
+        1800
       ],
       "logo": "/img/logos/via-puerta-de-hierro.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "andenes-san-nicolas",
@@ -280,14 +291,15 @@
       "partners": [],
       "image": "/img/projects/andenes-san-nicolas.jpg",
       "imageSize": [
-        1582,
-        1600
+        1645,
+        1664
       ],
       "logo": "/img/logos/andenes-san-nicolas.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "balcones-300",
@@ -304,14 +316,15 @@
       "partners": [],
       "image": "/img/projects/balcones-300.jpg",
       "imageSize": [
-        987,
-        716
+        1383,
+        1000
       ],
       "logo": "/img/logos/balcones-residencial.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "las-joyas",
@@ -335,7 +348,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "cinnamon-shore-ten-town-center",
@@ -353,13 +367,14 @@
       "image": "/img/projects/cinnamon-shore-ten-town-center.jpg",
       "imageSize": [
         1400,
-        1007
+        1012
       ],
       "logo": "/img/logos/cinnamon-shore.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "andenes-guadalupe",
@@ -376,14 +391,15 @@
       "partners": [],
       "image": "/img/projects/andenes-guadalupe.jpg",
       "imageSize": [
-        1386,
-        1009
+        1350,
+        976
       ],
       "logo": "/img/logos/andenes-guadalupe.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "andenes-hermosillo",
@@ -407,7 +423,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "jardin-secreto",
@@ -431,7 +448,30 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/jardin-secreto-1.jpg",
+          "size": [
+            1235,
+            1250
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/jardin-secreto-2.jpg",
+          "size": [
+            1246,
+            1254
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/jardin-secreto-3.jpg",
+          "size": [
+            1246,
+            1254
+          ]
+        }
+      ]
     },
     {
       "slug": "cinnamon-shore-five-town-center",
@@ -455,7 +495,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "arcadia",
@@ -472,14 +513,15 @@
       "partners": [],
       "image": "/img/projects/arcadia.jpg",
       "imageSize": [
-        1350,
-        976
+        1386,
+        1009
       ],
       "logo": "/img/logos/arcadia-guadalupe.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "parkview-pitic",
@@ -503,7 +545,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "cinnamon-shore-nine-town-center",
@@ -521,13 +564,14 @@
       "image": "/img/projects/cinnamon-shore-nine-town-center.jpg",
       "imageSize": [
         1400,
-        1012
+        1007
       ],
       "logo": "/img/logos/cinnamon-shore-nine-town-center.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "cinnamon-shore-sunset-cottages",
@@ -544,14 +588,15 @@
       "partners": [],
       "image": "/img/projects/cinnamon-shore-sunset-cottages.jpg",
       "imageSize": [
-        1137,
-        853
+        1600,
+        1200
       ],
       "logo": "/img/logos/cinnamon-shore.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "torre-pietra",
@@ -576,7 +621,23 @@
         "Presentación institucional, junio 2026 (v6)",
         "Completion 2022 confirmed by Juan Diego, 2026-10-12"
       ],
-      "salesUrl": "https://clubsonoma.mx"
+      "salesUrl": "https://clubsonoma.mx",
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/torre-pietra-1.jpg",
+          "size": [
+            1600,
+            1041
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/torre-pietra-2.jpg",
+          "size": [
+            1600,
+            1041
+          ]
+        }
+      ]
     },
     {
       "slug": "cinnamon-shore-eight-town-center",
@@ -600,7 +661,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "balcones-600",
@@ -617,15 +679,16 @@
       "partners": [],
       "image": "/img/projects/balcones-600.jpg",
       "imageSize": [
-        1383,
-        1000
+        987,
+        716
       ],
       "logo": "/img/logos/balcones-residencial.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "54 units confirmed by juan diego, 2026-10-12"
       ],
-      "salesUrl": "https://www.balconesresidencial.mx"
+      "salesUrl": "https://www.balconesresidencial.mx",
+      "gallery": []
     },
     {
       "slug": "las-velas-6-7",
@@ -650,7 +713,8 @@
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2027: Confirmed by Juan Diego, 2026-10-12"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "cinnamon-shore-six-town-center",
@@ -675,7 +739,8 @@
         "Presentación institucional, junio 2026 (v6)",
         "Delivered 2024: confirmed by Juan Diego, 2026-10-12"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "los-corales-bay-tower",
@@ -700,7 +765,8 @@
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "artesanias-tercera-fase",
@@ -725,7 +791,30 @@
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/artesanias-tercera-fase-1.jpg",
+          "size": [
+            949,
+            960
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/artesanias-tercera-fase-2.jpg",
+          "size": [
+            1192,
+            1200
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/artesanias-tercera-fase-3.jpg",
+          "size": [
+            1192,
+            1200
+          ]
+        }
+      ]
     },
     {
       "slug": "torre-fiori",
@@ -749,7 +838,30 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": "https://clubsonoma.mx"
+      "salesUrl": "https://clubsonoma.mx",
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/torre-fiori-1.jpg",
+          "size": [
+            1316,
+            690
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/torre-fiori-2.jpg",
+          "size": [
+            1298,
+            717
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/torre-fiori-3.jpg",
+          "size": [
+            1298,
+            717
+          ]
+        }
+      ]
     },
     {
       "slug": "amara-centro-primera-fase",
@@ -773,7 +885,30 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/amara-centro-primera-fase-1.jpg",
+          "size": [
+            1212,
+            1226
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/amara-centro-primera-fase-2.jpg",
+          "size": [
+            1073,
+            1080
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/amara-centro-primera-fase-3.jpg",
+          "size": [
+            1246,
+            1254
+          ]
+        }
+      ]
     },
     {
       "slug": "las-joyas-2",
@@ -797,7 +932,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "marena",
@@ -821,7 +957,8 @@
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": null
+      "salesUrl": null,
+      "gallery": []
     },
     {
       "slug": "torre-acqua",
@@ -840,8 +977,8 @@
       ],
       "image": "/img/projects/torre-acqua.jpg",
       "imageSize": [
-        879,
-        496
+        1524,
+        1800
       ],
       "logo": "/img/logos/torre-acqua.png",
       "sources": [
@@ -851,7 +988,30 @@
       "openQuestions": [
         "Deck shows 116 and 140 units"
       ],
-      "salesUrl": "https://clubsonoma.mx"
+      "salesUrl": "https://clubsonoma.mx",
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/torre-acqua-1.jpg",
+          "size": [
+            879,
+            496
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/torre-acqua-2.jpg",
+          "size": [
+            895,
+            501
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/torre-acqua-3.jpg",
+          "size": [
+            892,
+            502
+          ]
+        }
+      ]
     },
     {
       "slug": "balcones-200",
@@ -868,14 +1028,37 @@
       "partners": [],
       "image": "/img/projects/balcones-200.jpg",
       "imageSize": [
-        1105,
-        1600
+        1222,
+        1769
       ],
       "logo": "/img/logos/balcones-residencial.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
-      "salesUrl": "https://www.balconesresidencial.mx"
+      "salesUrl": "https://www.balconesresidencial.mx",
+      "gallery": [
+        {
+          "src": "/img/projects/gallery/balcones-200-1.jpg",
+          "size": [
+            1316,
+            690
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/balcones-200-2.jpg",
+          "size": [
+            1298,
+            717
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/balcones-200-3.jpg",
+          "size": [
+            1298,
+            717
+          ]
+        }
+      ]
     }
   ]
 }

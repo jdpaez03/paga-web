@@ -36,13 +36,14 @@ const year = new Date().getFullYear();
   <body>
     {site.preview && <div class="preview" role="note">{ui.previewBanner}</div>}
     <header class="site-header">
-      <div class="wrap">
+      <div class="bar">
         <a class="brand" href={paths.home(lang)} aria-label="PAGA Desarrollos">
-          <img src="/img/paga-icon-navy.png" alt="" width="34" height="34" />
+          <img src="/img/paga-icon-navy.png" alt="" width="42" height="42" />
           <span>PAGA<small>DESARROLLOS</small></span>
         </a>
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
+          <a class="hide-sm" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
           <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
           <a class="hide-sm" href={`${paths.home(lang)}#socios`}>{ui.nav.partners}</a>
           <a class="lang" href={altHref} hreflang={other} lang={other}>{other.toUpperCase()}</a>

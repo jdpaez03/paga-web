@@ -27,18 +27,27 @@ const desc = es
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
 <Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)}>
-  <div class="p-hero"><img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" /></div>
-  <section class="section tight" style="padding-top:0">
-    <div class="wrap">
-      <div class="p-head">
-        <div>
-          <p class="eyebrow" style="margin-top:8px"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
-          <h1>{p.name}</h1>
-          <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
-          {live && <p style="margin-top:16px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
+  <section class="p-top">
+    <div class="p-media">
+      <figure class="p-main">
+        <img id="p-main-img" src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+      </figure>
+      {p.gallery.length > 0 && (
+        <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>
+          {[{ src: p.image, size: p.imageSize }, ...p.gallery].map((g, i) => (
+            <button type="button" class="p-thumb" data-src={g.src} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name} ${i + 1}`}>
+              <img src={g.src} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
+            </button>
+          ))}
         </div>
-        <div class="p-logo"><img src={p.logo} alt={`${p.name} logo`} /></div>
-      </div>
+      )}
+    </div>
+    <div class="p-info">
+      <p class="eyebrow"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
+      <div class="p-logo"><img src={p.logo} alt={`${p.name} logo`} /></div>
+      <h1>{p.name}</h1>
+      <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
+      {live && <p style="margin-top:16px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
       <dl class="facts num">
         <div><dt>{live ? ui.estimatedCompletion : ui.completionYear}</dt><dd>{p.completionYear ?? (es ? 'Por definir' : 'To be defined')}</dd></div>
         <div><dt>{es ? 'Tipo' : 'Type'}</dt><dd>{typeTxt}</dd></div>
@@ -48,19 +57,30 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         {p.partners.length > 0 && <div><dt>{ui.developedWith}</dt><dd>{p.partners.join(', ')}</dd></div>}
       </dl>
       <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}</p>
-      {p.salesUrl && <p style="margin-top:32px"><a class="btn arrow" href={p.salesUrl} target="_blank" rel="noopener">{es ? 'Sitio del proyecto' : 'Project website'}</a></p>}
+      {p.salesUrl && <p style="margin-top:28px"><a class="btn arrow" href={p.salesUrl} target="_blank" rel="noopener">{es ? 'Sitio del proyecto' : 'Project website'}</a></p>}
+    </div>
+  </section>
 
+  <section class="section tight" style="padding-top:0">
+    <div class="wrap">
       {siblings.length > 0 && (
-        <div style="margin-top:96px">
+        <div style="margin-top:24px">
           <h2 class="eyebrow">{ui.masterPlan} · {masterPlans[p.masterPlan!]}</h2>
           <div class="grid" style="margin-top:24px">{siblings.map((s) => <ProjectCard p={s} lang={lang} />)}</div>
         </div>
       )}
-
       <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
         {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
         {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? ''} →</small>{next.name}</a> : <span />}
       </nav>
     </div>
   </section>
+  <script>
+    const main = document.getElementById('p-main-img') as HTMLImageElement | null;
+    document.querySelectorAll<HTMLButtonElement>('.p-thumb').forEach((b, _i, all) => b.addEventListener('click', () => {
+      if (!main) return;
+      main.src = b.dataset.src!; main.width = Number(b.dataset.w); main.height = Number(b.dataset.h);
+      all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    }));
+  </script>
 </Base>

@@ -1,0 +1,20 @@
+---
+import { type Lang, projects, paths } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+// one entry per development, oldest first; same-logo towers collapse into one stop per year
+const seen = new Set<string>();
+const stops = [...projects]
+  .filter((p) => p.completionYear)
+  .sort((a, b) => (a.completionYear as number) - (b.completionYear as number))
+  .filter((p) => { const k = `${p.completionYear}-${p.logo}`; if (seen.has(k)) return false; seen.add(k); return true; });
+---
+<div class="strip" role="list">
+  {stops.map((p) => (
+    <a role="listitem" href={paths.project(lang, p.slug)}>
+      <span class="y num">{p.completionYear}</span>
+      <span class="l"><img src={p.logo} alt="" loading="lazy" /></span>
+      <span class="n">{p.name}<br />{p.city}{p.status !== 'delivered' ? (lang === 'es' ? ' · en curso' : ' · underway') : ''}</span>
+    </a>
+  ))}
+</div>
