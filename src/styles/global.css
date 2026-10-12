@@ -45,7 +45,7 @@ p { margin: 0 0 1em; }
 .preview { background: var(--accent); color: var(--navy-deep); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; text-align: center; padding: 6px 12px; font-weight: 500; }
 
 /* header */
-.site-header { position: sticky; top: 0; z-index: 20; background: rgba(245, 243, 239, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(245, 243, 239, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); }
 .brand img { width: 34px; height: 34px; }
