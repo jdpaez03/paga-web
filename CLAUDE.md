@@ -14,6 +14,8 @@ Core line: **"25 años desarrollando valor."** (EN: "25 years developing value."
 2. `src/data/company.json` — purpose, niche, values, Three Uniques, Proven Process, Guarantee, headline figures. Public parts of the EOS V/TO (May 2026) only.
 3. Facts confirmed by Juan Diego in writing override the institutional deck (e.g. Torre Pietra completed 2022; Torre Acqua has 136 units; Balcones 500 and 400 were not developed by PAGA — PAGA's Balcones work starts with Balcones 300, then 600).
 
+**Not PAGA projects — never add them:** Balcones 500, Balcones 400, and the earlier Sonoma towers Alberi, Vento and Foresta (developed by others). Fortek and Nawa were planned but never built; they do not go in the portfolio or timeline.
+
 If two sources disagree, do not pick one silently: flag it in the PR description.
 
 ## Never publish
