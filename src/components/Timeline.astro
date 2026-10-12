@@ -1,0 +1,40 @@
+---
+import { type Lang, projects, paths, t } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const es = lang === 'es';
+const dated = projects.filter((p) => p.completionYear);
+const yrs = [...new Set(dated.map((p) => p.completionYear as number))].sort((a, b) => a - b);
+const nowYear = 2026;
+const statusLine = (p: (typeof projects)[number]) =>
+  p.status === "delivered" ? `${p.city}, ${p.state}` : `${p.city}, ${p.state} · ${ui.status[p.status as keyof typeof ui.status]}`;
+---
+<div class="tl">
+  <div class="tl-head" aria-hidden="true"><span>{ui.countryMX}</span><span>{es ? 'Año' : 'Year'}</span><span>{ui.countryUS}</span></div>
+  {yrs.map((y) => {
+    const mx = dated.filter((p) => p.completionYear === y && p.country === 'MX');
+    const us = dated.filter((p) => p.completionYear === y && p.country === 'US');
+    return (
+      <div class="tl-row">
+        <div class="tl-year num">{y}{y > nowYear - 1 && <small>{y > nowYear ? (es ? 'Estimado' : 'Estimated') : (es ? 'En curso' : 'Underway')}</small>}</div>
+        <div class="tl-lane mx">
+          {mx.map((p) => (
+            <a class:list={['tl-item', { future: p.status !== 'delivered' }]} href={paths.project(lang, p.slug)}>
+              <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
+              <span class="txt"><b>{p.name}</b><span>{statusLine(p)}</span></span>
+            </a>
+          ))}
+        </div>
+        <div class="tl-lane us">
+          {us.map((p) => (
+            <a class:list={['tl-item', { future: p.status !== 'delivered' }]} href={paths.project(lang, p.slug)}>
+              <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
+              <span class="txt"><b>{p.name}</b><span>{statusLine(p)}</span></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  })}
+</div>

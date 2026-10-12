@@ -1,0 +1,889 @@
+{
+  "asOf": "2026-10-12",
+  "projects": [
+    {
+      "slug": "los-robles",
+      "name": "Los Robles",
+      "country": "MX",
+      "city": "San Pedro Garza García",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2001,
+      "units": 7,
+      "builtAreaFt2": 27555,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/los-robles.jpg",
+      "imageSize": [
+        966,
+        978
+      ],
+      "logo": "/img/logos/los-robles.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-dunas",
+      "name": "Las Dunas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2002,
+      "units": 22,
+      "builtAreaFt2": 78354,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-dunas.jpg",
+      "imageSize": [
+        1327,
+        956
+      ],
+      "logo": "/img/logos/las-dunas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "balcones-500",
+      "name": "Balcones 500",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2005,
+      "units": 36,
+      "builtAreaFt2": 99774,
+      "masterPlan": "balcones",
+      "partners": [],
+      "image": "/img/projects/balcones-500.jpg",
+      "imageSize": [
+        1526,
+        1122
+      ],
+      "logo": "/img/logos/balcones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "los-rincones",
+      "name": "Los Rincones",
+      "country": "MX",
+      "city": "San Pedro Garza García",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2005,
+      "units": 19,
+      "builtAreaFt2": 77683,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/los-rincones.jpg",
+      "imageSize": [
+        972,
+        978
+      ],
+      "logo": "/img/logos/los-rincones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-villas",
+      "name": "Las Villas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2005,
+      "units": 38,
+      "builtAreaFt2": 92200,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-villas.jpg",
+      "imageSize": [
+        1310,
+        946
+      ],
+      "logo": "/img/logos/las-villas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-verandas",
+      "name": "Las Verandas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2006,
+      "units": 22,
+      "builtAreaFt2": 34985,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-verandas.jpg",
+      "imageSize": [
+        1282,
+        926
+      ],
+      "logo": "/img/logos/las-verandas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-marinas",
+      "name": "Las Marinas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2007,
+      "units": 32,
+      "builtAreaFt2": 53075,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-marinas.jpg",
+      "imageSize": [
+        1323,
+        956
+      ],
+      "logo": "/img/logos/las-marinas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "balcones-400",
+      "name": "Balcones 400",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2008,
+      "units": 36,
+      "builtAreaFt2": 103039,
+      "masterPlan": "balcones",
+      "partners": [],
+      "image": "/img/projects/balcones-400.jpg",
+      "imageSize": [
+        1600,
+        1073
+      ],
+      "logo": "/img/logos/balcones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "los-corales",
+      "name": "Los Corales",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2009,
+      "units": 84,
+      "builtAreaFt2": 278056,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/los-corales.jpg",
+      "imageSize": [
+        945,
+        956
+      ],
+      "logo": "/img/logos/los-corales.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-costas",
+      "name": "Las Costas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2010,
+      "units": 7,
+      "builtAreaFt2": 21980,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-costas.jpg",
+      "imageSize": [
+        950,
+        956
+      ],
+      "logo": "/img/logos/las-costas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "aurum",
+      "name": "Aurum",
+      "country": "MX",
+      "city": "San Pedro Garza García",
+      "state": "N.L.",
+      "type": "oficinas",
+      "status": "delivered",
+      "completionYear": 2012,
+      "units": null,
+      "builtAreaFt2": 350440,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/aurum.jpg",
+      "imageSize": [
+        944,
+        976
+      ],
+      "logo": "/img/logos/aurum.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-velas",
+      "name": "Las Velas",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2014,
+      "units": 34,
+      "builtAreaFt2": 51053,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-velas.jpg",
+      "imageSize": [
+        925,
+        956
+      ],
+      "logo": "/img/logos/las-velas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "via-puerta-de-hierro",
+      "name": "Vía Puerta de Hierro",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "comercial",
+      "status": "delivered",
+      "completionYear": 2017,
+      "units": null,
+      "builtAreaFt2": 425950,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/via-puerta-de-hierro.jpg",
+      "imageSize": [
+        1581,
+        1600
+      ],
+      "logo": "/img/logos/via-puerta-de-hierro.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "andenes-san-nicolas",
+      "name": "Andenes San Nicolás",
+      "country": "MX",
+      "city": "San Nicolás de los Garza",
+      "state": "N.L.",
+      "type": "comercial",
+      "status": "delivered",
+      "completionYear": 2017,
+      "units": null,
+      "builtAreaFt2": 185750,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/andenes-san-nicolas.jpg",
+      "imageSize": [
+        1582,
+        1600
+      ],
+      "logo": "/img/logos/andenes-san-nicolas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "balcones-300",
+      "name": "Balcones 300",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2017,
+      "units": 48,
+      "builtAreaFt2": 95715,
+      "masterPlan": "balcones",
+      "partners": [],
+      "image": "/img/projects/balcones-300.jpg",
+      "imageSize": [
+        987,
+        716
+      ],
+      "logo": "/img/logos/balcones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-joyas",
+      "name": "Las Joyas",
+      "country": "US",
+      "city": "Port Isabel",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2017,
+      "units": 94,
+      "builtAreaFt2": 139801,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-joyas.jpg",
+      "imageSize": [
+        945,
+        956
+      ],
+      "logo": "/img/logos/las-joyas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-ten-town-center",
+      "name": "Cinnamon Shore Ten Town Center",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2017,
+      "units": 14,
+      "builtAreaFt2": 15683,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-ten-town-center.jpg",
+      "imageSize": [
+        1400,
+        1007
+      ],
+      "logo": "/img/logos/cinnamon-shore.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "andenes-guadalupe",
+      "name": "Andenes Guadalupe",
+      "country": "MX",
+      "city": "Guadalupe",
+      "state": "N.L.",
+      "type": "comercial",
+      "status": "delivered",
+      "completionYear": 2018,
+      "units": null,
+      "builtAreaFt2": 289750,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/andenes-guadalupe.jpg",
+      "imageSize": [
+        1386,
+        1009
+      ],
+      "logo": "/img/logos/andenes-guadalupe.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "andenes-hermosillo",
+      "name": "Andenes Hermosillo",
+      "country": "MX",
+      "city": "Hermosillo",
+      "state": "Son.",
+      "type": "usos-mixtos",
+      "status": "delivered",
+      "completionYear": 2018,
+      "units": null,
+      "builtAreaFt2": 389749,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/andenes-hermosillo.jpg",
+      "imageSize": [
+        1169,
+        845
+      ],
+      "logo": "/img/logos/andenes-hermosillo.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "jardin-secreto",
+      "name": "Jardín Secreto",
+      "country": "MX",
+      "city": "Valle Poniente",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2018,
+      "units": 256,
+      "builtAreaFt2": 458800,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/jardin-secreto.jpg",
+      "imageSize": [
+        1235,
+        1250
+      ],
+      "logo": "/img/logos/jardin-secreto.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-five-town-center",
+      "name": "Cinnamon Shore Five Town Center",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "usos-mixtos",
+      "status": "delivered",
+      "completionYear": 2018,
+      "units": 5,
+      "builtAreaFt2": 34638,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-five-town-center.jpg",
+      "imageSize": [
+        1400,
+        1007
+      ],
+      "logo": "/img/logos/cinnamon-shore-five-town-center.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "arcadia",
+      "name": "Arcadia",
+      "country": "MX",
+      "city": "Guadalupe",
+      "state": "N.L.",
+      "type": "comercial",
+      "status": "delivered",
+      "completionYear": 2019,
+      "units": null,
+      "builtAreaFt2": 439482,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/arcadia.jpg",
+      "imageSize": [
+        1350,
+        976
+      ],
+      "logo": "/img/logos/arcadia-guadalupe.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "parkview-pitic",
+      "name": "Parkview Pitic",
+      "country": "MX",
+      "city": "Hermosillo",
+      "state": "Son.",
+      "type": "usos-mixtos",
+      "status": "delivered",
+      "completionYear": 2020,
+      "units": 74,
+      "builtAreaFt2": 312156,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/parkview-pitic.jpg",
+      "imageSize": [
+        1386,
+        1018
+      ],
+      "logo": "/img/logos/parkview-pitic.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-nine-town-center",
+      "name": "Cinnamon Shore Nine Town Center",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2020,
+      "units": 8,
+      "builtAreaFt2": 25241,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-nine-town-center.jpg",
+      "imageSize": [
+        1400,
+        1012
+      ],
+      "logo": "/img/logos/cinnamon-shore-nine-town-center.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-sunset-cottages",
+      "name": "Cinnamon Shore Sunset Cottages",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2020,
+      "units": 8,
+      "builtAreaFt2": 17265,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-sunset-cottages.jpg",
+      "imageSize": [
+        1137,
+        853
+      ],
+      "logo": "/img/logos/cinnamon-shore.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "torre-pietra",
+      "name": "Torre Pietra",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2022,
+      "units": 100,
+      "builtAreaFt2": 379097,
+      "masterPlan": "sonoma",
+      "partners": [],
+      "image": "/img/projects/torre-pietra.jpg",
+      "imageSize": [
+        1181,
+        1600
+      ],
+      "logo": "/img/logos/torre-pietra.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)",
+        "Completion 2022 confirmed by Juan Diego, 2026-10-12"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-eight-town-center",
+      "name": "Cinnamon Shore Eight Town Center",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2023,
+      "units": 12,
+      "builtAreaFt2": 24757,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-eight-town-center.jpg",
+      "imageSize": [
+        1024,
+        768
+      ],
+      "logo": "/img/logos/cinnamon-shore-eight-town-center.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "balcones-600",
+      "name": "Balcones 600",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "delivered",
+      "completionYear": 2024,
+      "units": 36,
+      "builtAreaFt2": 93646,
+      "masterPlan": "balcones",
+      "partners": [],
+      "image": "/img/projects/balcones-600.jpg",
+      "imageSize": [
+        1383,
+        1000
+      ],
+      "logo": "/img/logos/balcones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ],
+      "openQuestions": [
+        "Deck shows 36 units on project slide and 54 on master-plan slide"
+      ]
+    },
+    {
+      "slug": "las-velas-6-7",
+      "name": "Las Velas (6, 7)",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2024,
+      "units": 11,
+      "builtAreaFt2": 18522,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-velas-6-7.jpg",
+      "imageSize": [
+        950,
+        956
+      ],
+      "logo": "/img/logos/las-velas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "cinnamon-shore-six-town-center",
+      "name": "Cinnamon Shore Six Town Center",
+      "country": "US",
+      "city": "Port Aransas",
+      "state": "TX",
+      "type": "usos-mixtos",
+      "status": "construction",
+      "completionYear": 2024,
+      "units": 10,
+      "builtAreaFt2": 17592,
+      "masterPlan": "cinnamon-shore",
+      "partners": [],
+      "image": "/img/projects/cinnamon-shore-six-town-center.jpg",
+      "imageSize": [
+        1476,
+        811
+      ],
+      "logo": "/img/logos/cinnamon-shore-six-town-center.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "los-corales-bay-tower",
+      "name": "Los Corales Bay Tower",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2025,
+      "units": 29,
+      "builtAreaFt2": 62486,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/los-corales-bay-tower.jpg",
+      "imageSize": [
+        889,
+        900
+      ],
+      "logo": "/img/logos/los-corales-bay-tower.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "artesanias-tercera-fase",
+      "name": "Artesanías, tercera fase",
+      "country": "MX",
+      "city": "Nuevo Vallarta",
+      "state": "Nay.",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2025,
+      "units": 21,
+      "builtAreaFt2": 46306,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/artesanias-tercera-fase.jpg",
+      "imageSize": [
+        1186,
+        1200
+      ],
+      "logo": "/img/logos/artesanias.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "torre-fiori",
+      "name": "Torre Fiori",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2026,
+      "units": 117,
+      "builtAreaFt2": 399362,
+      "masterPlan": "sonoma",
+      "partners": [],
+      "image": "/img/projects/torre-fiori.jpg",
+      "imageSize": [
+        1026,
+        1486
+      ],
+      "logo": "/img/logos/torre-fiori.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "amara-centro-primera-fase",
+      "name": "Amāra Centro, primera fase",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "usos-mixtos",
+      "status": "construction",
+      "completionYear": 2026,
+      "units": 329,
+      "builtAreaFt2": 821286,
+      "masterPlan": "amara",
+      "partners": [],
+      "image": "/img/projects/amara-centro-primera-fase.jpg",
+      "imageSize": [
+        871,
+        882
+      ],
+      "logo": "/img/logos/amara-centro.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "las-joyas-2",
+      "name": "Las Joyas (2)",
+      "country": "US",
+      "city": "Port Isabel",
+      "state": "TX",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2026,
+      "units": 94,
+      "builtAreaFt2": 139800,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/las-joyas-2.jpg",
+      "imageSize": [
+        925,
+        956
+      ],
+      "logo": "/img/logos/las-joyas.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "marena",
+      "name": "Marena",
+      "country": "US",
+      "city": "South Padre Island",
+      "state": "TX",
+      "type": "residencial",
+      "status": "construction",
+      "completionYear": 2028,
+      "units": 25,
+      "builtAreaFt2": 102593,
+      "masterPlan": null,
+      "partners": [],
+      "image": "/img/projects/marena.jpg",
+      "imageSize": [
+        444,
+        549
+      ],
+      "logo": "/img/logos/marena.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    },
+    {
+      "slug": "torre-acqua",
+      "name": "Torre Acqua",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "permits",
+      "completionYear": 2029,
+      "units": 136,
+      "builtAreaFt2": 485548,
+      "masterPlan": "sonoma",
+      "partners": [
+        "Grupo DAGS"
+      ],
+      "image": "/img/projects/torre-acqua.jpg",
+      "imageSize": [
+        879,
+        496
+      ],
+      "logo": "/img/logos/torre-acqua.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)",
+        "136 units confirmed by Juan Diego (GVI schematic)"
+      ],
+      "openQuestions": [
+        "Deck shows 116 and 140 units"
+      ]
+    },
+    {
+      "slug": "balcones-200",
+      "name": "Balcones 200",
+      "country": "MX",
+      "city": "Monterrey",
+      "state": "N.L.",
+      "type": "residencial",
+      "status": "planning",
+      "completionYear": null,
+      "units": 116,
+      "builtAreaFt2": 274479,
+      "masterPlan": "balcones",
+      "partners": [],
+      "image": "/img/projects/balcones-200.jpg",
+      "imageSize": [
+        1105,
+        1600
+      ],
+      "logo": "/img/logos/balcones-residencial.png",
+      "sources": [
+        "Presentación institucional, junio 2026 (v6)"
+      ]
+    }
+  ]
+}

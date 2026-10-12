@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import Figures from '../components/Figures.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { type Lang, company, tx, t, paths, projects } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const es = lang === 'es';
+const seo = company.seo.home;
+const featuredSlugs = ['torre-pietra', 'los-corales', 'parkview-pitic', 'jardin-secreto', 'cinnamon-shore-ten-town-center', 'torre-acqua'];
+const featured = featuredSlugs.map((s) => projects.find((p) => p.slug === s)!).filter(Boolean);
+const hero = projects.find((p) => p.slug === 'torre-fiori')!;
+const [line1, line2] = tx(company.tagline, lang).replace(/\.$/, '').split(es ? ' desarrollando ' : ' developing ');
+---
+<Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="home" alt={paths.home(es ? 'en' : 'es')}>
+  <section class="hero">
+    <img src={hero.image} alt="" width={hero.imageSize[0]} height={hero.imageSize[1]} fetchpriority="high" />
+    <div class="wrap">
+      <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas' : 'Mexico and Texas'}</p>
+      <h1>{line1} <span class="accent">{es ? 'desarrollando' : 'developing'} {line2}.</span></h1>
+      <p class="lead">{tx(company.heroLead, lang)}</p>
+    </div>
+  </section>
+
+  <section class="section tight on-white">
+    <div class="wrap"><Figures lang={lang} /></div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{es ? 'Propósito' : 'Purpose'}</p>
+      <p class="statement"><span class="accent">{tx(company.purpose, lang)}</span> {tx(company.niche, lang)}</p>
+      <p style="margin-top:40px"><a class="btn arrow" href={paths.about(lang)}>{ui.nav.about}</a></p>
+    </div>
+  </section>
+
+  <section class="section on-dark">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{es ? 'Por qué PAGA' : 'Why PAGA'}</p>
+          <h2>{es ? 'Tres cosas que nos distinguen' : 'Three things that set us apart'}</h2>
+        </div>
+      </div>
+      <div class="uniques">
+        {company.uniques.map((u, i) => (
+          <div class="unique"><b>0{i + 1}</b><h3>{tx(u.name, lang)}</h3><p>{tx(u.text, lang)}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{ui.nav.projects}</p>
+          <h2>{es ? 'Proyectos que hablan por nosotros' : 'Projects that speak for us'}</h2>
+        </div>
+        <p>{es ? 'Una selección de desarrollos entregados y en curso. La trayectoria completa, año por año, está en la línea del tiempo.' : 'A selection of delivered and ongoing developments. The full track record, year by year, is on the timeline.'}</p>
+      </div>
+      <div class="grid">
+        {featured.map((p) => <ProjectCard p={p} lang={lang} />)}
+      </div>
+      <p style="margin-top:56px"><a class="btn arrow" href={paths.projects(lang)}>{ui.viewProjects}</a></p>
+    </div>
+  </section>
+
+  <section class="section on-deep" id="socios">
+    <div class="wrap partner">
+      <div>
+        <p class="eyebrow">{ui.nav.partners}</p>
+        <h2>{tx(company.partnerTeaser.title, lang)}</h2>
+      </div>
+      <div>
+        <p>{tx(company.partnerTeaser.text, lang)}</p>
+        <p style="margin-top:28px"><a class="btn arrow" href={paths.about(lang) + '#proceso'}>{tx(company.partnerTeaser.cta, lang)}</a></p>
+      </div>
+    </div>
+  </section>
+</Base>

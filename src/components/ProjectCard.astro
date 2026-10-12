@@ -1,0 +1,18 @@
+---
+import { type Lang, type Project, t, paths, typeLabel, tx } from '../lib/data';
+interface Props { p: Project; lang: Lang; eager?: boolean }
+const { p, lang, eager } = Astro.props;
+const ui = t(lang);
+const live = p.status !== 'delivered';
+const year = p.completionYear ? (live ? `${lang === 'es' ? 'Est.' : 'Est.'} ${p.completionYear}` : `${p.completionYear}`) : '';
+---
+<a class="card" href={paths.project(lang, p.slug)} data-country={p.country} data-status={p.status}>
+  <div class="ph"><img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={eager ? 'eager' : 'lazy'} decoding="async" /></div>
+  <h3>{p.name}</h3>
+  <div class="meta">
+    <span>{p.city}, {p.state}</span>
+    <span>{tx(typeLabel[p.type], lang)}</span>
+    {year && <span class="num">{year}</span>}
+  </div>
+  {live && <p style="margin-top:10px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
+</a>

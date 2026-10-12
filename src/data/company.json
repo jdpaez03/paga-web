@@ -1,0 +1,329 @@
+{
+  "purpose": {
+    "es": "Desarrollamos valor.",
+    "en": "We develop value."
+  },
+  "tagline": {
+    "es": "25 años desarrollando valor.",
+    "en": "25 years developing value."
+  },
+  "heroLead": {
+    "es": "Desde 2001 identificamos, estructuramos y desarrollamos proyectos inmobiliarios en México y Texas: vivienda, comercio, oficinas y usos mixtos.",
+    "en": "Since 2001 we have identified, structured and built real estate projects in Mexico and Texas: residential, retail, office and mixed use."
+  },
+  "niche": {
+    "es": "Identificamos y estructuramos oportunidades inmobiliarias en mercados estratégicos, con estructuras de capital sólidas, para responder a necesidades reales de vivienda, comercio y trabajo.",
+    "en": "We identify and structure real estate opportunities in strategic markets, backed by sound capital structures, to meet real demand for housing, retail and workspace."
+  },
+  "about": {
+    "title": {
+      "es": "Quiénes somos",
+      "en": "Who we are"
+    },
+    "paragraphs": {
+      "es": [
+        "PAGA Desarrollos nació en 2001 en San Pedro Garza García. Desde entonces desarrollamos proyectos residenciales, comerciales, de oficinas y de usos mixtos.",
+        "Operamos en dos países. En México, en el área metropolitana de Monterrey, Hermosillo y Nuevo Vallarta; en Texas, en South Padre Island, Port Isabel y Port Aransas. Varios proyectos forman parte de planes maestros como Sonoma, Balcones, Amāra y Cinnamon Shore.",
+        "Hoy consolidamos una operación institucional: estructuras de capital sólidas, procesos documentados y gobierno corporativo. Así damos a socios, compradores y comunidades la claridad que cada proyecto requiere."
+      ],
+      "en": [
+        "PAGA Desarrollos was founded in 2001 in San Pedro Garza García, Mexico. Since then we have developed residential, retail, office and mixed-use projects.",
+        "We work in two countries. In Mexico, in the Monterrey metropolitan area, Hermosillo and Nuevo Vallarta; in Texas, on South Padre Island and in Port Isabel and Port Aransas. Several projects belong to master plans such as Sonoma, Balcones, Amāra and Cinnamon Shore.",
+        "Today we are building an institutional platform: sound capital structures, documented processes and corporate governance. It gives partners, buyers and communities the clarity every project calls for."
+      ]
+    }
+  },
+  "values": [
+    {
+      "name": {
+        "es": "Generación de valor",
+        "en": "Value creation"
+      },
+      "line": {
+        "es": "Cada proyecto debe dejar valor duradero para quienes participan en él.",
+        "en": "Every project should leave lasting value for everyone involved in it."
+      },
+      "text": {
+        "es": "Aplicamos innovación y creatividad para elevar el estándar en cada desarrollo. Buscamos valor sostenible para accionistas, clientes, equipo y socios.",
+        "en": "We apply innovation and creativity to raise the standard of each development. We pursue sustainable value for shareholders, clients, our team and our partners."
+      }
+    },
+    {
+      "name": {
+        "es": "Eficiencia",
+        "en": "Efficiency"
+      },
+      "line": {
+        "es": "Orden, disciplina y enfoque para convertir recursos en resultados.",
+        "en": "Order, discipline and focus that turn resources into results."
+      },
+      "text": {
+        "es": "Cuidamos cada recurso y cada decisión. Trabajamos con método para que el esfuerzo se traduzca en resultados concretos.",
+        "en": "We take care with every resource and every decision. We work with method so that effort translates into concrete results."
+      }
+    },
+    {
+      "name": {
+        "es": "Comunicación",
+        "en": "Communication"
+      },
+      "line": {
+        "es": "Decimos las cosas con claridad y honestidad, también cuando son difíciles.",
+        "en": "We speak clearly and honestly, including when the news is difficult."
+      },
+      "text": {
+        "es": "Comunicamos con precisión y asumimos la responsabilidad de lo que decimos. Enfrentamos los momentos difíciles de frente, con información oportuna.",
+        "en": "We communicate precisely and take responsibility for what we say. We face difficult moments directly, with timely information."
+      }
+    },
+    {
+      "name": {
+        "es": "Proactividad",
+        "en": "Initiative"
+      },
+      "line": {
+        "es": "Nos anticipamos y actuamos antes de que algo se vuelva urgente.",
+        "en": "We anticipate and act before anything becomes urgent."
+      },
+      "text": {
+        "es": "Planeamos con tiempo y tomamos la iniciativa. Preferimos resolver un tema en la mesa de trabajo que en la obra.",
+        "en": "We plan ahead and take the initiative. We would rather resolve an issue at the planning table than on the job site."
+      }
+    },
+    {
+      "name": {
+        "es": "Entrega / Compromiso",
+        "en": "Commitment to delivery"
+      },
+      "line": {
+        "es": "Llevamos cada proyecto hasta el final.",
+        "en": "We see every project through to the end."
+      },
+      "text": {
+        "es": "Mantenemos la determinación desde el primer estudio hasta la entrega. Cuando surgen obstáculos, respondemos con resiliencia y seguimos adelante.",
+        "en": "We stay committed from the first study to the final handover. When obstacles arise, we respond with resilience and keep moving forward."
+      }
+    }
+  ],
+  "uniques": [
+    {
+      "name": {
+        "es": "Mejor producto",
+        "en": "A better product"
+      },
+      "text": {
+        "es": "Diseño, funcionalidad y distribución pensados con cuidado. Buscamos que cada desarrollo sea un activo superior dentro de su segmento.",
+        "en": "Careful design, functionality and layout. We aim for each development to be a stronger asset within its segment."
+      }
+    },
+    {
+      "name": {
+        "es": "Ejecución enfocada en generar valor",
+        "en": "Execution focused on value"
+      },
+      "text": {
+        "es": "Seleccionamos, estructuramos y ejecutamos cada proyecto con disciplina, para crear valor real para inversionistas y compradores.",
+        "en": "We select, structure and execute each project with discipline, to create real value for investors and buyers."
+      }
+    },
+    {
+      "name": {
+        "es": "Soluciones a necesidades específicas",
+        "en": "Answers to specific needs"
+      },
+      "text": {
+        "es": "Estudiamos cada mercado y cada proyecto por separado. Desarrollamos productos que responden a necesidades concretas, no a fórmulas.",
+        "en": "We study each market and each project on its own terms. We develop products that answer concrete needs, not formulas."
+      }
+    }
+  ],
+  "process": [
+    {
+      "name": {
+        "es": "Identificamos",
+        "en": "Identify"
+      },
+      "text": {
+        "es": "Buscamos terrenos y oportunidades en mercados estratégicos y los validamos con estudios de mercado.",
+        "en": "We source land and opportunities in strategic markets and test them against market research."
+      }
+    },
+    {
+      "name": {
+        "es": "Estructuramos",
+        "en": "Structure"
+      },
+      "text": {
+        "es": "Definimos la estructura de capital, el modelo financiero y los socios adecuados para cada proyecto.",
+        "en": "We define the capital structure, the financial model and the right partners for each project."
+      }
+    },
+    {
+      "name": {
+        "es": "Desarrollamos",
+        "en": "Design"
+      },
+      "text": {
+        "es": "Integramos diseño conceptual y arquitectónico, ingenierías y presupuesto en un proyecto ejecutivo.",
+        "en": "We bring conceptual and architectural design, engineering and budget together into a construction-ready plan."
+      }
+    },
+    {
+      "name": {
+        "es": "Ejecutamos",
+        "en": "Build"
+      },
+      "text": {
+        "es": "Construimos con control de calidad, costo y tiempos, y damos seguimiento puntual a cada avance.",
+        "en": "We build with control over quality, cost and schedule, and track every stage of progress."
+      }
+    },
+    {
+      "name": {
+        "es": "Comercializamos",
+        "en": "Market"
+      },
+      "text": {
+        "es": "Diseñamos la estrategia comercial y de marketing de cada desarrollo y acompañamos al comprador en su decisión.",
+        "en": "We design the sales and marketing strategy for each development and guide buyers through their decision."
+      }
+    },
+    {
+      "name": {
+        "es": "Entregamos",
+        "en": "Deliver"
+      },
+      "text": {
+        "es": "Entregamos cada unidad, acompañamos la escrituración y damos servicio posventa.",
+        "en": "We hand over every unit, support the closing process and provide after-sales service."
+      }
+    }
+  ],
+  "guarantee": {
+    "draft": true,
+    "title": {
+      "es": "Si lo estructuramos, lo entregamos.",
+      "en": "If we structure it, we deliver it."
+    },
+    "text": {
+      "es": "Cada nuevo proyecto inicia obra con su estructura de capital definida. Cada socio y cada comprador recibe información clara y periódica del avance hasta la entrega.",
+      "en": "Every new project breaks ground with its capital structure in place. Every partner and buyer receives clear, regular progress updates through to delivery."
+    }
+  },
+  "partnerTeaser": {
+    "title": {
+      "es": "Desarrollemos juntos",
+      "en": "Let's develop together"
+    },
+    "text": {
+      "es": "Trabajamos con propietarios de terrenos, socios de capital y codesarrolladores. Si tiene una oportunidad en mente, la evaluamos con usted desde el primer estudio.",
+      "en": "We work with landowners, capital partners and co-developers. If you have an opportunity in mind, we will assess it with you from the first study."
+    },
+    "cta": {
+      "es": "Hablemos de su proyecto",
+      "en": "Talk to us about your project"
+    }
+  },
+  "seo": {
+    "home": {
+      "title": {
+        "es": "PAGA Desarrollos | 25 años desarrollando valor",
+        "en": "PAGA Desarrollos | 25 years developing value"
+      },
+      "description": {
+        "es": "Desarrolladora inmobiliaria con proyectos residenciales, comerciales, de oficinas y usos mixtos en México y Texas desde 2001.",
+        "en": "Real estate developer with residential, retail, office and mixed-use projects in Mexico and Texas since 2001."
+      }
+    },
+    "projects": {
+      "title": {
+        "es": "Proyectos | PAGA Desarrollos",
+        "en": "Projects | PAGA Desarrollos"
+      },
+      "description": {
+        "es": "Desarrollos de PAGA en Monterrey, Hermosillo, Nuevo Vallarta y la costa de Texas, de 2001 a la fecha: entregados, en obra y en planeación.",
+        "en": "PAGA developments in Monterrey, Hermosillo, Nuevo Vallarta and the Texas coast since 2001: delivered, under construction and in planning."
+      }
+    },
+    "about": {
+      "title": {
+        "es": "Nosotros | PAGA Desarrollos",
+        "en": "About us | PAGA Desarrollos"
+      },
+      "description": {
+        "es": "Conozca a PAGA Desarrollos: propósito, valores y proceso para identificar, estructurar, construir y entregar proyectos inmobiliarios en México y Texas.",
+        "en": "Meet PAGA Desarrollos: our purpose, values and process for identifying, structuring, building and delivering real estate in Mexico and Texas."
+      }
+    }
+  },
+  "ui": {
+    "es": {
+      "nav": {
+        "home": "Inicio",
+        "projects": "Proyectos",
+        "about": "Nosotros",
+        "partners": "Socios",
+        "contact": "Contacto"
+      },
+      "viewProjects": "Ver proyectos",
+      "timeline": "Línea del tiempo",
+      "filterAll": "Todos",
+      "countryMX": "México",
+      "countryUS": "Estados Unidos",
+      "status": {
+        "delivered": "Entregado",
+        "construction": "En construcción",
+        "permits": "En permisos",
+        "planning": "En planeación"
+      },
+      "completionYear": "Año de conclusión",
+      "estimatedCompletion": "Conclusión estimada",
+      "units": "Unidades",
+      "builtArea": "Superficie construida",
+      "masterPlan": "Plan maestro",
+      "developedWith": "Desarrollado con",
+      "backToProjects": "Volver a proyectos",
+      "footer": {
+        "privacy": "Aviso de privacidad",
+        "cookies": "Aviso de cookies",
+        "terms": "Términos",
+        "officialChannels": "Canales oficiales"
+      },
+      "previewBanner": "Vista previa — no publicada"
+    },
+    "en": {
+      "nav": {
+        "home": "Home",
+        "projects": "Projects",
+        "about": "About",
+        "partners": "Partners",
+        "contact": "Contact"
+      },
+      "viewProjects": "View projects",
+      "timeline": "Timeline",
+      "filterAll": "All",
+      "countryMX": "Mexico",
+      "countryUS": "United States",
+      "status": {
+        "delivered": "Delivered",
+        "construction": "Under construction",
+        "permits": "In permitting",
+        "planning": "In planning"
+      },
+      "completionYear": "Completion year",
+      "estimatedCompletion": "Estimated completion",
+      "units": "Units",
+      "builtArea": "Built area",
+      "masterPlan": "Master plan",
+      "developedWith": "Developed with",
+      "backToProjects": "Back to projects",
+      "footer": {
+        "privacy": "Privacy notice",
+        "cookies": "Cookie notice",
+        "terms": "Terms",
+        "officialChannels": "Official channels"
+      },
+      "previewBanner": "Preview — not published"
+    }
+  }
+}

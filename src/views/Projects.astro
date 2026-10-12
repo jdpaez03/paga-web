@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Figures from '../components/Figures.astro';
+import { type Lang, company, tx, t, paths, projects } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const es = lang === 'es';
+const seo = company.seo.projects;
+const list = [...projects].sort((a, b) => (b.completionYear ?? 9999) - (a.completionYear ?? 9999));
+---
+<Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="projects" alt={paths.projects(es ? 'en' : 'es')}>
+  <section class="section tight">
+    <div class="wrap">
+      <p class="eyebrow">{ui.nav.projects}</p>
+      <h1 style="font-size:clamp(40px,6vw,80px);color:var(--navy);max-width:16ch">{es ? 'Veinticinco años, dos países, una trayectoria.' : 'Twenty-five years, two countries, one track record.'}</h1>
+      <div style="margin-top:56px"><Figures lang={lang} /></div>
+    </div>
+  </section>
+
+  <section class="section on-deep" id="linea-del-tiempo">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{ui.timeline}</p>
+          <h2>{es ? 'De Los Robles a Torre Acqua' : 'From Los Robles to Torre Acqua'}</h2>
+        </div>
+        <p>{es ? 'Cada desarrollo por año de conclusión. Los proyectos en curso aparecen con borde punteado y año estimado.' : 'Every development by completion year. Ongoing projects have a dashed outline and an estimated year.'}</p>
+      </div>
+      <Timeline lang={lang} />
+    </div>
+  </section>
+
+  <section class="section" id="portafolio">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">{es ? 'Portafolio' : 'Portfolio'}</p>
+        <h2>{es ? 'Todos los desarrollos' : 'All developments'}</h2>
+      </div>
+      <div class="chips" role="group" aria-label={es ? 'Filtrar por país' : 'Filter by country'}>
+        <button class="chip" type="button" data-f="all" aria-pressed="true">{ui.filterAll}</button>
+        <button class="chip" type="button" data-f="MX" aria-pressed="false">{ui.countryMX}</button>
+        <button class="chip" type="button" data-f="US" aria-pressed="false">{ui.countryUS}</button>
+        <button class="chip" type="button" data-f="live" aria-pressed="false">{es ? 'En curso' : 'Underway'}</button>
+      </div>
+      <div class="grid" id="pgrid">
+        {list.map((p) => <ProjectCard p={p} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+  <script>
+    const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-f]');
+    const cards = document.querySelectorAll<HTMLElement>('#pgrid .card');
+    chips.forEach((c) => c.addEventListener('click', () => {
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      const f = c.dataset.f;
+      cards.forEach((k) => {
+        const show = f === 'all' || k.dataset.country === f || (f === 'live' && k.dataset.status !== 'delivered');
+        k.classList.toggle('hidden', !show);
+      });
+    }));
+  </script>
+</Base>

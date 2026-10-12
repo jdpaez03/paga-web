@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects } from '../lib/data';
+interface Props { lang: Lang; p: Project }
+const { lang, p } = Astro.props;
+const ui = t(lang);
+const es = lang === 'es';
+const live = p.status !== 'delivered';
+const ordered = sortedByYear();
+const i = ordered.findIndex((x) => x.slug === p.slug);
+const prev = ordered[i - 1];
+const next = ordered[i + 1];
+const siblings = p.masterPlan ? projects.filter((x) => x.masterPlan === p.masterPlan && x.slug !== p.slug) : [];
+const typeTxt = tx(typeLabel[p.type], lang);
+const title = `${p.name} · PAGA Desarrollos`;
+const desc = es
+  ? `${p.name}, desarrollo ${typeTxt.toLowerCase()} de PAGA Desarrollos en ${p.city}, ${p.state}.`
+  : `${p.name}, a ${typeTxt.toLowerCase()} development by PAGA Desarrollos in ${p.city}, ${p.state}.`;
+---
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)}>
+  <div class="p-hero"><img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" /></div>
+  <section class="section tight" style="padding-top:0">
+    <div class="wrap">
+      <div class="p-head">
+        <div>
+          <p class="eyebrow" style="margin-top:8px"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
+          <h1>{p.name}</h1>
+          <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
+          {live && <p style="margin-top:16px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
+        </div>
+        <div class="p-logo"><img src={p.logo} alt={`${p.name} logo`} /></div>
+      </div>
+      <dl class="facts num">
+        <div><dt>{live ? ui.estimatedCompletion : ui.completionYear}</dt><dd>{p.completionYear ?? (es ? 'Por definir' : 'To be defined')}</dd></div>
+        <div><dt>{es ? 'Tipo' : 'Type'}</dt><dd>{typeTxt}</dd></div>
+        {p.units != null && <div><dt>{ui.units}</dt><dd>{num(p.units, lang)}</dd></div>}
+        <div><dt>{ui.builtArea}</dt><dd>{area(p.builtAreaFt2, lang)}</dd></div>
+        {p.masterPlan && <div><dt>{ui.masterPlan}</dt><dd>{masterPlans[p.masterPlan]}</dd></div>}
+        {p.partners.length > 0 && <div><dt>{ui.developedWith}</dt><dd>{p.partners.join(', ')}</dd></div>}
+      </dl>
+
+      {siblings.length > 0 && (
+        <div style="margin-top:96px">
+          <p class="eyebrow">{ui.masterPlan} · {masterPlans[p.masterPlan!]}</p>
+          <div class="grid" style="margin-top:24px">{siblings.map((s) => <ProjectCard p={s} lang={lang} />)}</div>
+        </div>
+      )}
+
+      <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
+        {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
+        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? ''} →</small>{next.name}</a> : <span />}
+      </nav>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,16 @@
+{
+  "name": "paga-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/jost": "^5.3.0",
+    "astro": "^5.18.2",
+    "astro-relative-links": "^0.4.2"
+  }
+}

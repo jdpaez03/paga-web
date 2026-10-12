@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { type Lang, company, tx, paths } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const es = lang === 'es';
+const seo = company.seo.about;
+const g = company.guarantee;
+---
+<Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="about" alt={paths.about(es ? 'en' : 'es')}>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{es ? 'Nosotros' : 'About'}</p>
+      <h1 style="font-size:clamp(40px,6vw,84px);color:var(--navy);max-width:14ch">{tx(company.about.title, lang)}</h1>
+      <div style="display:grid;gap:24px;margin-top:56px;max-width:68ch;font-size:19px">
+        {company.about.paragraphs[lang].map((para) => <p style="margin:0">{para}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-white" id="valores">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Valores' : 'Values'}</p><h2>{es ? 'Cómo trabajamos, todos los días' : 'How we work, every day'}</h2></div>
+        <p>{es ? 'Cinco valores que guían a quién contratamos, cómo decidimos y cómo respondemos a nuestros socios.' : 'Five values that guide who we hire, how we decide and how we answer to our partners.'}</p>
+      </div>
+      <div class="values">
+        {company.values.map((v, i) => (
+          <div class="value">
+            <span class="n">0{i + 1}</span>
+            <h3>{tx(v.name, lang)}</h3>
+            <div class="body"><p class="line">{tx(v.line, lang)}</p><p>{tx(v.text, lang)}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-dark" id="proceso">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Proceso' : 'Process'}</p><h2>{es ? 'Seis pasos, de la oportunidad a la entrega' : 'Six steps, from opportunity to delivery'}</h2></div>
+        <p>{tx(company.niche, lang)}</p>
+      </div>
+      <div class="process">
+        {company.process.map((s, i) => (
+          <div class="step"><b>0{i + 1}</b><h3>{tx(s.name, lang)}</h3><p>{tx(s.text, lang)}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="garantia">
+    <div class="wrap">
+      <div class="guarantee">
+        <p class="eyebrow">{es ? 'Nuestra garantía' : 'Our guarantee'}</p>
+        <h2 class="accent" style="font-weight:400">{tx(g.title, lang)}</h2>
+        <p>{tx(g.text, lang)}</p>
+        {g.draft && <span class="draft-note">{es ? 'Borrador · pendiente de aprobación de Dirección y Jurídico' : 'Draft · pending approval by management and legal'}</span>}
+      </div>
+    </div>
+  </section>
+</Base>
