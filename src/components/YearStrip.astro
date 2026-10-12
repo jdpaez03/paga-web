@@ -12,9 +12,9 @@ const stops = [...projects]
 <div class="strip" role="list">
   {stops.map((p) => (
     <a role="listitem" href={paths.project(lang, p.slug)}>
-      <span class="y num">{p.completionYear}</span>
+      <span class="y num">{p.status !== 'delivered' && <small style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:block;color:var(--accent)">{lang === 'es' ? 'Estimado' : 'Est.'}</small>}{p.completionYear}</span>
       <span class="l"><img src={p.logo} alt="" loading="lazy" /></span>
-      <span class="n">{p.name}<br />{p.city}{p.status !== 'delivered' ? (lang === 'es' ? ' · en curso' : ' · underway') : ''}</span>
+      <span class="n">{p.name}<br />{p.city}</span>
     </a>
   ))}
 </div>

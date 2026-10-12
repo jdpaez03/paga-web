@@ -35,7 +35,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       {p.gallery.length > 0 && (
         <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>
           {[{ src: p.image, size: p.imageSize }, ...p.gallery].map((g, i) => (
-            <button type="button" class="p-thumb" data-src={g.src} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name} ${i + 1}`}>
+            <button type="button" class="p-thumb" data-src={g.src} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
               <img src={g.src} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
             </button>
           ))}
@@ -71,7 +71,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       )}
       <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
         {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
-        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? ''} →</small>{next.name}</a> : <span />}
+        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? (es ? 'En planeación' : 'In planning')} →</small>{next.name}</a> : <span />}
       </nav>
     </div>
   </section>
@@ -79,7 +79,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     const main = document.getElementById('p-main-img') as HTMLImageElement | null;
     document.querySelectorAll<HTMLButtonElement>('.p-thumb').forEach((b, _i, all) => b.addEventListener('click', () => {
       if (!main) return;
-      main.src = b.dataset.src!; main.width = Number(b.dataset.w); main.height = Number(b.dataset.h);
+      main.src = b.dataset.src!; main.alt = b.dataset.alt || main.alt; main.width = Number(b.dataset.w); main.height = Number(b.dataset.h);
       all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     }));
   </script>
