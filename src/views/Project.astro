@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import descriptions from '../data/descriptions.json';
 import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf } from '../lib/data';
 interface Props { lang: Lang; p: Project }
 const { lang, p } = Astro.props;
@@ -47,6 +48,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       <div class="p-logo"><img src={p.logo} alt={`${p.name} logo`} /></div>
       <h1>{p.name}</h1>
       <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
+      {(descriptions as any)[p.slug] && <p class="p-desc">{(descriptions as any)[p.slug][lang]}</p>}
       {live && <p style="margin-top:16px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
       <dl class="facts num">
         <div><dt>{live ? ui.estimatedCompletion : ui.completionYear}</dt><dd>{p.completionYear ?? (es ? 'Por definir' : 'To be defined')}</dd></div>

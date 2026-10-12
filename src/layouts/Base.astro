@@ -73,10 +73,10 @@ const year = new Date().getFullYear();
         <div class="bottom">
           <span>© {year} PAGA Desarrollos</span>
           <div class="legal">
-            <a href="#">{ui.footer.privacy}</a>
-            <a href="#">{ui.footer.cookies}</a>
-            <a href="#">{ui.footer.terms}</a>
-            <a href="#">{ui.footer.officialChannels}</a>
+            <a href={paths.legal(lang, 'aviso-de-privacidad')}>{ui.footer.privacy}</a>
+            <a href={paths.legal(lang, 'aviso-de-cookies')}>{ui.footer.cookies}</a>
+            <a href={paths.legal(lang, 'terminos')}>{ui.footer.terms}</a>
+            <a href={paths.legal(lang, 'canales-oficiales')}>{ui.footer.officialChannels}</a>
           </div>
         </div>
       </div>

@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { type Lang, type LegalDoc, paths } from '../lib/data';
+interface Props { lang: Lang; doc: LegalDoc }
+const { lang, doc } = Astro.props;
+const es = import.meta.glob('../content/legal/*.md', { eager: true }) as Record<string, any>;
+const en = import.meta.glob('../content/legal/en/*.md', { eager: true }) as Record<string, any>;
+const mod = (lang === 'es' ? es : en)[`../content/legal/${lang === 'es' ? '' : 'en/'}${doc}.md`];
+const { Content, frontmatter } = mod;
+---
+<Base lang={lang} title={`${frontmatter.title} · PAGA Desarrollos`} description={frontmatter.title} alt={paths.legal(lang === 'es' ? 'en' : 'es', doc)}>
+  <section class="section">
+    <div class="wrap prose">
+      <Content />
+    </div>
+  </section>
+</Base>

@@ -44,11 +44,20 @@ export const masterPlans: Record<string, string> = {
 export const countryLabel = (c: string, lang: Lang) =>
   c === 'MX' ? t(lang).countryMX : t(lang).countryUS;
 
+export type LegalDoc = 'aviso-de-privacidad' | 'aviso-de-cookies' | 'terminos' | 'canales-oficiales';
+export const legalSlugs: Record<LegalDoc, { es: string; en: string }> = {
+  'aviso-de-privacidad': { es: 'aviso-de-privacidad', en: 'privacy-notice' },
+  'aviso-de-cookies': { es: 'aviso-de-cookies', en: 'cookie-notice' },
+  terminos: { es: 'terminos', en: 'terms' },
+  'canales-oficiales': { es: 'canales-oficiales', en: 'official-channels' },
+};
+
 export const paths = {
   home: (l: Lang) => (l === 'es' ? '/' : '/en/'),
   projects: (l: Lang) => (l === 'es' ? '/proyectos/' : '/en/projects/'),
   project: (l: Lang, slug: string) => (l === 'es' ? `/proyectos/${slug}/` : `/en/projects/${slug}/`),
   about: (l: Lang) => (l === 'es' ? '/nosotros/' : '/en/about/'),
+  legal: (l: Lang, doc: LegalDoc) => (l === 'es' ? `/${legalSlugs[doc].es}/` : `/en/${legalSlugs[doc].en}/`),
 };
 
 export const sortedByYear = () =>

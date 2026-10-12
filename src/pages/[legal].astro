@@ -1,0 +1,9 @@
+---
+import Legal from '../views/Legal.astro';
+import { legalSlugs, type LegalDoc } from '../lib/data';
+export function getStaticPaths() {
+  return (Object.keys(legalSlugs) as LegalDoc[]).map((doc) => ({ params: { legal: legalSlugs[doc].es }, props: { doc } }));
+}
+const { doc } = Astro.props;
+---
+<Legal lang="es" doc={doc} />
