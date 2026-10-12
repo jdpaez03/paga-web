@@ -215,7 +215,7 @@ p { margin: 0 0 1em; }
 .site-footer nav { display: flex; flex-direction: column; gap: 10px; }
 .site-footer a { text-decoration: none; }
 .site-footer a:hover { color: var(--white); }
-.site-footer h4 { margin: 0 0 14px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+.site-footer .fh { margin: 0 0 14px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
 .site-footer .bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 28px; font-size: 12.5px; }
 .site-footer .legal { display: flex; flex-wrap: wrap; gap: 8px 22px; }
 @media (min-width: 900px) { .site-footer .top { grid-template-columns: 2fr 1fr 1fr; } }

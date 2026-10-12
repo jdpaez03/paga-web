@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects } from '../lib/data';
+import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf } from '../lib/data';
 interface Props { lang: Lang; p: Project }
 const { lang, p } = Astro.props;
 const ui = t(lang);
@@ -14,9 +14,17 @@ const next = ordered[i + 1];
 const siblings = p.masterPlan ? projects.filter((x) => x.masterPlan === p.masterPlan && x.slug !== p.slug) : [];
 const typeTxt = tx(typeLabel[p.type], lang);
 const title = `${p.name} · PAGA Desarrollos`;
+const typePhrase: Record<string, { es: string; en: string }> = {
+  residencial: { es: 'desarrollo residencial', en: 'a residential development' },
+  comercial: { es: 'desarrollo comercial', en: 'a retail development' },
+  oficinas: { es: 'desarrollo de oficinas', en: 'an office development' },
+  'usos-mixtos': { es: 'desarrollo de usos mixtos', en: 'a mixed-use development' },
+};
+const place = `${p.city}, ${p.state}`.replace(/\.$/, '');
 const desc = es
-  ? `${p.name}, desarrollo ${typeTxt.toLowerCase()} de PAGA Desarrollos en ${p.city}, ${p.state}.`
-  : `${p.name}, a ${typeTxt.toLowerCase()} development by PAGA Desarrollos in ${p.city}, ${p.state}.`;
+  ? `${p.name}, ${typePhrase[p.type].es} de PAGA Desarrollos en ${place}.`
+  : `${p.name}, ${typePhrase[p.type].en} by PAGA Desarrollos in ${place}.`;
+const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
 <Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)}>
   <div class="p-hero"><img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" /></div>
@@ -39,10 +47,12 @@ const desc = es
         {p.masterPlan && <div><dt>{ui.masterPlan}</dt><dd>{masterPlans[p.masterPlan]}</dd></div>}
         {p.partners.length > 0 && <div><dt>{ui.developedWith}</dt><dd>{p.partners.join(', ')}</dd></div>}
       </dl>
+      <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}</p>
+      {p.salesUrl && <p style="margin-top:32px"><a class="btn arrow" href={p.salesUrl} target="_blank" rel="noopener">{es ? 'Sitio del proyecto' : 'Project website'}</a></p>}
 
       {siblings.length > 0 && (
         <div style="margin-top:96px">
-          <p class="eyebrow">{ui.masterPlan} · {masterPlans[p.masterPlan!]}</p>
+          <h2 class="eyebrow">{ui.masterPlan} · {masterPlans[p.masterPlan!]}</h2>
           <div class="grid" style="margin-top:24px">{siblings.map((s) => <ProjectCard p={s} lang={lang} />)}</div>
         </div>
       )}

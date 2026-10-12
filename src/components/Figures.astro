@@ -9,8 +9,8 @@ const es = lang === 'es';
 ---
 <div class="figures num">
   <div class="figure"><strong>{f.years}</strong><span>{es ? 'años desde 2001' : 'years, since 2001'}</span></div>
-  <div class="figure"><strong>{f.developments}</strong><span>{es ? 'desarrollos en México y Texas' : 'developments in Mexico and Texas'}</span></div>
+  <div class="figure"><strong>{f.developments}</strong><span>{es ? 'desarrollos en México y Texas, incluidos los que están en curso' : 'developments in Mexico and Texas, including those underway'}</span></div>
   <div class="figure"><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
-  <div class="figure"><strong>{area(f.totalFt2, lang, 10000).replace(/ (m²|ft²)$/, '')}</strong><span>{es ? 'm² de superficie construida, entregados y en curso' : 'ft² of built area, delivered and underway'}</span></div>
+  <div class="figure"><strong>{area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '')}</strong><span>{es ? 'm² de superficie construida y en desarrollo' : 'ft² of built area, completed and in development'}</span></div>
 </div>
-<p class="asof">{es ? `Cifras al ${asOfLabel}, con base en los desarrollos documentados.` : `Figures as of ${asOfLabel}, based on documented developments.`}</p>
+<p class="asof">{es ? `Cifras a ${asOfLabel}, con base en los desarrollos documentados.` : `Figures as of ${asOfLabel}, based on documented developments.`}</p>

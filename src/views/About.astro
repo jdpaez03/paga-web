@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { type Lang, company, tx, paths } from '../lib/data';
+import site from '../data/site.json';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
@@ -50,7 +51,7 @@ const g = company.guarantee;
     </div>
   </section>
 
-  <section class="section" id="garantia">
+  {(!g.draft || site.preview) && <section class="section" id="garantia">
     <div class="wrap">
       <div class="guarantee">
         <p class="eyebrow">{es ? 'Nuestra garantía' : 'Our guarantee'}</p>
@@ -59,5 +60,5 @@ const g = company.guarantee;
         {g.draft && <span class="draft-note">{es ? 'Borrador · pendiente de aprobación de Dirección y Jurídico' : 'Draft · pending approval by management and legal'}</span>}
       </div>
     </div>
-  </section>
+  </section>}
 </Base>

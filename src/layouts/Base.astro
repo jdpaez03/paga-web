@@ -5,6 +5,7 @@ import '@fontsource/jost/latin-500.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import '../styles/global.css';
 import { type Lang, t, paths } from '../lib/data';
+import site from '../data/site.json';
 
 interface Props {
   lang: Lang;
@@ -33,7 +34,7 @@ const year = new Date().getFullYear();
     <meta property="og:type" content="website" />
   </head>
   <body>
-    <div class="preview" role="note">{ui.previewBanner}</div>
+    {site.preview && <div class="preview" role="note">{ui.previewBanner}</div>}
     <header class="site-header">
       <div class="wrap">
         <a class="brand" href={paths.home(lang)} aria-label="PAGA Desarrollos">
@@ -58,13 +59,13 @@ const year = new Date().getFullYear();
             <img class="logo" src="/img/paga-logo-white.png" alt="PAGA Desarrollos" width="120" height="108" />
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
-            <h4>{lang === 'es' ? 'Sitio' : 'Site'}</h4>
+            <p class="fh">{lang === 'es' ? 'Sitio' : 'Site'}</p>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
             <a href={`${paths.home(lang)}#socios`}>{ui.nav.partners}</a>
           </nav>
           <div>
-            <h4>{lang === 'es' ? 'Presencia' : 'Locations'}</h4>
+            <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
           </div>
         </div>

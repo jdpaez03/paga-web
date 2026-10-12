@@ -4,7 +4,7 @@ interface Props { p: Project; lang: Lang; eager?: boolean }
 const { p, lang, eager } = Astro.props;
 const ui = t(lang);
 const live = p.status !== 'delivered';
-const year = p.completionYear ? (live ? `${lang === 'es' ? 'Est.' : 'Est.'} ${p.completionYear}` : `${p.completionYear}`) : '';
+const year = p.completionYear ? (live ? `${lang === 'es' ? 'Estimado' : 'Est.'} ${p.completionYear}` : `${p.completionYear}`) : '';
 ---
 <a class="card" href={paths.project(lang, p.slug)} data-country={p.country} data-status={p.status}>
   <div class="ph"><img src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={eager ? 'eager' : 'lazy'} decoding="async" /></div>
@@ -13,6 +13,7 @@ const year = p.completionYear ? (live ? `${lang === 'es' ? 'Est.' : 'Est.'} ${p.
     <span>{p.city}, {p.state}</span>
     <span>{tx(typeLabel[p.type], lang)}</span>
     {year && <span class="num">{year}</span>}
+    {p.partners.length > 0 && <span>{lang === 'es' ? 'con' : 'with'} {p.partners.join(', ')}</span>}
   </div>
   {live && <p style="margin-top:10px"><span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span></p>}
 </a>
