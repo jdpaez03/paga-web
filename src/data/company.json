@@ -341,15 +341,15 @@
       {
         "name": "Adrián Páez",
         "role": {
-          "es": "Socio · Director División México",
-          "en": "Partner · Head of Mexico Division"
+          "es": "Fundador · Director México",
+          "en": "Founder · Director, Mexico"
         }
       },
       {
         "name": "Pablo Páez",
         "role": {
-          "es": "Socio · Director División Estados Unidos",
-          "en": "Partner · Head of U.S. Division"
+          "es": "Fundador · Director Estados Unidos",
+          "en": "Founder · Director, United States"
         }
       }
     ],
@@ -359,13 +359,6 @@
         "role": {
           "es": "Director de Proyecto · Sonoma y Balcones",
           "en": "Project Director · Sonoma and Balcones"
-        }
-      },
-      {
-        "name": "René Capistrán-Garza",
-        "role": {
-          "es": "Director de Proyecto · Amāra",
-          "en": "Project Director · Amāra"
         }
       },
       {
@@ -401,13 +394,6 @@
         "role": {
           "es": "Recursos Humanos",
           "en": "Human Resources"
-        }
-      },
-      {
-        "name": "Juan Diego Páez",
-        "role": {
-          "es": "Mejora Continua",
-          "en": "Continuous Improvement"
         }
       }
     ],
