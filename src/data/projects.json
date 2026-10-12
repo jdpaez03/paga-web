@@ -659,7 +659,7 @@
       "type": "residencial",
       "status": "delivered",
       "completionYear": 2024,
-      "units": 36,
+      "units": 54,
       "builtAreaFt2": 93646,
       "masterPlan": "balcones",
       "partners": [],
@@ -670,10 +670,8 @@
       ],
       "logo": "/img/logos/balcones-residencial.png",
       "sources": [
-        "Presentación institucional, junio 2026 (v6)"
-      ],
-      "openQuestions": [
-        "Deck shows 36 units on project slide and 54 on master-plan slide"
+        "Presentación institucional, junio 2026 (v6)",
+        "54 units confirmed by juan diego, 2026-10-12"
       ],
       "salesUrl": "https://www.balconesresidencial.mx"
     },
@@ -685,7 +683,7 @@
       "state": "TX",
       "type": "residencial",
       "status": "construction",
-      "completionYear": 2024,
+      "completionYear": 2027,
       "units": 11,
       "builtAreaFt2": 18522,
       "masterPlan": null,
@@ -697,7 +695,8 @@
       ],
       "logo": "/img/logos/las-velas.png",
       "sources": [
-        "Presentación institucional, junio 2026 (v6)"
+        "Presentación institucional, junio 2026 (v6)",
+        "Estimated completion 2027: Confirmed by Juan Diego, 2026-10-12"
       ],
       "salesUrl": null
     },
@@ -733,7 +732,7 @@
       "state": "TX",
       "type": "residencial",
       "status": "construction",
-      "completionYear": 2025,
+      "completionYear": 2026,
       "units": 29,
       "builtAreaFt2": 62486,
       "masterPlan": null,
@@ -745,7 +744,8 @@
       ],
       "logo": "/img/logos/los-corales-bay-tower.png",
       "sources": [
-        "Presentación institucional, junio 2026 (v6)"
+        "Presentación institucional, junio 2026 (v6)",
+        "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
       ],
       "salesUrl": null
     },
@@ -757,7 +757,7 @@
       "state": "Nay.",
       "type": "residencial",
       "status": "construction",
-      "completionYear": 2025,
+      "completionYear": 2026,
       "units": 21,
       "builtAreaFt2": 46306,
       "masterPlan": null,
@@ -769,7 +769,8 @@
       ],
       "logo": "/img/logos/artesanias.png",
       "sources": [
-        "Presentación institucional, junio 2026 (v6)"
+        "Presentación institucional, junio 2026 (v6)",
+        "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
       ],
       "salesUrl": null
     },
