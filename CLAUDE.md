@@ -22,7 +22,7 @@ If two sources disagree, do not pick one silently: flag it in the PR description
 
 Portfolio value, IRR, margins, debt, financing or capital terms, investor names, the 10-Year Target figures, 3-Year Picture, 1-Year Plan, Rocks, Issues List, people evaluations. The EOS folder contains all of these; agents work from `company.json`, not from that folder.
 
-Torre Acqua is co-developed with Grupo DAGS (independent companies; neither owns the other). Any co-developed project must name its partner.
+Project partners and co-developers are NOT mentioned on the site for now (decided by Juan Diego, Oct 12, 2026) — including Grupo DAGS on Torre Acqua. Keep `partners` empty in projects.json. Dates stay as in projects.json; do not replace them with paezdevelopment.com dates.
 
 ## Conventions
 

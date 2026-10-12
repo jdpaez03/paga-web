@@ -45,7 +45,7 @@ const year = new Date().getFullYear();
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
           <a class="hide-sm" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
           <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
-          <a class="hide-sm" href={`${paths.home(lang)}#socios`}>{ui.nav.partners}</a>
+          <a class="hide-sm" href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
           <a class="lang" href={altHref} hreflang={other} lang={other}>{other.toUpperCase()}</a>
         </nav>
       </div>
@@ -63,7 +63,7 @@ const year = new Date().getFullYear();
             <p class="fh">{lang === 'es' ? 'Sitio' : 'Site'}</p>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
-            <a href={`${paths.home(lang)}#socios`}>{ui.nav.partners}</a>
+            <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
           </nav>
           <div>
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>

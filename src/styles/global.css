@@ -276,3 +276,15 @@ p { margin: 0 0 1em; }
 .prose table { border-collapse: collapse; width: 100%; font-size: 15px; display: block; overflow-x: auto; }
 .prose th, .prose td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
 .prose a { color: var(--blue); }
+
+/* team */
+.team { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
+.team + .team { border-top: 0; }
+.member { display: flex; align-items: center; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.member .mono { flex: none; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); color: var(--navy); font-size: 17px; letter-spacing: .08em; border: 1px solid var(--line); }
+.member.lead .mono { width: 72px; height: 72px; font-size: 21px; background: var(--navy); color: var(--white); border-color: var(--navy); }
+.member h3 { font-size: 21px; font-weight: 400; color: var(--navy); }
+.member.lead h3 { font-size: 26px; }
+.member p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+@media (min-width: 700px) { .team { grid-template-columns: repeat(2, 1fr); column-gap: 40px; } }
+@media (min-width: 1100px) { .team:not(.partners) { grid-template-columns: repeat(4, 1fr); } .team:not(.partners) .member { flex-direction: column; align-items: flex-start; } }

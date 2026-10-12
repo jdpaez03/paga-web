@@ -19,7 +19,26 @@ const g = company.guarantee;
     </div>
   </section>
 
-  <section class="section on-white" id="valores">
+  <section class="section on-white" id="equipo">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Equipo' : 'Team'}</p><h2>{tx(company.team.title, lang)}</h2></div>
+        <p>{tx(company.team.lead, lang)}</p>
+      </div>
+      <div class="team partners">
+        {company.team.partners.map((m) => (
+          <div class="member lead"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
+        ))}
+      </div>
+      <div class="team">
+        {company.team.leaders.map((m) => (
+          <div class="member"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="valores">
     <div class="wrap">
       <div class="section-head split">
         <div><p class="eyebrow">{es ? 'Valores' : 'Values'}</p><h2>{es ? 'Cómo trabajamos, todos los días' : 'How we work, every day'}</h2></div>

@@ -63,7 +63,7 @@ Before paying, confirm the account by calling [TELÉFONO OFICIAL] or writing to 
 
 **Authorized partners and sales agents**
 
-- Some projects are developed or sold with partners. Torre Acqua is co-developed with Grupo DAGS. [LIST OF AUTHORIZED PARTNERS, SALES AGENTS OR BROKERS BY PROJECT, OR HOW TO VERIFY THEM.]
+- Some projects are developed or sold with partners. [LIST OF AUTHORIZED PARTNERS, SALES AGENTS OR BROKERS BY PROJECT, OR HOW TO VERIFY THEM.]
 
 Any other domain, account or number using the name of PAGA or its projects is not official, even if it copies our logos, images or the look of this site.
 

@@ -86,7 +86,7 @@ If we ever want to use your data for a purpose not described here, we will ask f
 - Where needed to enter into or perform a contract you request or that is in your interest.
 - Where a law requires it or a competent authority orders it.
 
-[JURÍDICO TO DECIDE: If your inquiry is about a co-developed project (for example, Torre Acqua, co-developed with Grupo DAGS) or one sold by a third party, state here whether your data is shared with the partner or sales agent, and whether this requires your consent.]
+[JURÍDICO TO DECIDE: If your inquiry is about a co-developed project or one sold by a third party, state here whether your data is shared with the partner or sales agent, and whether this requires your consent.]
 
 We do not sell your personal data.
 

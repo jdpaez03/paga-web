@@ -61,7 +61,7 @@ Antes de pagar, confirme la cuenta llamando al [TELÉFONO OFICIAL] o escribiendo
 
 **Socios y comercializadores autorizados**
 
-- Algunos proyectos se desarrollan o comercializan con socios. Torre Acqua se codesarrolla con Grupo DAGS. [LISTA DE SOCIOS, COMERCIALIZADORES O CORREDORES AUTORIZADOS POR PROYECTO, O INDICACIÓN DE CÓMO VERIFICARLOS.]
+- Algunos proyectos se desarrollan o comercializan con socios. [LISTA DE SOCIOS, COMERCIALIZADORES O CORREDORES AUTORIZADOS POR PROYECTO, O INDICACIÓN DE CÓMO VERIFICARLOS.]
 
 Cualquier otro dominio, cuenta o número que use el nombre de PAGA o de sus proyectos no es oficial, aunque copie nuestros logotipos, imágenes o la apariencia de este sitio.
 

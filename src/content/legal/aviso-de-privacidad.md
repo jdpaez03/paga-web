@@ -84,7 +84,7 @@ Si en el futuro quisiéramos usar sus datos para una finalidad distinta de las a
 - Cuando sea necesario para celebrar o cumplir un contrato que usted solicite o que sea en su interés.
 - Cuando lo exija una ley o lo ordene una autoridad competente.
 
-[DECISIÓN DE JURÍDICO: Si su consulta trata sobre un proyecto codesarrollado (por ejemplo, Torre Acqua, codesarrollada con Grupo DAGS) o comercializado por un tercero, indicar aquí si sus datos se comparten con el socio o con el comercializador, y si eso requiere su consentimiento. En ese caso: "□ Acepto que mis datos se compartan con el socio desarrollador o comercializador del proyecto de mi interés".]
+[DECISIÓN DE JURÍDICO: Si su consulta trata sobre un proyecto codesarrollado o comercializado por un tercero, indicar aquí si sus datos se comparten con el socio o con el comercializador, y si eso requiere su consentimiento. En ese caso: "□ Acepto que mis datos se compartan con el socio desarrollador o comercializador del proyecto de mi interés".]
 
 No vendemos sus datos personales.
 

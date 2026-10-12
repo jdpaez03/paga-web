@@ -263,7 +263,8 @@
         "projects": "Proyectos",
         "about": "Nosotros",
         "partners": "Socios",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "team": "Equipo"
       },
       "viewProjects": "Ver proyectos",
       "timeline": "Línea del tiempo",
@@ -297,7 +298,8 @@
         "projects": "Projects",
         "about": "About",
         "partners": "Partners",
-        "contact": "Contact"
+        "contact": "Contact",
+        "team": "Leadership"
       },
       "viewProjects": "View projects",
       "timeline": "Timeline",
@@ -325,5 +327,91 @@
       },
       "previewBanner": "Preview — not published"
     }
+  },
+  "team": {
+    "title": {
+      "es": "Equipo de Dirección",
+      "en": "Leadership"
+    },
+    "lead": {
+      "es": "Las personas que dirigen la operación de PAGA en México y Estados Unidos.",
+      "en": "The people who lead PAGA's work in Mexico and the United States."
+    },
+    "partners": [
+      {
+        "name": "Adrián Páez",
+        "role": {
+          "es": "Socio · Director División México",
+          "en": "Partner · Head of Mexico Division"
+        }
+      },
+      {
+        "name": "Pablo Páez",
+        "role": {
+          "es": "Socio · Director División Estados Unidos",
+          "en": "Partner · Head of U.S. Division"
+        }
+      }
+    ],
+    "leaders": [
+      {
+        "name": "Javier Juárez",
+        "role": {
+          "es": "Director de Proyecto · Sonoma y Balcones",
+          "en": "Project Director · Sonoma and Balcones"
+        }
+      },
+      {
+        "name": "René Capistrán-Garza",
+        "role": {
+          "es": "Director de Proyecto · Amāra",
+          "en": "Project Director · Amāra"
+        }
+      },
+      {
+        "name": "Jimena González",
+        "role": {
+          "es": "Comercial",
+          "en": "Sales and Marketing"
+        }
+      },
+      {
+        "name": "Jesús Valencia",
+        "role": {
+          "es": "Construcción",
+          "en": "Construction"
+        }
+      },
+      {
+        "name": "Josué Saldaña",
+        "role": {
+          "es": "Jurídico",
+          "en": "Legal"
+        }
+      },
+      {
+        "name": "Jorge Ramos",
+        "role": {
+          "es": "Gerente de Administración",
+          "en": "Administration Manager"
+        }
+      },
+      {
+        "name": "Elizabeth Benavides",
+        "role": {
+          "es": "Recursos Humanos",
+          "en": "Human Resources"
+        }
+      },
+      {
+        "name": "Juan Diego Páez",
+        "role": {
+          "es": "Mejora Continua",
+          "en": "Continuous Improvement"
+        }
+      }
+    ],
+    "draft": true,
+    "source": "EOS Accountability Chart v6 and job descriptions (Sept 2026); titles pending confirmation"
   }
 }
