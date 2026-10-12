@@ -12,7 +12,7 @@ Core line: **"25 años desarrollando valor."** (EN: "25 years developing value."
 
 1. `src/data/projects.json` — every project fact (year, city, units, area, status). Pages, the timeline and the figures band all read from it. Never type a project fact into a page.
 2. `src/data/company.json` — purpose, niche, values, Three Uniques, Proven Process, Guarantee, headline figures. Public parts of the EOS V/TO (May 2026) only.
-3. Facts confirmed by Juan Diego in writing override the institutional deck (e.g. Torre Pietra completed 2022; Torre Acqua has 136 units).
+3. Facts confirmed by Juan Diego in writing override the institutional deck (e.g. Torre Pietra completed 2022; Torre Acqua has 136 units; Balcones 500 and 400 were not developed by PAGA — PAGA's Balcones work starts with Balcones 300, then 600).
 
 If two sources disagree, do not pick one silently: flag it in the PR description.
 

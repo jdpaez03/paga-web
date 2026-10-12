@@ -50,30 +50,6 @@
       "salesUrl": null
     },
     {
-      "slug": "balcones-500",
-      "name": "Balcones 500",
-      "country": "MX",
-      "city": "Monterrey",
-      "state": "N.L.",
-      "type": "residencial",
-      "status": "delivered",
-      "completionYear": 2005,
-      "units": 36,
-      "builtAreaFt2": 99774,
-      "masterPlan": "balcones",
-      "partners": [],
-      "image": "/img/projects/balcones-500.jpg",
-      "imageSize": [
-        1526,
-        1122
-      ],
-      "logo": "/img/logos/balcones-residencial.png",
-      "sources": [
-        "Presentación institucional, junio 2026 (v6)"
-      ],
-      "salesUrl": null
-    },
-    {
       "slug": "los-rincones",
       "name": "Los Rincones",
       "country": "MX",
@@ -164,30 +140,6 @@
         956
       ],
       "logo": "/img/logos/las-marinas.png",
-      "sources": [
-        "Presentación institucional, junio 2026 (v6)"
-      ],
-      "salesUrl": null
-    },
-    {
-      "slug": "balcones-400",
-      "name": "Balcones 400",
-      "country": "MX",
-      "city": "Monterrey",
-      "state": "N.L.",
-      "type": "residencial",
-      "status": "delivered",
-      "completionYear": 2008,
-      "units": 36,
-      "builtAreaFt2": 103039,
-      "masterPlan": "balcones",
-      "partners": [],
-      "image": "/img/projects/balcones-400.jpg",
-      "imageSize": [
-        1600,
-        1073
-      ],
-      "logo": "/img/logos/balcones-residencial.png",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
