@@ -707,7 +707,7 @@
       "city": "Port Aransas",
       "state": "TX",
       "type": "usos-mixtos",
-      "status": "construction",
+      "status": "delivered",
       "completionYear": 2024,
       "units": 10,
       "builtAreaFt2": 17592,
@@ -720,7 +720,8 @@
       ],
       "logo": "/img/logos/cinnamon-shore-six-town-center.png",
       "sources": [
-        "Presentación institucional, junio 2026 (v6)"
+        "Presentación institucional, junio 2026 (v6)",
+        "Delivered 2024: confirmed by Juan Diego, 2026-10-12"
       ],
       "salesUrl": null
     },
