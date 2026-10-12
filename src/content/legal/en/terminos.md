@@ -17,7 +17,7 @@ These terms govern the use of pagadesarrollos.com (the "site"), operated by **PA
 
 The site is **informational**. It presents PAGA, its track record and the projects it has developed or is developing in Mexico and the United States. No property is sold and no payments are taken through it.
 
-For sales information about a project, the site directs you to that project's sales website or official channels (see [Official channels](/en/canales-oficiales)).
+For sales information about a project, the site directs you to that project's sales website or official channels (see [Official channels](/en/official-channels)).
 
 ## 2. The information is not an offer
 
@@ -53,7 +53,7 @@ When using the site, you agree not to:
 
 - Try to gain unauthorized access to its systems or interfere with how it works.
 - Use it to send false or unlawful information or information that harms others.
-- Pretend to be PAGA or its staff, or use its name or content to offer property or request payments (see [Official channels](/en/canales-oficiales)).
+- Pretend to be PAGA or its staff, or use its name or content to offer property or request payments (see [Official channels](/en/official-channels)).
 
 ## 7. Liability
 
@@ -63,7 +63,7 @@ Nothing in these terms limits any rights you have under consumer protection law 
 
 ## 8. Personal data and cookies
 
-Personal data is handled under the [Privacy notice](/en/aviso-de-privacidad) and cookies under the [Cookie notice](/en/aviso-de-cookies).
+Personal data is handled under the [Privacy notice](/en/privacy-notice) and cookies under the [Cookie notice](/en/cookie-notice).
 
 ## 9. Changes to these terms
 

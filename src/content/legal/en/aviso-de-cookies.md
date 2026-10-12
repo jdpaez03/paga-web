@@ -11,7 +11,7 @@ updated: "[FECHA]"
 
 # Cookie notice
 
-This notice explains which tracking technologies pagadesarrollos.com uses. It supplements the [Privacy notice](/en/aviso-de-privacidad) of PAGA Desarrollos, S.A. de C.V.
+This notice explains which tracking technologies pagadesarrollos.com uses. It supplements the [Privacy notice](/en/privacy-notice) of PAGA Desarrollos, S.A. de C.V.
 
 ## 1. What cookies are
 
