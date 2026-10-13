@@ -197,8 +197,8 @@ p { margin: 0 0 1em; }
 
 /* project detail: image at its real size, never stretched */
 .p-top { display: grid; grid-template-columns: 1fr; gap: clamp(28px, 4vw, 64px); max-width: 1440px; margin: 0 auto; padding: clamp(24px, 4vw, 56px) clamp(16px, 2.6vw, 40px) clamp(48px, 6vw, 80px); }
-.p-main { margin: 0; background: #e9e5dd; display: grid; place-items: center; height: min(78vh, 820px); min-height: 320px; }
-.p-main img { width: auto; height: auto; max-width: 100%; max-height: 100%; }
+.p-main { margin: 0; background: #e9e5dd; display: flex; align-items: center; justify-content: center; height: min(78vh, 820px); min-height: 320px; overflow: hidden; }
+.p-main img { display: block; width: auto; height: auto; max-width: 100%; max-height: min(78vh, 820px); object-fit: contain; }
 @media (max-width: 999px) { .p-main { height: auto; min-height: 0; } .p-main img { max-height: 70vh; } }
 .p-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 8px; }
 .p-thumb { padding: 0; border: 1px solid transparent; background: none; cursor: pointer; aspect-ratio: 4 / 3; overflow: hidden; }
