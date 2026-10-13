@@ -1,0 +1,21 @@
+---
+import contact from '../data/contact.json';
+import { type Lang, tx, contactPath } from '../lib/data';
+interface Props { lang: Lang; profile?: string; project?: string; title?: string; text?: string }
+const { lang, profile, project, title, text } = Astro.props;
+const q: Record<string, string> = {};
+if (profile) q.perfil = profile;
+if (project) q.proyecto = project;
+---
+<section class="cta-band on-deep" aria-labelledby="cta-title">
+  <div class="wrap cta-inner">
+    <div>
+      <p class="eyebrow">{lang === 'es' ? 'Contacto' : 'Contact'}</p>
+      <h2 id="cta-title">{title ?? tx(contact.cta.title, lang)}</h2>
+      <p>{text ?? tx(contact.cta.text, lang)}</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn light arrow" href={contactPath(lang, q)} data-track="cta_click" data-track-where="band">{tx(contact.cta.button, lang)}</a>
+    </div>
+  </div>
+</section>

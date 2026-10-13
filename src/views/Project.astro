@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import descriptions from '../data/descriptions.json';
-import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf } from '../lib/data';
+import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf, srcset, contactPath } from '../lib/data';
 interface Props { lang: Lang; p: Project }
 const { lang, p } = Astro.props;
 const ui = t(lang);
@@ -22,22 +22,29 @@ const typePhrase: Record<string, { es: string; en: string }> = {
   'usos-mixtos': { es: 'desarrollo de usos mixtos', en: 'a mixed-use development' },
 };
 const place = `${p.city}, ${p.state}`.replace(/\.$/, '');
-const desc = es
-  ? `${p.name}, ${typePhrase[p.type].es} de PAGA Desarrollos en ${place}.`
-  : `${p.name}, ${typePhrase[p.type].en} by PAGA Desarrollos in ${place}.`;
+const longDesc = (descriptions as any)[p.slug]?.[lang] as string | undefined;
+const desc = longDesc && longDesc.length <= 160 ? longDesc : es
+  ? `${p.name}, ${typePhrase[p.type].es} de PAGA Desarrollos en ${place}${p.completionYear ? `, ${live ? 'conclusión estimada' : 'concluido en'} ${p.completionYear}` : ''}.`
+  : `${p.name}, ${typePhrase[p.type].en} by PAGA Desarrollos in ${place}${p.completionYear ? `, ${live ? 'estimated completion' : 'completed in'} ${p.completionYear}` : ''}.`;
+const ld = {
+  '@context': 'https://schema.org', '@type': p.type === 'residencial' ? 'ApartmentComplex' : 'Place', name: p.name,
+  description: longDesc ?? desc, image: new URL(p.image, 'https://pagadesarrollos.com').href,
+  address: { '@type': 'PostalAddress', addressLocality: p.city, addressRegion: p.state, addressCountry: p.country === 'MX' ? 'MX' : 'US' },
+  ...(p.units ? { numberOfAccommodationUnits: p.units } : {}),
+};
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)}>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={p.image} jsonLd={ld}>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">
-        <img id="p-main-img" src={p.image} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+        <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 60vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
       </figure>
       {p.gallery.length > 0 && (
         <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>
           {[{ src: p.image, size: p.imageSize }, ...p.gallery].map((g, i) => (
-            <button type="button" class="p-thumb" data-src={g.src} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
-              <img src={g.src} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
+            <button type="button" class="p-thumb" data-src={g.src} data-srcset={srcset(g.src, g.size[0])} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
+              <img src={`/img/w/${g.src.split('/').pop()!.replace(/\.jpg$/, '')}-480.webp`} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
             </button>
           ))}
         </div>
@@ -59,7 +66,13 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         {p.partners.length > 0 && <div><dt>{ui.developedWith}</dt><dd>{p.partners.join(', ')}</dd></div>}
       </dl>
       <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}</p>
-      {p.salesUrl && <p style="margin-top:28px"><a class="btn arrow" href={p.salesUrl} target="_blank" rel="noopener">{es ? 'Sitio del proyecto' : 'Project website'}</a></p>}
+      {live && (
+        <div class="p-actions">
+          <a class="btn solid arrow" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+          {p.salesUrl && <a class="btn" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>}
+        </div>
+      )}
+      <p class="p-invest">{es ? '¿Tienes un terreno o te interesa participar en un próximo desarrollo? ' : 'Do you own land or want to take part in a future development? '}<a href={contactPath(lang, { perfil: live ? 'inversion' : 'terreno' })} data-track="cta_click" data-track-where={`project_invest_${p.slug}`}>{es ? 'Hablemos' : "Let's talk"} →</a></p>
     </div>
   </section>
 
@@ -81,7 +94,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     const main = document.getElementById('p-main-img') as HTMLImageElement | null;
     document.querySelectorAll<HTMLButtonElement>('.p-thumb').forEach((b, _i, all) => b.addEventListener('click', () => {
       if (!main) return;
-      main.src = b.dataset.src!; main.alt = b.dataset.alt || main.alt; main.width = Number(b.dataset.w); main.height = Number(b.dataset.h);
+      main.srcset = b.dataset.srcset || ''; main.src = b.dataset.src!; main.alt = b.dataset.alt || main.alt; main.width = Number(b.dataset.w); main.height = Number(b.dataset.h);
       all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     }));
   </script>

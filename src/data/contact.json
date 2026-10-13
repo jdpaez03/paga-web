@@ -1,0 +1,49 @@
+{
+  "title": { "es": "Hablemos", "en": "Let's talk" },
+  "lead": {
+    "es": "Cuéntanos quién eres y en qué podemos ayudarte. Cada mensaje llega directo al área que corresponde.",
+    "en": "Tell us who you are and how we can help. Each message goes straight to the right team."
+  },
+  "profiles": [
+    { "id": "inversion", "es": "Inversión o socio de capital", "en": "Investment or capital partnership", "hint": { "es": "Te compartimos cómo estructuramos cada proyecto y nuestra trayectoria.", "en": "We'll share how we structure each project and our track record." } },
+    { "id": "terreno", "es": "Tengo un terreno", "en": "I own land", "hint": { "es": "Evaluamos terrenos en mercados estratégicos de México y Texas.", "en": "We evaluate land in strategic markets in Mexico and Texas." } },
+    { "id": "banco", "es": "Banco o institución financiera", "en": "Bank or financial institution", "hint": { "es": "Historial de entregas, proyectos en curso y contacto con el área de finanzas.", "en": "Delivery history, current projects and a contact in finance." } },
+    { "id": "comprador", "es": "Quiero comprar", "en": "I want to buy", "hint": { "es": "Te conectamos con el equipo comercial del proyecto que te interesa.", "en": "We'll connect you with the sales team of the project you're interested in." } },
+    { "id": "broker", "es": "Broker o asesor inmobiliario", "en": "Broker or real estate agent", "hint": { "es": "Información para comercializar nuestros proyectos.", "en": "Information to market our projects." } },
+    { "id": "proveedor", "es": "Proveedor", "en": "Supplier", "hint": { "es": "Registro de proveedores y contratistas.", "en": "Supplier and contractor registration." } },
+    { "id": "prensa", "es": "Prensa", "en": "Press", "hint": { "es": "Información institucional, imágenes y entrevistas.", "en": "Company information, images and interviews." } },
+    { "id": "empleo", "es": "Bolsa de trabajo", "en": "Careers", "hint": { "es": "Cuéntanos tu experiencia y el área que te interesa.", "en": "Tell us about your experience and the area you're interested in." } }
+  ],
+  "fields": {
+    "name": { "es": "Nombre", "en": "Name" },
+    "email": { "es": "Correo electrónico", "en": "Email" },
+    "phone": { "es": "Teléfono (opcional)", "en": "Phone (optional)" },
+    "company": { "es": "Empresa (opcional)", "en": "Company (optional)" },
+    "message": { "es": "Mensaje", "en": "Message" },
+    "project": { "es": "Proyecto de interés", "en": "Project of interest" },
+    "projectAny": { "es": "Aún no lo sé", "en": "Not sure yet" },
+    "landLocation": { "es": "Ubicación del terreno", "en": "Land location" },
+    "landArea": { "es": "Superficie aproximada (m²)", "en": "Approximate area (m²)" },
+    "deck": { "es": "Quiero recibir la presentación corporativa", "en": "Send me the corporate presentation" },
+    "consent": { "es": "Acepto el tratamiento de mis datos conforme al", "en": "I agree to the processing of my data under the" },
+    "consentLink": { "es": "aviso de privacidad", "en": "privacy notice" },
+    "submit": { "es": "Enviar mensaje", "en": "Send message" },
+    "profile": { "es": "¿Quién eres?", "en": "Who are you?" }
+  },
+  "salesHint": { "es": "Este proyecto tiene sitio de ventas propio, con disponibilidad y precios:", "en": "This project has its own sales site, with availability and prices:" },
+  "ok": { "es": "Gracias. Recibimos tu mensaje y te responderemos pronto.", "en": "Thank you. We received your message and will reply soon." },
+  "pending": { "es": "El formulario aún no está conectado: estará activo en el lanzamiento del sitio.", "en": "This form is not connected yet; it will be active when the site launches." },
+  "error": { "es": "No pudimos enviar tu mensaje. Revisa los campos marcados e inténtalo de nuevo.", "en": "We couldn't send your message. Check the highlighted fields and try again." },
+  "side": {
+    "title": { "es": "Antes de escribir", "en": "Before you write" },
+    "items": {
+      "es": ["Respondemos en un máximo de dos días hábiles.", "PAGA nunca solicita depósitos por cuentas personales ni por mensajes no oficiales. Consulta nuestros canales oficiales.", "Si buscas un departamento, el sitio de cada proyecto muestra disponibilidad y precios."],
+      "en": ["We reply within two business days.", "PAGA never asks for deposits through personal accounts or unofficial messages. See our official channels.", "If you're looking for a home, each project's own site shows availability and prices."]
+    }
+  },
+  "cta": {
+    "title": { "es": "¿Tienes un terreno, un proyecto o una inversión en mente?", "en": "Do you have land, a project or an investment in mind?" },
+    "text": { "es": "Hablemos. Respondemos en un máximo de dos días hábiles.", "en": "Let's talk. We reply within two business days." },
+    "button": { "es": "Contáctanos", "en": "Contact us" }
+  }
+}

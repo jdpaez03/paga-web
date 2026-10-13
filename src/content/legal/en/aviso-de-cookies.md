@@ -24,6 +24,7 @@ Some are needed for a site to work. Others measure visits, remember preferences 
 As of [FECHA DE ÚLTIMA ACTUALIZACIÓN]:
 
 - **We use no analytics, advertising or social media cookies.**
+- We measure visits in aggregate with Vercel Web Analytics, which uses no cookies and does not identify people: it records page views and general actions (for example, button clicks or form submissions) without storing data that reveals who you are. [JURÍDICO TO CONFIRM this wording.]
 - **We use no third-party pixels or web beacons.**
 - **We load no fonts or other resources from outside services** that could record your visit: fonts are served from the site itself.
 - [JURÍDICO / WEB TEAM TO CONFIRM: whether the site stores any preference in the browser, such as language. If so, describe it here as strictly necessary and free of personal data.]

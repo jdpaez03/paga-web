@@ -62,3 +62,20 @@ export const paths = {
 
 export const sortedByYear = () =>
   [...projects].sort((a, b) => (a.completionYear ?? 9999) - (b.completionYear ?? 9999));
+
+/** Responsive WebP srcset for a project or gallery image (variants live in /img/w/). */
+export function srcset(src: string, naturalW: number) {
+  const base = src.split('/').pop()!.replace(/\.jpg$/, '');
+  const widths = [480, 800, 1200, 1600].filter((w) => w === 480 || w <= naturalW);
+  return widths.map((w) => `/img/w/${base}-${w}.webp ${Math.min(w, naturalW)}w`).join(', ');
+}
+
+/** Projects people can still ask about (not delivered). */
+export const liveProjects = () =>
+  [...projects].filter((p) => p.status !== 'delivered').sort((a, b) => (a.completionYear ?? 9999) - (b.completionYear ?? 9999));
+
+export const contactPath = (l: Lang, q: Record<string, string> = {}) => {
+  const base = l === 'es' ? '/contacto/' : '/en/contact/';
+  const qs = new URLSearchParams(q).toString();
+  return qs ? `${base}?${qs}` : base;
+};

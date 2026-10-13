@@ -22,6 +22,7 @@ Algunas son necesarias para que un sitio funcione. Otras sirven para medir visit
 Al día de [FECHA DE ÚLTIMA ACTUALIZACIÓN]:
 
 - **No usamos cookies de analítica, de publicidad ni de redes sociales.**
+- Medimos visitas de forma agregada con Vercel Web Analytics, que no usa cookies ni identifica a las personas: registra páginas vistas y acciones generales (por ejemplo, clics en botones o envío del formulario) sin guardar datos que permitan saber quién es usted. [DECISIÓN DE JURÍDICO: confirmar esta redacción.]
 - **No usamos píxeles ni *web beacons*** de terceros.
 - **No cargamos tipografías ni otros recursos desde servicios externos** que puedan registrar su visita: las fuentes se sirven desde el propio sitio.
 - [DECISIÓN DE JURÍDICO / EQUIPO WEB: confirmar si el sitio guarda alguna preferencia en el navegador, como el idioma. Si lo hace, describirla aquí como estrictamente necesaria, sin datos personales.]

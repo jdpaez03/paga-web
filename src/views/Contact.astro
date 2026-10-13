@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import contact from '../data/contact.json';
+import { type Lang, tx, paths, liveProjects, contactPath } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const es = lang === 'es';
+const F = contact.fields;
+const live = liveProjects();
+const sales = Object.fromEntries(live.filter((p) => p.salesUrl).map((p) => [p.slug, p.salesUrl]));
+const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), error: tx(contact.error, lang), salesHint: tx(contact.salesHint, lang) };
+---
+<Base lang={lang} title={`${tx(contact.title, lang)} · PAGA Desarrollos`} description={tx(contact.lead, lang)} current="contact" alt={contactPath(es ? 'en' : 'es')} hideCta>
+  <section class="section contact">
+    <div class="wrap contact-grid">
+      <div>
+        <p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
+        <h1>{tx(contact.title, lang)}</h1>
+        <p class="lead">{tx(contact.lead, lang)}</p>
+        <aside class="contact-side">
+          <h2>{tx(contact.side.title, lang)}</h2>
+          <ul>
+            {contact.side.items[lang].map((t, i) => (
+              <li>{i === 1 ? <>{t.split(es ? 'Consulta' : 'See')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulta nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+
+      <form id="contact-form" class="form" novalidate data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
+        <fieldset class="profiles">
+          <legend>{tx(F.profile, lang)}</legend>
+          {contact.profiles.map((pr, i) => (
+            <label class="chip-radio">
+              <input type="radio" name="profile" value={pr.id} required checked={i === 0} data-hint={pr.hint[lang]} />
+              <span>{pr[lang]}</span>
+            </label>
+          ))}
+        </fieldset>
+        <p class="hint" id="profile-hint">{contact.profiles[0].hint[lang]}</p>
+
+        <div class="row">
+          <label class="field"><span>{tx(F.name, lang)}</span><input id="f-name" name="name" autocomplete="name" required maxlength="120" /></label>
+          <label class="field"><span>{tx(F.email, lang)}</span><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="160" /></label>
+        </div>
+        <div class="row">
+          <label class="field"><span>{tx(F.phone, lang)}</span><input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" /></label>
+          <label class="field"><span>{tx(F.company, lang)}</span><input id="f-company" name="company" autocomplete="organization" maxlength="120" /></label>
+        </div>
+
+        <div class="row only" data-for="terreno" hidden>
+          <label class="field"><span>{tx(F.landLocation, lang)}</span><input id="f-land-loc" name="landLocation" maxlength="200" /></label>
+          <label class="field"><span>{tx(F.landArea, lang)}</span><input id="f-land-area" name="landArea" inputmode="numeric" maxlength="20" /></label>
+        </div>
+        <div class="only" data-for="comprador" hidden>
+          <label class="field"><span>{tx(F.project, lang)}</span>
+            <select id="f-project" name="project">
+              <option value="">{tx(F.projectAny, lang)}</option>
+              {live.map((p) => <option value={p.slug}>{p.name} · {p.city}</option>)}
+            </select>
+          </label>
+          <p class="hint" id="sales-link" hidden></p>
+        </div>
+
+        <label class="field"><span>{tx(F.message, lang)}</span><textarea id="f-message" name="message" rows="5" required maxlength="3000"></textarea></label>
+
+        <label class="check only" data-for="inversion terreno banco"><input id="f-deck" type="checkbox" name="deck" value="1" /> <span>{tx(F.deck, lang)}</span></label>
+        <label class="check"><input id="f-consent" type="checkbox" name="consent" value="1" required /> <span>{tx(F.consent, lang)} <a href={paths.legal(lang, 'aviso-de-privacidad')} target="_blank" rel="noopener">{tx(F.consentLink, lang)}</a>.</span></label>
+        <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+
+        <button class="btn solid arrow" type="submit">{tx(F.submit, lang)}</button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const status = document.getElementById('form-status')!;
+    const hint = document.getElementById('profile-hint')!;
+    const salesBox = document.getElementById('sales-link')!;
+    const sales = JSON.parse(form.dataset.sales || '{}');
+    const track = (name: string, data: Record<string, string> = {}) => (window as any).va?.('event', { name, data });
+
+    const apply = () => {
+      const r = form.querySelector<HTMLInputElement>('input[name=profile]:checked');
+      if (!r) return;
+      hint.textContent = r.dataset.hint || '';
+      form.querySelectorAll<HTMLElement>('.only').forEach((el) => { el.hidden = !(el.dataset.for || '').split(' ').includes(r.value); });
+    };
+    const showSales = () => {
+      const sel = document.getElementById('f-project') as HTMLSelectElement;
+      const url = sales[sel.value];
+      salesBox.hidden = !url;
+      if (url) { salesBox.innerHTML = ''; salesBox.append(form.dataset.salesHint + ' '); const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = url.replace(/^https?:\/\/(www\.)?/, ''); a.addEventListener('click', () => track('outbound_sales_site', { project: sel.value, from: 'contact' })); salesBox.append(a); }
+    };
+
+    // prefill from ?perfil=…&proyecto=…
+    const q = new URLSearchParams(location.search);
+    const pre = q.get('perfil') || q.get('profile');
+    if (pre) { const r = form.querySelector<HTMLInputElement>(`input[name=profile][value="${CSS.escape(pre)}"]`); if (r) r.checked = true; }
+    const proj = q.get('proyecto') || q.get('project');
+    if (proj) (document.getElementById('f-project') as HTMLSelectElement).value = proj;
+    apply(); showSales();
+    form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'profile') { apply(); track('route_select', { profile: t.value }); } if (t.name === 'project') showSales(); });
+    let started = false;
+    form.addEventListener('input', () => { if (!started) { started = true; track('form_start'); } }, { once: false });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      form.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
+      const bad = [...form.querySelectorAll<HTMLInputElement>('input[required], textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
+      if (bad.length) { bad.forEach((el) => (el.closest('.field, .check') || el).classList.add('invalid')); status.textContent = form.dataset.error!; bad[0].focus(); track('form_error'); return; }
+      const data = Object.fromEntries(new FormData(form) as any);
+      data.lang = form.dataset.lang; data.page = location.pathname;
+      status.textContent = '…';
+      try {
+        const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
+        if (res.ok) { form.reset(); apply(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
+        else if (res.status === 400) { status.textContent = form.dataset.error!; track('form_error'); }
+        else { status.textContent = form.dataset.pending!; }
+      } catch { status.textContent = form.dataset.pending!; }
+    });
+  </script>
+</Base>

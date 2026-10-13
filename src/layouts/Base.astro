@@ -4,21 +4,36 @@ import '@fontsource/jost/latin-400.css';
 import '@fontsource/jost/latin-500.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import '../styles/global.css';
-import { type Lang, t, paths } from '../lib/data';
-import site from '../data/site.json';
+import { type Lang, t, paths, contactPath } from '../lib/data';
+import ContactCta from '../components/ContactCta.astro';
+import siteCfg from '../data/site.json';
 
 interface Props {
   lang: Lang;
   title: string;
   description: string;
-  current?: 'home' | 'projects' | 'about';
+  current?: 'home' | 'projects' | 'about' | 'contact';
   alt?: string; // path of this page in the other language
+  image?: string; // og:image path
+  hideCta?: boolean;
+  jsonLd?: Record<string, unknown>;
 }
-const { lang, title, description, current, alt } = Astro.props;
+const { lang, title, description, current, alt, image, hideCta, jsonLd } = Astro.props;
 const ui = t(lang);
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const altHref = alt ?? paths.home(other);
 const year = new Date().getFullYear();
+const site = 'https://pagadesarrollos.com';
+const here = new URL(Astro.url.pathname, site).href;
+const altAbs = new URL(altHref.split('?')[0], site).href;
+const esUrl = lang === 'es' ? here : altAbs;
+const enUrl = lang === 'en' ? here : altAbs;
+const ogImage = new URL(image ?? '/img/projects/via-puerta-de-hierro.jpg', site).href;
+const org = {
+  '@context': 'https://schema.org', '@type': 'Organization', name: 'PAGA Desarrollos', url: site,
+  logo: `${site}/img/paga-logo-navy.png`, foundingDate: '2001',
+  areaServed: ['Monterrey', 'Hermosillo', 'Nuevo Vallarta', 'South Padre Island', 'Port Isabel', 'Port Aransas'],
+};
 ---
 <!doctype html>
 <html lang={lang === 'es' ? 'es-MX' : 'en'}>
@@ -27,14 +42,26 @@ const year = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="noindex" />
+    {siteCfg.preview && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={here} />
+    <link rel="alternate" hreflang="es-MX" href={esUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={esUrl} />
     <link rel="icon" type="image/png" href="/img/paga-icon-navy.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={here} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0B1B33" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd ?? org)} />
+    <script is:inline>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
-    {site.preview && <div class="preview" role="note">{ui.previewBanner}</div>}
+    {siteCfg.preview && <div class="preview" role="note">{ui.previewBanner}</div>}
     <header class="site-header">
       <div class="bar">
         <a class="brand" href={paths.home(lang)} aria-label="PAGA Desarrollos">
@@ -43,15 +70,15 @@ const year = new Date().getFullYear();
         </a>
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
-          <a class="hide-sm" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
-          <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
-          <a class="hide-sm" href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
-          <a class="lang" href={altHref} hreflang={other} lang={other}>{other.toUpperCase()}</a>
+          <a class="hide-xs" href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
+          <a class="lang" href={altHref} hreflang={other} lang={other} data-track="lang_switch">{other.toUpperCase()}</a>
+          <a class="btn solid nav-cta" href={contactPath(lang)} aria-current={current === 'contact' ? 'page' : undefined} data-track="cta_click" data-track-where="header">{lang === 'es' ? 'Contacto' : 'Contact'}</a>
         </nav>
       </div>
     </header>
     <main>
       <slot />
+      {!hideCta && <ContactCta lang={lang} />}
     </main>
     <footer class="site-footer">
       <div class="wrap">
@@ -64,6 +91,7 @@ const year = new Date().getFullYear();
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
             <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
+            <a href={contactPath(lang)}>{lang === 'es' ? 'Contacto' : 'Contact'}</a>
           </nav>
           <div>
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
@@ -81,5 +109,14 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
+    <script is:inline>
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a,[data-track]');
+        if (!a) return;
+        var name = a.getAttribute('data-track');
+        if (!name && a.host && a.host !== location.host) name = 'outbound';
+        if (name && window.va) window.va('event', { name: name, data: { where: a.getAttribute('data-track-where') || '', href: a.getAttribute('href') || '' } });
+      });
+    </script>
   </body>
 </html>
