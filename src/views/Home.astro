@@ -8,41 +8,56 @@ const ui = t(lang);
 const es = lang === 'es';
 const seo = company.seo.home;
 const f = figures();
-const bySlug = (s: string) => projects.find((p) => p.slug === s)!;
-// first screen: delivered work across both countries and every business line
-const tiles = ['via-puerta-de-hierro', 'los-corales', 'torre-pietra', 'parkview-pitic', 'cinnamon-shore-five-town-center'].map(bySlug);
 const live = liveProjects();
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="home" alt={paths.home(es ? 'en' : 'es')}>
-  <section class="intro">
-    <div class="intro-text">
+  <section class="hero">
+    <div class="hero-media" aria-hidden="true">
+      <img src="/video/hero.webp" srcset="/video/hero-960.webp 960w, /video/hero.webp 1600w" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+      <video id="hero-video" muted loop playsinline preload="none" width="1920" height="1080" data-src-sm="/video/hero-720.mp4" data-src-lg="/video/hero-1080.mp4"></video>
+    </div>
+    <div class="hero-inner">
       <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas, desde 2001' : 'Mexico and Texas, since 2001'}</p>
       <h1>{es ? '25 años' : '25 years'} <span class="accent">{es ? 'desarrollando valor.' : 'developing value.'}</span></h1>
       <p class="lead">{tx(company.heroLead, lang)}</p>
       <p class="audience">{es ? 'Trabajamos con propietarios de tierra, socios de capital, instituciones financieras y compradores.' : 'We work with landowners, capital partners, financial institutions and buyers.'}</p>
       <div class="ctas">
-        <a class="btn solid arrow" href="#en-desarrollo" data-track="cta_click" data-track-where="hero_live">{es ? 'Proyectos en desarrollo' : 'Projects in development'}</a>
+        <a class="btn light arrow" href="#en-desarrollo" data-track="cta_click" data-track-where="hero_live">{es ? 'Proyectos en desarrollo' : 'Projects in development'}</a>
         <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Hablemos' : "Let's talk"}</a>
       </div>
-      <div class="kpis num">
-        <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>
-        <div><strong>{f.developments}</strong><span>{es ? 'desarrollos' : 'developments'}</span></div>
-        <div><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
-        <div><strong>{areaShort}</strong><span>{es ? 'm² construidos y en desarrollo' : 'ft² built and in development'}</span></div>
+      <div class="hero-foot">
+        <div class="kpis num">
+          <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>
+          <div><strong>{f.developments}</strong><span>{es ? 'desarrollos' : 'developments'}</span></div>
+          <div><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
+          <div><strong>{areaShort}</strong><span>{es ? 'm² construidos y en desarrollo' : 'ft² built and in development'}</span></div>
+        </div>
+        <div class="hero-cap">
+          <p class="kpis-note">{es ? `Cifras a ${asOfLabel}.` : `Figures as of ${asOfLabel}.`} {es ? 'En video: Sonoma y Balcones, Monterrey.' : 'On video: Sonoma and Balcones, Monterrey.'}</p>
+          <button type="button" class="film-btn" id="hero-btn" aria-pressed="false" hidden>{es ? 'Pausar' : 'Pause'}</button>
+        </div>
       </div>
-      <p class="kpis-note">{es ? `Cifras a ${asOfLabel}.` : `Figures as of ${asOfLabel}.`}</p>
-    </div>
-    <div class="mosaic">
-      {tiles.map((p, i) => (
-        <a class:list={['tile', `t${i + 1}`]} href={paths.project(lang, p.slug)}>
-          <img src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes={i === 0 ? '(min-width: 1000px) 20vw, 100vw' : '(min-width: 1000px) 20vw, 50vw'} alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={i < 3 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
-          <figcaption><b>{p.name}</b>{p.city}, {p.state} · {p.completionYear}</figcaption>
-        </a>
-      ))}
     </div>
   </section>
+  <script define:vars={{ es }}>
+    (function () {
+      var v = document.getElementById('hero-video');
+      var b = document.getElementById('hero-btn');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var save = navigator.connection && navigator.connection.saveData;
+      if (!v || reduce || save) return;
+      v.src = window.matchMedia('(max-width: 760px)').matches ? v.dataset.srcSm : v.dataset.srcLg;
+      v.addEventListener('playing', function () { v.classList.add('on'); });
+      var userPaused = false;
+      var label = function () { b.textContent = v.paused ? (es ? 'Reproducir' : 'Play') : (es ? 'Pausar' : 'Pause'); b.setAttribute('aria-pressed', String(v.paused)); };
+      v.addEventListener('play', label); v.addEventListener('pause', label);
+      b.hidden = false;
+      b.addEventListener('click', function () { if (v.paused) { userPaused = false; v.play(); } else { userPaused = true; v.pause(); } });
+      new IntersectionObserver(function (e) { if (e[0].isIntersecting && !userPaused) v.play().catch(function () {}); else v.pause(); }, { threshold: 0.1 }).observe(v);
+    })();
+  </script>
 
   <section class="section" id="en-desarrollo">
     <div class="wrap">
@@ -73,28 +88,30 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
     </div>
   </section>
 
-  <section class="film" aria-label={es ? 'Recorrido aéreo por Sonoma y Balcones' : 'Aerial tour of Sonoma and Balcones'}>
-    <video id="film" muted loop playsinline preload="none" poster="/video/paga-recorrido.jpg" width="1920" height="1080">
-      <source src="/video/paga-recorrido-movil.mp4" type="video/mp4" media="(max-width: 760px)" />
-      <source src="/video/paga-recorrido.mp4" type="video/mp4" />
-    </video>
-    <div class="film-cap wrap">
-      <p class="eyebrow">{es ? 'Recorrido aéreo' : 'Aerial tour'}</p>
-      <p>{es ? 'Sonoma Club & Residences y Balcones Residencial, Monterrey.' : 'Sonoma Club & Residences and Balcones Residencial, Monterrey.'}</p>
-      <button type="button" class="film-btn" id="film-btn" aria-pressed="false">{es ? 'Pausar' : 'Pause'}</button>
-    </div>
-  </section>
-  <script define:vars={{ es }}>
-    const v = document.getElementById('film');
-    const b = document.getElementById('film-btn');
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const set = (playing) => { b.textContent = playing ? (es ? 'Pausar' : 'Pause') : (es ? 'Reproducir' : 'Play'); b.setAttribute('aria-pressed', String(!playing)); };
-    if (!reduce) {
-      let tracked = false;
-      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && b.getAttribute('aria-pressed') === 'false') { v.play().catch(() => {}); if (!tracked && window.va) { tracked = true; window.va('event', { name: 'video_play' }); } } else v.pause(); }, { threshold: 0.25 });
-      io.observe(v);
-    } else set(false);
-    b.addEventListener('click', () => { if (v.paused) { v.play(); set(true); } else { v.pause(); set(false); } });
+  {es && (
+    <section class="section on-dark film-full" aria-labelledby="film-h">
+      <div class="wrap">
+        <div class="section-head split">
+          <div><p class="eyebrow">{`${f.developments} desarrollos`}</p><h2 id="film-h">25 años en dos minutos</h2></div>
+          <p>Cada desarrollo de PAGA, de Los Robles en 2001 a Torre Acqua, con su año de conclusión, ciudad y estatus. Video sin audio.</p>
+        </div>
+        <div class="film-frame">
+          <video id="film" controls playsinline preload="none" poster="/video/paga-25-anos.webp" width="1920" height="1080">
+            <source src="/video/paga-25-anos-720.mp4" type="video/mp4" media="(max-width: 760px)" />
+            <source src="/video/paga-25-anos.mp4" type="video/mp4" />
+          </video>
+          <button type="button" class="film-play" id="film-play" data-track="video_play" data-track-where="home_film"><span aria-hidden="true">▶</span> Ver el video · 2:11</button>
+        </div>
+      </div>
+    </section>
+  )}
+  <script>
+    const film = document.getElementById('film') as HTMLVideoElement | null;
+    const play = document.getElementById('film-play');
+    if (film && play) {
+      play.addEventListener('click', () => { play.hidden = true; film.play().catch(() => {}); });
+      film.addEventListener('play', () => { play.hidden = true; });
+    }
   </script>
 
 
