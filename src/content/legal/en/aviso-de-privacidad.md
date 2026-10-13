@@ -27,13 +27,13 @@ For anything related to this notice or your data, contact [RESPONSABLE / DEPARTA
 
 As of [FECHA DE ÚLTIMA ACTUALIZACIÓN], pagadesarrollos.com is an informational website:
 
-- It has no forms and no user accounts.
+- It has a contact form. It has no user accounts.
 - It uses no analytics, advertising or tracking cookies (see the [Cookie notice](/en/cookie-notice)).
 - It serves its fonts from the site itself, with no calls to third-party services such as Google Fonts.
 
 Like any web server, the hosting provider, [PROVEEDOR DE HOSPEDAJE — e.g. Vercel Inc., United States], may keep short-lived technical logs such as IP address, browser type and the page requested, in order to deliver the site and protect it from abuse. PAGA does not use these logs to identify you or for commercial purposes.
 
-This notice also covers any contact channel PAGA adds in the future (a contact form or a contact email published on the site). If you write to us through one of them, the following applies.
+This notice covers the site's contact form and any other contact channel PAGA publishes on it (for example, an email address). If you write to us through any of them, the following applies.
 
 ## 3. What personal data we process
 
@@ -44,6 +44,8 @@ When you contact us, we may process:
 - Phone number.
 - The company or organization you represent, and your position, if you give it.
 - The content of your message, including anything you choose to share about land, a business proposal or your interest in a project.
+- The profile you choose on the form (for example, landowner or investor) and, if you give it, the project you are interested in.
+- How you reached the site, only if you submit the form: the first page you visited, the site you came from and the campaign name in the link, if any. We use it to learn which channels work; it is not used to identify you. [JURÍDICO TO CONFIRM wording.]
 
 **We do not ask for sensitive personal data** (for example, health, ethnic origin, beliefs or preferences). Please do not include it in your message. If you send it anyway, we will not use it and will delete it.
 

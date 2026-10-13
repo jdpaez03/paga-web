@@ -125,3 +125,9 @@ Ningún domicilio, correo, teléfono ni nombre se inventó. Los marcadores son:
 16. **Cláusula de no responsabilidad por pagos a terceros** (canales, final) y **limitación de responsabilidad** (términos, secc. 7): confirmar alcance.
 17. **Versiones en inglés.** Confirmar la leyenda de prevalencia del español y si los proyectos de Texas requieren avisos propios en inglés bajo ley estadounidense (fuera del alcance de estos borradores).
 18. **Aprobación.** Al aprobarse, cambiar `draft: true` a `false`, llenar `[FECHA]` y retirar la leyenda de borrador.
+
+## Actualización 13 oct 2026 — formulario y origen del contacto
+
+- El sitio ya tiene un formulario de contacto (`/contacto/`). Se actualizó la sección 2 del aviso de privacidad, que decía que no había formularios.
+- El sitio guarda en el almacenamiento de sesión del navegador (no es cookie; se borra al cerrar la pestaña) la primera página visitada, el sitio de referencia y la campaña (UTM). Solo se envía a PAGA si la persona envía el formulario. Se agregó a los datos tratados (aviso de privacidad, secc. 3) y al aviso de cookies (secc. 2). **Jurídico debe confirmar** la redacción y si basta con informarlo o requiere otra base.
+- El proveedor de correo previsto es Resend (Estados Unidos) — falta reflejarlo en `[PROVEEDOR DE CORREO / FORMULARIOS]`, secc. 6, si se confirma.

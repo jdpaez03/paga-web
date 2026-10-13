@@ -110,7 +110,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     </div>
   </section>
   {live && (
-    <div class="p-sticky" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
+    <div class="p-sticky" role="region" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
       <span>{p.name}</span>
       {p.salesUrl
         ? <a class="btn solid" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>

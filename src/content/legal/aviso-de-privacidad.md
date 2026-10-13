@@ -25,13 +25,13 @@ Para cualquier asunto relacionado con este aviso o con sus datos, puede dirigirs
 
 Al día de [FECHA DE ÚLTIMA ACTUALIZACIÓN], el sitio pagadesarrollos.com es informativo:
 
-- No tiene formularios ni cuentas de usuario.
+- Tiene un formulario de contacto. No tiene cuentas de usuario.
 - No usa cookies de analítica, publicidad ni rastreo; mide visitas de forma agregada y sin cookies (ver el [Aviso de cookies](/aviso-de-cookies)).
 - Sirve sus tipografías desde el propio sitio, sin llamadas a servicios de terceros como Google Fonts.
 
 Como cualquier servidor web, el proveedor que aloja el sitio, [PROVEEDOR DE HOSPEDAJE — p. ej. Vercel Inc., Estados Unidos], puede registrar de forma técnica y temporal datos como la dirección IP, el tipo de navegador y la página solicitada, para entregar el sitio y protegerlo contra abusos. PAGA no usa esos registros para identificarle ni para fines comerciales.
 
-Este aviso también cubre los canales de contacto que PAGA habilite en el futuro (un formulario o un correo de contacto publicado en el sitio). Si usted nos escribe por cualquiera de ellos, aplica lo que sigue.
+Este aviso cubre el formulario de contacto del sitio y cualquier otro canal de contacto que PAGA publique en él (por ejemplo, un correo). Si usted nos escribe por cualquiera de ellos, aplica lo que sigue.
 
 ## 3. Qué datos personales tratamos
 
@@ -42,6 +42,8 @@ Cuando usted nos contacta, podemos tratar:
 - Teléfono.
 - Empresa u organización a la que representa, y su cargo, si lo indica.
 - El contenido de su mensaje, incluida la información que decida compartir sobre un terreno, una propuesta de negocio o su interés en un proyecto.
+- El perfil que elija en el formulario (por ejemplo, propietario de terreno o inversionista) y, si lo indica, el proyecto que le interesa.
+- Datos de cómo llegó al sitio, solo si envía el formulario: la primera página que visitó, el sitio desde el que llegó y el nombre de la campaña del enlace, si lo hay. Los usamos para saber qué canales funcionan; no sirven para identificarle. [DECISIÓN DE JURÍDICO: confirmar redacción.]
 
 **No le pedimos datos personales sensibles** (por ejemplo, de salud, origen étnico, creencias o preferencias). Le pedimos que no los incluya en su mensaje. Si llegara a enviarlos, no los usaremos y los eliminaremos.
 
