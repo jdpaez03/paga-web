@@ -288,3 +288,12 @@ p { margin: 0 0 1em; }
 .member p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
 @media (min-width: 700px) { .team { grid-template-columns: repeat(2, 1fr); column-gap: 40px; } }
 @media (min-width: 1100px) { .team:not(.partners) { grid-template-columns: repeat(3, 1fr); } .team:not(.partners) .member { flex-direction: column; align-items: flex-start; } }
+
+/* aerial film band */
+.film { position: relative; background: var(--navy-deep); color: var(--white); }
+.film video { display: block; width: 100%; height: auto; max-height: 86vh; object-fit: cover; }
+.film-cap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; padding-top: 16px; padding-bottom: 16px; }
+.film-cap .eyebrow { color: rgba(255,255,255,.8); margin: 0; }
+.film-cap p { margin: 0; font-size: 14px; color: rgba(255,255,255,.85); }
+.film-btn { margin-left: auto; font: inherit; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--white); background: rgba(11,27,51,.45); border: 1px solid rgba(255,255,255,.5); padding: 8px 14px; cursor: pointer; }
+.film-btn:hover { background: rgba(11,27,51,.75); }

@@ -44,6 +44,28 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
     </div>
   </section>
 
+  <section class="film" aria-label={es ? 'Recorrido aéreo por Sonoma y Balcones' : 'Aerial tour of Sonoma and Balcones'}>
+    <video id="film" muted loop playsinline preload="metadata" poster="/video/paga-recorrido.jpg" width="1920" height="1080">
+      <source src="/video/paga-recorrido.mp4" type="video/mp4" />
+    </video>
+    <div class="film-cap wrap">
+      <p class="eyebrow">{es ? 'Recorrido aéreo' : 'Aerial tour'}</p>
+      <p>{es ? 'Sonoma Club & Residences y Balcones Residencial, Monterrey.' : 'Sonoma Club & Residences and Balcones Residencial, Monterrey.'}</p>
+      <button type="button" class="film-btn" id="film-btn" aria-pressed="false">{es ? 'Pausar' : 'Pause'}</button>
+    </div>
+  </section>
+  <script define:vars={{ es }}>
+    const v = document.getElementById('film');
+    const b = document.getElementById('film-btn');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const set = (playing) => { b.textContent = playing ? (es ? 'Pausar' : 'Pause') : (es ? 'Reproducir' : 'Play'); b.setAttribute('aria-pressed', String(!playing)); };
+    if (!reduce) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && b.getAttribute('aria-pressed') === 'false') v.play().catch(() => {}); else v.pause(); }, { threshold: 0.25 });
+      io.observe(v);
+    } else set(false);
+    b.addEventListener('click', () => { if (v.paused) { v.play(); set(true); } else { v.pause(); set(false); } });
+  </script>
+
   <section class="section">
     <div class="wrap">
       <div class="section-head split">
