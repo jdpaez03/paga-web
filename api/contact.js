@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     name: clean(b.name, 120), email: clean(b.email, 160), phone: clean(b.phone, 40), company: clean(b.company, 120),
     message: cleanText(b.message, 3000), project: clean(b.project, 80), landLocation: clean(b.landLocation, 200), landArea: clean(b.landArea, 20),
     deck: b.deck ? 'Sí' : 'No', consent: !!b.consent, lang: b.lang === 'en' ? 'en' : 'es', page: clean(b.page, 200),
+    srcLanding: clean(b.srcLanding, 200), srcRef: clean(b.srcRef, 300), srcUtm: clean(b.srcUtm, 200),
   };
   const errors = [];
   if (!d.profile) errors.push('profile');
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
   const rows = [
     ['Perfil', LABELS[d.profile]], ['Nombre', d.name], ['Correo', d.email], ['Teléfono', d.phone], ['Empresa', d.company],
     ['Proyecto', d.project], ['Ubicación del terreno', d.landLocation], ['Superficie (m²)', d.landArea],
-    ['Presentación corporativa', d.deck], ['Idioma', d.lang], ['Página', d.page], ['Consentimiento aviso de privacidad', 'Sí'],
+    ['Presentación corporativa', d.deck], ['Idioma', d.lang], ['Página', d.page], ['Primera página de la visita', d.srcLanding], ['Llegó desde', d.srcRef || (d.srcLanding ? 'Directo o sin referencia' : '')], ['Campaña (UTM)', d.srcUtm], ['Consentimiento aviso de privacidad', 'Sí'],
   ].filter(([, v]) => v);
   const html = `<h2>Nuevo mensaje desde pagadesarrollos.com</h2><table cellpadding="6">${rows.map(([k, v]) => `<tr><td><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join('')}</table><p style="white-space:pre-wrap">${esc(d.message)}</p>`;
 

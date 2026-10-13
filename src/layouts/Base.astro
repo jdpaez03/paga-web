@@ -63,6 +63,7 @@ const org = {
     <script is:inline defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
+    <a class="skip" href="#main">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
     {siteCfg.preview && <div class="preview" role="note">{ui.previewBanner}</div>}
     <header class="site-header">
       <div class="bar">
@@ -78,7 +79,7 @@ const org = {
         </nav>
       </div>
     </header>
-    <main>
+    <main id="main" tabindex="-1">
       <slot />
       {!hideCta && <ContactCta lang={lang} />}
     </main>
@@ -112,6 +113,14 @@ const org = {
       </div>
     </footer>
     <script is:inline>
+      // lead source: first page, referrer and campaign of this visit (sessionStorage only, cleared when the tab closes)
+      try {
+        if (!sessionStorage.getItem('paga_src')) {
+          var u = new URL(location.href), ref = document.referrer && new URL(document.referrer).host !== location.host ? document.referrer.split('?')[0] : '';
+          var utm = ['utm_source', 'utm_medium', 'utm_campaign'].map(function (k) { return u.searchParams.get(k) || ''; }).filter(Boolean).join(' / ');
+          sessionStorage.setItem('paga_src', JSON.stringify({ landing: u.pathname, ref: ref, utm: utm }));
+        }
+      } catch (e) {}
       document.addEventListener('click', function (e) {
         var a = e.target.closest && e.target.closest('a,[data-track]');
         if (!a) return;

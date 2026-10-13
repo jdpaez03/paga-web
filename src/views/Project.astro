@@ -34,7 +34,7 @@ const ld = {
 };
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld}>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld} hideCta>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">
@@ -68,15 +68,34 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}</p>
       {live && (
         <div class="p-actions">
-          <a class="btn solid arrow" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
-          {p.salesUrl && <a class="btn" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>}
+          {p.salesUrl ? (
+            <>
+              <a class="btn solid arrow" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'} ↗</a>
+              <a class="btn" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+            </>
+          ) : (
+            <a class="btn solid arrow" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+          )}
         </div>
       )}
-      <p class="p-invest">{es ? '¿Tienes un terreno o te interesa participar en un próximo desarrollo? ' : 'Do you own land or want to take part in a future development? '}<a href={contactPath(lang, { perfil: live ? 'inversion' : 'terreno' })} data-track="cta_click" data-track-where={`project_invest_${p.slug}`}>{es ? 'Hablemos' : "Let's talk"} →</a></p>
     </div>
   </section>
 
-  <section class="section tight" style="padding-top:0">
+  <section class="p-band on-dark">
+    <div class="wrap p-band-in">
+      <div>
+        <p class="eyebrow">{es ? 'Próximos desarrollos' : 'Future developments'}</p>
+        <h2>{es ? '¿Tienes un terreno o capital para el siguiente proyecto?' : 'Do you have land or capital for the next project?'}</h2>
+        <p>{es ? 'Identificamos, estructuramos y desarrollamos proyectos con propietarios de tierra, socios de capital e instituciones financieras en México y Texas.' : 'We identify, structure and develop projects with landowners, capital partners and financial institutions in Mexico and Texas.'}</p>
+      </div>
+      <div class="p-band-ctas">
+        <a class="btn light arrow" href={contactPath(lang, { perfil: 'terreno' })} data-track="cta_click" data-track-where={`project_band_land_${p.slug}`}>{es ? 'Tengo un terreno' : 'I own land'}</a>
+        <a class="btn arrow" href={contactPath(lang, { perfil: 'inversion' })} data-track="cta_click" data-track-where={`project_band_invest_${p.slug}`}>{es ? 'Invertir o asociarse' : 'Invest or partner'}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
     <div class="wrap">
       {siblings.length > 0 && (
         <div style="margin-top:24px">
@@ -90,6 +109,14 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       </nav>
     </div>
   </section>
+  {live && (
+    <div class="p-sticky" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
+      <span>{p.name}</span>
+      {p.salesUrl
+        ? <a class="btn solid" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>
+        : <a class="btn solid" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
+    </div>
+  )}
   <script>
     const main = document.getElementById('p-main-img') as HTMLImageElement | null;
     document.querySelectorAll<HTMLButtonElement>('.p-thumb').forEach((b, _i, all) => b.addEventListener('click', () => {

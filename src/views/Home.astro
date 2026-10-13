@@ -22,11 +22,12 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas, desde 2001' : 'Mexico and Texas, since 2001'}</p>
       <h1>{es ? '25 años' : '25 years'} <span class="accent">{es ? 'desarrollando valor.' : 'developing value.'}</span></h1>
       <p class="lead">{tx(company.heroLead, lang)}</p>
-      <p class="audience">{es ? 'Trabajamos con propietarios de tierra, socios de capital, instituciones financieras y compradores.' : 'We work with landowners, capital partners, financial institutions and buyers.'}</p>
+      <p class="audience">{es ? 'Trabajamos con propietarios de tierra, socios de capital, instituciones financieras y codesarrolladores.' : 'We work with landowners, capital partners, financial institutions and co-developers.'}</p>
       <div class="ctas">
-        <a class="btn light arrow" href="#en-desarrollo" data-track="cta_click" data-track-where="hero_live">{es ? 'Proyectos en desarrollo' : 'Projects in development'}</a>
-        <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Hablemos' : "Let's talk"}</a>
+        <a class="btn light arrow" href={contactPath(lang, { perfil: 'inversion' })} data-track="cta_click" data-track-where="hero_invest">{es ? 'Invertir o asociarse' : 'Invest or partner'}</a>
+        <a class="btn" href={contactPath(lang, { perfil: 'terreno' })} data-track="cta_click" data-track-where="hero_land">{es ? 'Tengo un terreno' : 'I own land'}</a>
       </div>
+      <p class="hero-buy">{es ? '¿Buscas comprar? ' : 'Looking to buy? '}<a href="#en-desarrollo" data-track="cta_click" data-track-where="hero_live">{es ? 'Ve los proyectos en desarrollo' : 'See projects in development'} ↓</a></p>
       <div class="hero-foot">
         <div class="kpis num">
           <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>
@@ -48,6 +49,7 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var save = navigator.connection && navigator.connection.saveData;
       if (!v || reduce || save) return;
+      var start = function () {
       v.src = window.matchMedia('(max-width: 760px)').matches ? v.dataset.srcSm : v.dataset.srcLg;
       v.addEventListener('playing', function () { v.classList.add('on'); });
       var userPaused = false;
@@ -56,6 +58,8 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       b.hidden = false;
       b.addEventListener('click', function () { if (v.paused) { userPaused = false; v.play(); } else { userPaused = true; v.pause(); } });
       new IntersectionObserver(function (e) { if (e[0].isIntersecting && !userPaused) v.play().catch(function () {}); else v.pause(); }, { threshold: 0.1 }).observe(v);
+      };
+      if (document.readyState === 'complete') setTimeout(start, 300); else window.addEventListener('load', function () { setTimeout(start, 300); });
     })();
   </script>
 
@@ -88,23 +92,21 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
     </div>
   </section>
 
-  {es && (
-    <section class="section on-dark film-full" aria-labelledby="film-h">
-      <div class="wrap">
-        <div class="section-head split">
-          <div><p class="eyebrow">{`${f.developments} desarrollos`}</p><h2 id="film-h">25 años en dos minutos</h2></div>
-          <p>Cada desarrollo de PAGA, de Los Robles en 2001 a Torre Acqua, con su año de conclusión, ciudad y estatus. Video sin audio.</p>
-        </div>
-        <div class="film-frame">
-          <video id="film" controls playsinline preload="none" poster="/video/paga-25-anos.webp" width="1920" height="1080">
-            <source src="/video/paga-25-anos-720.mp4" type="video/mp4" media="(max-width: 760px)" />
-            <source src="/video/paga-25-anos.mp4" type="video/mp4" />
-          </video>
-          <button type="button" class="film-play" id="film-play" data-track="video_play" data-track-where="home_film"><span aria-hidden="true">▶</span> Ver el video · 2:11</button>
-        </div>
+  <section class="section on-dark film-full" aria-labelledby="film-h">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? `${f.developments} desarrollos` : `${f.developments} developments`}</p><h2 id="film-h">{es ? '25 años en dos minutos' : '25 years in two minutes'}</h2></div>
+        <p>{es ? 'Cada desarrollo de PAGA, de Los Robles en 2001 a Torre Acqua, con su año de conclusión, ciudad y estatus. Video sin audio.' : 'Every PAGA development, from Los Robles in 2001 to Torre Acqua, with its completion year, city and status. No sound.'}</p>
       </div>
-    </section>
-  )}
+      <div class="film-frame">
+        <video id="film" controls playsinline preload="none" poster={es ? '/video/paga-25-anos.webp' : '/video/paga-25-years.webp'} width="1920" height="1080">
+          <source src={es ? '/video/paga-25-anos-720.mp4' : '/video/paga-25-years-720.mp4'} type="video/mp4" media="(max-width: 760px)" />
+          <source src={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} type="video/mp4" />
+        </video>
+        <button type="button" class="film-play" id="film-play" data-track="video_play" data-track-where={`home_film_${lang}`}><span aria-hidden="true">▶</span> {es ? 'Ver el video' : 'Watch the film'} · 2:11</button>
+      </div>
+    </div>
+  </section>
   <script>
     const film = document.getElementById('film') as HTMLVideoElement | null;
     const play = document.getElementById('film-play');
