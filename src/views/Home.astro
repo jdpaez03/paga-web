@@ -24,10 +24,9 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       <p class="lead">{tx(company.heroLead, lang)}</p>
       <p class="audience">{es ? 'Trabajamos con propietarios de tierra, socios de capital, instituciones financieras y codesarrolladores.' : 'We work with landowners, capital partners, financial institutions and co-developers.'}</p>
       <div class="ctas">
-        <a class="btn light arrow" href={contactPath(lang, { perfil: 'inversion' })} data-track="cta_click" data-track-where="hero_invest">{es ? 'Invertir o asociarse' : 'Invest or partner'}</a>
-        <a class="btn" href={contactPath(lang, { perfil: 'terreno' })} data-track="cta_click" data-track-where="hero_land">{es ? 'Tengo un terreno' : 'I own land'}</a>
+        <a class="btn light arrow" href={paths.projects(lang)} data-track="cta_click" data-track-where="hero_projects">{es ? 'Proyectos' : 'Projects'}</a>
+        <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Contáctanos' : 'Contact us'}</a>
       </div>
-      <p class="hero-buy">{es ? '¿Buscas comprar? ' : 'Looking to buy? '}<a href="#en-desarrollo" data-track="cta_click" data-track-where="hero_live">{es ? 'Ve los proyectos en desarrollo' : 'See projects in development'} ↓</a></p>
       <div class="hero-foot">
         <div class="kpis num">
           <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>

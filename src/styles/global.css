@@ -82,8 +82,6 @@ p { margin: 0 0 1em; }
 .hero .kpis strong { color: var(--white); }
 .hero .kpis span, .hero .kpis-note { color: rgba(255,255,255,.88); }
 .hero .kpis-note { font-size: 12.5px; }
-.hero-buy { margin: 18px 0 0; font-size: 14.5px; color: rgba(255,255,255,.88); }
-.hero-buy a { color: var(--white); text-underline-offset: 4px; }
 .hero-cap { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
 .hero-cap .kpis-note { margin: 0; max-width: 40ch; }
 .hero-cap .film-btn { margin-left: 0; }
@@ -370,13 +368,7 @@ p { margin: 0 0 1em; }
 .skip { position: absolute; left: 12px; top: -60px; z-index: 50; background: var(--navy); color: var(--white); padding: 10px 16px; text-decoration: none; font-size: 14px; }
 .skip:focus { top: 12px; }
 
-/* project: partner band + mobile sticky action */
-.p-band { padding: clamp(48px, 7vw, 88px) 0; margin-top: clamp(32px, 5vw, 64px); }
-.p-band-in { display: grid; gap: 28px; align-items: end; }
-.p-band h2 { font-size: clamp(28px, 3.2vw, 44px); font-weight: 300; line-height: 1.12; margin: 0; max-width: 22ch; }
-.p-band p:not(.eyebrow) { color: rgba(255,255,255,.8); max-width: 56ch; margin: 18px 0 0; }
-.p-band-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-@media (min-width: 900px) { .p-band-in { grid-template-columns: 1fr auto; } }
+/* project: mobile sticky action */
 .p-sticky { display: none; }
 @media (max-width: 760px) {
   .p-sticky { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: rgba(245,243,239,.97); border-top: 1px solid var(--line); }

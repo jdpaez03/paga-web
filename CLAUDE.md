@@ -6,6 +6,8 @@ Corporate website of PAGA Desarrollos. Owner: Juan Diego Páez (Mejora Continua)
 
 Make PAGA read as an **institutional developer**: 25 years, Mexico and the United States, every development dated and documented. Primary audience: capital partners, landowners, banks and co-developers. Buyers are served by each project's own sales site; the corporate site links out to them.
 
+Calls to action stay institutional, not salesy (decided by Juan Diego, Oct 13, 2026): the hero offers only **"Proyectos"** and **"Contáctanos"**. Do not add audience-specific CTAs such as "Invertir o asociarse" or "Tengo un terreno" to the hero or project pages; the visitor picks their profile inside the contact form.
+
 Core line: **"25 años desarrollando valor."** (EN: "25 years developing value.") It pairs with the EOS purpose *Desarrollamos valor*.
 
 ## Sources of truth (in this order)

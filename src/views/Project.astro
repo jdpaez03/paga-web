@@ -34,7 +34,7 @@ const ld = {
 };
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld} hideCta>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld}>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">
@@ -81,19 +81,6 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     </div>
   </section>
 
-  <section class="p-band on-dark">
-    <div class="wrap p-band-in">
-      <div>
-        <p class="eyebrow">{es ? 'Próximos desarrollos' : 'Future developments'}</p>
-        <h2>{es ? '¿Tienes un terreno o capital para el siguiente proyecto?' : 'Do you have land or capital for the next project?'}</h2>
-        <p>{es ? 'Identificamos, estructuramos y desarrollamos proyectos con propietarios de tierra, socios de capital e instituciones financieras en México y Texas.' : 'We identify, structure and develop projects with landowners, capital partners and financial institutions in Mexico and Texas.'}</p>
-      </div>
-      <div class="p-band-ctas">
-        <a class="btn light arrow" href={contactPath(lang, { perfil: 'terreno' })} data-track="cta_click" data-track-where={`project_band_land_${p.slug}`}>{es ? 'Tengo un terreno' : 'I own land'}</a>
-        <a class="btn arrow" href={contactPath(lang, { perfil: 'inversion' })} data-track="cta_click" data-track-where={`project_band_invest_${p.slug}`}>{es ? 'Invertir o asociarse' : 'Invest or partner'}</a>
-      </div>
-    </div>
-  </section>
 
   <section class="section tight">
     <div class="wrap">
