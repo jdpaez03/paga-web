@@ -34,7 +34,7 @@ const ld = {
 };
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={p.image} jsonLd={ld}>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld}>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">

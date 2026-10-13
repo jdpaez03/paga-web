@@ -8,7 +8,7 @@ const es = lang === 'es';
 const F = contact.fields;
 const live = liveProjects();
 const sales = Object.fromEntries(live.filter((p) => p.salesUrl).map((p) => [p.slug, p.salesUrl]));
-const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), error: tx(contact.error, lang), salesHint: tx(contact.salesHint, lang) };
+const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), error: tx(contact.error, lang), sendError: tx(contact.sendError, lang), salesHint: tx(contact.salesHint, lang) };
 ---
 <Base lang={lang} title={`${tx(contact.title, lang)} · PAGA Desarrollos`} description={tx(contact.lead, lang)} current="contact" alt={contactPath(es ? 'en' : 'es')} hideCta>
   <section class="section contact">
@@ -21,23 +21,23 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
           <h2>{tx(contact.side.title, lang)}</h2>
           <ul>
             {contact.side.items[lang].map((t, i) => (
-              <li>{i === 1 ? <>{t.split(es ? 'Consulta' : 'See')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulta nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
+              <li>{i === 1 ? <>{t.split(es ? 'Consulta' : 'See our')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulta nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
             ))}
           </ul>
         </aside>
       </div>
 
-      <form id="contact-form" class="form" novalidate data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
+      <form id="contact-form" class="form" novalidate data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
         <fieldset class="profiles">
           <legend>{tx(F.profile, lang)}</legend>
           {contact.profiles.map((pr, i) => (
             <label class="chip-radio">
-              <input type="radio" name="profile" value={pr.id} required checked={i === 0} data-hint={pr.hint[lang]} />
+              <input type="radio" name="profile" value={pr.id} required data-hint={pr.hint[lang]} />
               <span>{pr[lang]}</span>
             </label>
           ))}
         </fieldset>
-        <p class="hint" id="profile-hint">{contact.profiles[0].hint[lang]}</p>
+        <p class="hint" id="profile-hint" aria-live="polite"></p>
 
         <div class="row">
           <label class="field"><span>{tx(F.name, lang)}</span><input id="f-name" name="name" autocomplete="name" required maxlength="120" /></label>
@@ -68,7 +68,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
         <label class="check"><input id="f-consent" type="checkbox" name="consent" value="1" required /> <span>{tx(F.consent, lang)} <a href={paths.legal(lang, 'aviso-de-privacidad')} target="_blank" rel="noopener">{tx(F.consentLink, lang)}</a>.</span></label>
         <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
 
-        <button class="btn solid arrow" type="submit">{tx(F.submit, lang)}</button>
+        <button class="btn solid arrow" type="submit" id="f-submit">{tx(F.submit, lang)}</button>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -84,9 +84,8 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
 
     const apply = () => {
       const r = form.querySelector<HTMLInputElement>('input[name=profile]:checked');
-      if (!r) return;
-      hint.textContent = r.dataset.hint || '';
-      form.querySelectorAll<HTMLElement>('.only').forEach((el) => { el.hidden = !(el.dataset.for || '').split(' ').includes(r.value); });
+      hint.textContent = r ? r.dataset.hint || '' : '';
+      form.querySelectorAll<HTMLElement>('.only').forEach((el) => { el.hidden = !r || !(el.dataset.for || '').split(' ').includes(r.value); });
     };
     const showSales = () => {
       const sel = document.getElementById('f-project') as HTMLSelectElement;
@@ -108,18 +107,30 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const btn = document.getElementById('f-submit') as HTMLButtonElement;
+      if (btn.disabled) return;
       form.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
-      const bad = [...form.querySelectorAll<HTMLInputElement>('input[required], textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
-      if (bad.length) { bad.forEach((el) => (el.closest('.field, .check') || el).classList.add('invalid')); status.textContent = form.dataset.error!; bad[0].focus(); track('form_error'); return; }
-      const data = Object.fromEntries(new FormData(form) as any);
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      const bad = [...form.querySelectorAll<HTMLInputElement>('input[required]:not([type=radio]), textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
+      const noProfile = !form.querySelector('input[name=profile]:checked');
+      if (noProfile) form.querySelector('.profiles')!.classList.add('invalid');
+      if (bad.length || noProfile) {
+        bad.forEach((el) => { el.setAttribute('aria-invalid', 'true'); (el.closest('.field, .check') || el).classList.add('invalid'); });
+        status.textContent = form.dataset.error!; (noProfile ? form.querySelector<HTMLInputElement>('input[name=profile]')! : bad[0]).focus(); track('form_error'); return;
+      }
+      const fd = new FormData(form);
+      form.querySelectorAll<HTMLElement>('.only[hidden] [name]').forEach((el) => fd.delete((el as HTMLInputElement).name));
+      const data: Record<string, any> = Object.fromEntries(fd as any);
       data.lang = form.dataset.lang; data.page = location.pathname;
-      status.textContent = '…';
+      btn.disabled = true; status.textContent = '…';
       try {
         const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
         if (res.ok) { form.reset(); apply(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
         else if (res.status === 400) { status.textContent = form.dataset.error!; track('form_error'); }
-        else { status.textContent = form.dataset.pending!; }
-      } catch { status.textContent = form.dataset.pending!; }
+        else if ([404, 405, 501, 503].includes(res.status)) { status.textContent = form.dataset.pending!; }
+        else { status.textContent = form.dataset.sendError!; track('form_error'); }
+      } catch { status.textContent = form.dataset.sendError!; }
+      finally { btn.disabled = false; }
     });
   </script>
 </Base>

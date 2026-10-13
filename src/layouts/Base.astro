@@ -28,7 +28,7 @@ const here = new URL(Astro.url.pathname, site).href;
 const altAbs = new URL(altHref.split('?')[0], site).href;
 const esUrl = lang === 'es' ? here : altAbs;
 const enUrl = lang === 'en' ? here : altAbs;
-const ogImage = new URL(image ?? '/img/projects/via-puerta-de-hierro.jpg', site).href;
+const ogImage = new URL(image ?? '/img/og/paga.jpg', site).href;
 const org = {
   '@context': 'https://schema.org', '@type': 'Organization', name: 'PAGA Desarrollos', url: site,
   logo: `${site}/img/paga-logo-navy.png`, foundingDate: '2001',
@@ -53,6 +53,8 @@ const org = {
     <meta property="og:type" content="website" />
     <meta property="og:url" content={here} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#0B1B33" />
