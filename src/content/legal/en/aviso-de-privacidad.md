@@ -75,7 +75,7 @@ If we ever want to use your data for a purpose not described here, we will ask f
 ## 5. Your consent
 
 - By sending us a message after this notice has been made available to you, you consent to the processing of your data for the necessary purposes.
-- [JURÍDICO TO DECIDE: If a form is added, it will include an unticked box for you to confirm that you have read this notice and accept the processing.]
+- The contact form includes an unticked box for you to confirm that you have read this notice and accept the processing. The form cannot be sent without it. [JURÍDICO TO CONFIRM this mechanism.]
 - For optional purposes we will ask for separate agreement.
 
 ## 6. Who we share your data with

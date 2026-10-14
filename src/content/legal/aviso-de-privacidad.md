@@ -73,7 +73,7 @@ Si en el futuro quisiéramos usar sus datos para una finalidad distinta de las a
 ## 5. Su consentimiento
 
 - Al enviarnos un mensaje después de que este aviso se le ha puesto a disposición, usted consiente el tratamiento de sus datos para las finalidades necesarias.
-- [DECISIÓN DE JURÍDICO: Si se habilita un formulario, este incluirá una casilla, no marcada de antemano, para que usted confirme que leyó este aviso y acepta el tratamiento.]
+- El formulario de contacto incluye una casilla, no marcada de antemano, para que usted confirme que leyó este aviso y acepta el tratamiento. Sin esa casilla, el formulario no se envía. [DECISIÓN DE JURÍDICO: confirmar este mecanismo.]
 - Para las finalidades voluntarias le pediremos una aceptación separada.
 
 ## 6. Con quién compartimos sus datos
