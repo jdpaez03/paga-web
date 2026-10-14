@@ -88,7 +88,7 @@ Ningún domicilio, correo, teléfono ni nombre se inventó. Los marcadores son:
 | `[CORREO DE CONTACTO DE DATOS PERSONALES]` | Privacidad (varias), Cookies (secc. 6) |
 | `[TELÉFONO]` | Privacidad (secc. 1), Términos (contacto) |
 | `[CORREO DE CONTACTO GENERAL]` | Términos (secc. 4 y 12) |
-| `[PROVEEDOR DE HOSPEDAJE]` | Privacidad (secc. 2 y 6), Cookies (secc. 2). Hoy el sitio se aloja en Vercel (EE. UU.); confirmar razón social del proveedor |
+| `[PROVEEDOR DE HOSPEDAJE]` | Privacidad (secc. 2 y 6), Cookies (secc. 2). Hoy el sitio se aloja en Cloudflare Pages (Cloudflare, Inc., EE. UU.); confirmar razón social del proveedor |
 | `[PROVEEDOR DE CORREO / FORMULARIOS]` | Privacidad (secc. 6) |
 | `[LISTA DE SOCIEDADES O DESCRIPCIÓN DEL GRUPO]` | Privacidad (secc. 6) |
 | `[PLAZO DE CONSERVACIÓN]` | Privacidad (secc. 7) |
@@ -111,7 +111,7 @@ Ningún domicilio, correo, teléfono ni nombre se inventó. Los marcadores son:
 2. **Finalidad voluntaria de envío de información.** ¿PAGA enviará noticias o información de proyectos? Si no, eliminar la finalidad voluntaria y su mecanismo de negativa. Si sí, definir el mecanismo (casilla separada o correo) y si se menciona el REPEP de PROFECO o un listado de exclusión propio.
 3. **Transferencias a socios y comercializadores.** Definir si los datos de interesados en proyectos codesarrollados (p. ej. Torre Acqua con Grupo DAGS) o comercializados por terceros se comparten con ellos, si es transferencia o remisión, y si requiere consentimiento y cláusula de aceptación.
 4. **Grupo empresarial.** Listar las sociedades del grupo que pueden recibir datos sin consentimiento (art. 36) y confirmar que operan bajo políticas comunes.
-5. **Remisión internacional.** El hospedaje (Vercel) y, en su caso, el proveedor de correo o formularios están en EE. UU. Confirmar la redacción y que existan contratos con cláusulas de confidencialidad y seguridad.
+5. **Remisión internacional.** El hospedaje (Cloudflare) y, en su caso, el proveedor de correo o formularios están en EE. UU. Confirmar la redacción y que existan contratos con cláusulas de confidencialidad y seguridad.
 6. **Estado del Reglamento y de los Lineamientos.** Confirmar si sigue aplicando el Reglamento anterior y si hay nuevos lineamientos de la Secretaría (requerimiento de información incompleta en ARCO, mención de transferencias, reglas de cookies).
 7. **Reforma del 14 de noviembre de 2025 (art. 4).** Confirmar que no impacta.
 8. **Plazo de conservación** de los datos de contacto y propuestas.

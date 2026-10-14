@@ -29,7 +29,7 @@ Al día de [FECHA DE ÚLTIMA ACTUALIZACIÓN], el sitio pagadesarrollos.com es in
 - No usa cookies de analítica, publicidad ni rastreo; mide visitas de forma agregada y sin cookies (ver el [Aviso de cookies](/aviso-de-cookies)).
 - Sirve sus tipografías desde el propio sitio, sin llamadas a servicios de terceros como Google Fonts.
 
-Como cualquier servidor web, el proveedor que aloja el sitio, [PROVEEDOR DE HOSPEDAJE — p. ej. Vercel Inc., Estados Unidos], puede registrar de forma técnica y temporal datos como la dirección IP, el tipo de navegador y la página solicitada, para entregar el sitio y protegerlo contra abusos. PAGA no usa esos registros para identificarle ni para fines comerciales.
+Como cualquier servidor web, el proveedor que aloja el sitio, [PROVEEDOR DE HOSPEDAJE — p. ej. Cloudflare, Inc., Estados Unidos], puede registrar de forma técnica y temporal datos como la dirección IP, el tipo de navegador y la página solicitada, para entregar el sitio y protegerlo contra abusos. PAGA no usa esos registros para identificarle ni para fines comerciales.
 
 Este aviso cubre el formulario de contacto del sitio y cualquier otro canal de contacto que PAGA publique en él (por ejemplo, un correo). Si usted nos escribe por cualquiera de ellos, aplica lo que sigue.
 

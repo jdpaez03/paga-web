@@ -23,7 +23,7 @@ const ui = t(lang);
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const altHref = alt ?? paths.home(other);
 const year = new Date().getFullYear();
-const site = 'https://pagadesarrollos.com';
+const site = 'https://www.pagadesarrollos.com';
 const here = new URL(Astro.url.pathname, site).href;
 const altAbs = new URL(altHref.split('?')[0], site).href;
 const esUrl = lang === 'es' ? here : altAbs;
@@ -59,8 +59,6 @@ const org = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#0B1B33" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd ?? org)} />
-    <script is:inline>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
-    <script is:inline defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <a class="skip" href="#main">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
@@ -121,13 +119,6 @@ const org = {
           sessionStorage.setItem('paga_src', JSON.stringify({ landing: u.pathname, ref: ref, utm: utm }));
         }
       } catch (e) {}
-      document.addEventListener('click', function (e) {
-        var a = e.target.closest && e.target.closest('a,[data-track]');
-        if (!a) return;
-        var name = a.getAttribute('data-track');
-        if (!name && a.host && a.host !== location.host) name = 'outbound';
-        if (name && window.va) window.va('event', { name: name, data: { where: a.getAttribute('data-track-where') || '', href: a.getAttribute('href') || '' } });
-      });
     </script>
   </body>
 </html>

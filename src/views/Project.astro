@@ -28,7 +28,7 @@ const desc = longDesc && longDesc.length <= 160 ? longDesc : es
   : `${p.name}, ${typePhrase[p.type].en} by PAGA Desarrollos in ${place}${p.completionYear ? `, ${live ? 'estimated completion' : 'completed in'} ${p.completionYear}` : ''}.`;
 const ld = {
   '@context': 'https://schema.org', '@type': p.type === 'residencial' ? 'ApartmentComplex' : 'Place', name: p.name,
-  description: longDesc ?? desc, image: new URL(p.image, 'https://pagadesarrollos.com').href,
+  description: longDesc ?? desc, image: new URL(p.image, 'https://www.pagadesarrollos.com').href,
   address: { '@type': 'PostalAddress', addressLocality: p.city, addressRegion: p.state, addressCountry: p.country === 'MX' ? 'MX' : 'US' },
   ...(p.units ? { numberOfAccommodationUnits: p.units } : {}),
 };

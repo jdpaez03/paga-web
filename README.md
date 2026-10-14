@@ -12,4 +12,4 @@ npm run build    # static output in dist/
 - Company copy (purpose, values, process, guarantee, UI labels): `src/data/company.json`
 - Agent brief: `CLAUDE.md`; agent team: `.claude/agents/`
 
-Deploy: import the repo in Vercel (framework preset: Astro). The production domain is connected only at launch; keep the existing Microsoft 365 mail DNS records untouched.
+Deploy: Cloudflare Pages (build command `npm run build`, output `dist`; the `functions/` folder becomes `/api/*`). Public address www.pagadesarrollos.com. Launch steps, DNS changes and rollback: `docs/LANZAMIENTO.md`. Never touch the Microsoft 365 mail DNS records.

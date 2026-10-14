@@ -31,7 +31,7 @@ As of [FECHA DE ÚLTIMA ACTUALIZACIÓN], pagadesarrollos.com is an informational
 - It uses no analytics, advertising or tracking cookies (see the [Cookie notice](/en/cookie-notice)).
 - It serves its fonts from the site itself, with no calls to third-party services such as Google Fonts.
 
-Like any web server, the hosting provider, [PROVEEDOR DE HOSPEDAJE — e.g. Vercel Inc., United States], may keep short-lived technical logs such as IP address, browser type and the page requested, in order to deliver the site and protect it from abuse. PAGA does not use these logs to identify you or for commercial purposes.
+Like any web server, the hosting provider, [PROVEEDOR DE HOSPEDAJE — e.g. Cloudflare, Inc., United States], may keep short-lived technical logs such as IP address, browser type and the page requested, in order to deliver the site and protect it from abuse. PAGA does not use these logs to identify you or for commercial purposes.
 
 This notice covers the site's contact form and any other contact channel PAGA publishes on it (for example, an email address). If you write to us through any of them, the following applies.
 

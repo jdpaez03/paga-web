@@ -46,7 +46,7 @@ Project partners and co-developers are NOT mentioned on the site for now (decide
 
 ## Stack
 
-Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR. Deployed on Vercel; previews per branch. The production domain is connected only at launch.
+Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR. Hosted on **Cloudflare Pages** (decided by Juan Diego, Oct 14, 2026): Git integration with previews per branch; the contact form is a Pages Function in `functions/api/contact.js`; security and cache headers in `public/_headers`. Public address is **www.pagadesarrollos.com** (canonical); the bare domain redirects to www from the old Neubox hosting. DNS stays at Neubox (managed with Maparnet): at launch only the `www` CNAME changes; never touch the Microsoft 365 mail records (MX, autodiscover, SPF, DKIM, DMARC, Lync/SIP). Single files must stay under 25 MiB (Cloudflare limit). Launch steps: `docs/LANZAMIENTO.md`.
 
 ## Legal
 

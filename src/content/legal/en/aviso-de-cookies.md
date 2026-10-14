@@ -24,7 +24,7 @@ Some are needed for a site to work. Others measure visits, remember preferences 
 As of [FECHA DE ÚLTIMA ACTUALIZACIÓN]:
 
 - **We use no analytics, advertising or social media cookies.**
-- We measure visits in aggregate with Vercel Web Analytics, which uses no cookies and does not identify people: it records page views and general actions (for example, button clicks or form submissions) without storing data that reveals who you are. [JURÍDICO TO CONFIRM this wording.]
+- We measure visits in aggregate with Cloudflare Web Analytics, which uses no cookies and does not identify people: it records page views without storing data that reveals who you are. [JURÍDICO TO CONFIRM this wording.]
 - **We use no third-party pixels or web beacons.**
 - **We load no fonts or other resources from outside services** that could record your visit: fonts are served from the site itself.
 - **Browser session storage (not a cookie).** During your visit, the site keeps in your own browser the first page you opened, the site you came from and, if any, the campaign name in the link. It is not sent anywhere while you browse. Only if you submit the contact form is it included with your message, so we know how you found us. It is deleted when you close the tab. [JURÍDICO TO CONFIRM wording, and whether to also list it in the privacy notice among the data collected through the form.]

@@ -22,7 +22,7 @@ Algunas son necesarias para que un sitio funcione. Otras sirven para medir visit
 Al día de [FECHA DE ÚLTIMA ACTUALIZACIÓN]:
 
 - **No usamos cookies de analítica, de publicidad ni de redes sociales.**
-- Medimos visitas de forma agregada con Vercel Web Analytics, que no usa cookies ni identifica a las personas: registra páginas vistas y acciones generales (por ejemplo, clics en botones o envío del formulario) sin guardar datos que permitan saber quién es usted. [DECISIÓN DE JURÍDICO: confirmar esta redacción.]
+- Medimos visitas de forma agregada con Cloudflare Web Analytics, que no usa cookies ni identifica a las personas: registra páginas vistas, sin guardar datos que permitan saber quién es usted. [DECISIÓN DE JURÍDICO: confirmar esta redacción.]
 - **No usamos píxeles ni *web beacons*** de terceros.
 - **No cargamos tipografías ni otros recursos desde servicios externos** que puedan registrar su visita: las fuentes se sirven desde el propio sitio.
 - **Almacenamiento de sesión del navegador (no es una cookie).** Durante su visita, el sitio guarda en su propio navegador la primera página que abrió, el sitio desde el que llegó y, si existe, el nombre de la campaña del enlace. Ese dato no se envía a nadie mientras usted navega. Solo si usted envía el formulario de contacto se incluye en su mensaje, para saber cómo nos conoció. Se borra al cerrar la pestaña. [DECISIÓN DE JURÍDICO: confirmar redacción y si debe mencionarse también en el aviso de privacidad, en los datos que se obtienen por el formulario.]

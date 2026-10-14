@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { paths, contactPath } from '../lib/data';
+---
+<Base lang="es" title="Página no encontrada · PAGA Desarrollos" description="La página que buscas no existe o cambió de dirección." alt={paths.home('en')} hideCta>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Error 404</p>
+      <h1 style="font-size:clamp(40px,6vw,84px);color:var(--navy);max-width:16ch">Esta página no existe o cambió de dirección.</h1>
+      <p style="margin-top:28px;max-width:56ch;font-size:19px;color:var(--muted)">Renovamos el sitio de PAGA Desarrollos. Puedes ver todos nuestros desarrollos o escribirnos.</p>
+      <p lang="en" style="margin-top:12px;max-width:56ch;font-size:16px;color:var(--muted)">This page does not exist or has moved. We have redesigned our website.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:36px">
+        <a class="btn solid arrow" href={paths.projects('es')}>Proyectos</a>
+        <a class="btn" href={contactPath('es')}>Contáctanos</a>
+        <a class="btn" href={paths.home('en')} lang="en">English</a>
+      </div>
+    </div>
+  </section>
+</Base>

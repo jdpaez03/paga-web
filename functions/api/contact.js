@@ -1,10 +1,10 @@
-// Vercel Serverless Function: POST /api/contact
+// Cloudflare Pages Function: POST /api/contact
 // Sends each form submission by email through Resend (https://resend.com).
-// Configure in Vercel → Project → Settings → Environment Variables:
-//   RESEND_API_KEY   API key from Resend
-//   CONTACT_TO       inbox that receives messages (e.g. contacto@pagadesarrollos.com)
-//   CONTACT_FROM     verified sender, required (e.g. "PAGA Desarrollos <web@pagadesarrollos.com>")
-//   CONTACT_TO_<PROFILE> optional per-profile inbox, e.g. CONTACT_TO_TERRENO, CONTACT_TO_COMPRADOR
+// Configure in Cloudflare → Workers & Pages → (project) → Settings → Variables and Secrets:
+//   RESEND_API_KEY        API key from Resend (store as a secret)
+//   CONTACT_TO            inbox that receives messages (e.g. contacto@pagadesarrollos.com)
+//   CONTACT_FROM          verified sender, required (e.g. "PAGA Desarrollos <web@pagadesarrollos.com>")
+//   CONTACT_TO_<PROFILE>  optional per-profile inbox, e.g. CONTACT_TO_TERRENO, CONTACT_TO_COMPRADOR
 // Until RESEND_API_KEY, CONTACT_TO and CONTACT_FROM are set it answers 503 and the page shows "not connected yet".
 
 const PROFILES = ['inversion', 'terreno', 'banco', 'comprador', 'broker', 'proveedor', 'prensa', 'empleo'];
@@ -13,12 +13,13 @@ const clean = (v, n = 500) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, 
 // keeps line breaks (for the message body only)
 const cleanText = (v, n = 3000) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim().slice(0, n);
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
+export async function onRequestPost({ request, env }) {
   let b;
-  try { b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {}; } catch { return res.status(400).json({ error: 'bad_json' }); }
-  if (b.website) return res.status(200).json({ ok: true }); // honeypot: silently drop bots
+  try { b = await request.json(); } catch { return json(400, { error: 'bad_json' }); }
+  if (!b || typeof b !== 'object') return json(400, { error: 'bad_json' });
+  if (b.website) return json(200, { ok: true }); // honeypot: silently drop bots
 
   const d = {
     profile: PROFILES.includes(b.profile) ? b.profile : '',
@@ -33,12 +34,12 @@ export default async function handler(req, res) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) errors.push('email');
   if (!d.message) errors.push('message');
   if (!d.consent) errors.push('consent');
-  if (errors.length) return res.status(400).json({ error: 'invalid', fields: errors });
+  if (errors.length) return json(400, { error: 'invalid', fields: errors });
 
-  const key = process.env.RESEND_API_KEY;
-  const to = process.env[`CONTACT_TO_${d.profile.toUpperCase()}`] || process.env.CONTACT_TO;
-  const from = process.env.CONTACT_FROM;
-  if (!key || !to || !from) return res.status(503).json({ error: 'not_configured' });
+  const key = env.RESEND_API_KEY;
+  const to = env[`CONTACT_TO_${d.profile.toUpperCase()}`] || env.CONTACT_TO;
+  const from = env.CONTACT_FROM;
+  if (!key || !to || !from) return json(503, { error: 'not_configured' });
 
   const rows = [
     ['Perfil', LABELS[d.profile]], ['Nombre', d.name], ['Correo', d.email], ['Teléfono', d.phone], ['Empresa', d.company],
@@ -50,14 +51,10 @@ export default async function handler(req, res) {
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from,
-      to: to.split(',').map((s) => s.trim()),
-      reply_to: d.email,
-      subject: `[Web] ${LABELS[d.profile]} · ${d.name}`,
-      html,
-    }),
+    body: JSON.stringify({ from, to: to.split(',').map((s) => s.trim()), reply_to: d.email, subject: `[Web] ${LABELS[d.profile]} · ${d.name}`, html }),
   });
-  if (!r.ok) return res.status(502).json({ error: 'send_failed' });
-  return res.status(200).json({ ok: true });
+  if (!r.ok) return json(502, { error: 'send_failed' });
+  return json(200, { ok: true });
 }
+
+export const onRequest = () => json(405, { error: 'method_not_allowed' });
