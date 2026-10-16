@@ -90,13 +90,12 @@ const org = {
             <img class="logo" src="/img/paga-logo-white.png" alt="PAGA Desarrollos" width="120" height="108" />
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
-            <p class="fh">{lang === 'es' ? 'Sitio' : 'Site'}</p>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
             <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
             <a href={contactPath(lang)}>{lang === 'es' ? 'Contacto' : 'Contact'}</a>
           </nav>
-          <div>
+          <div class="loc">
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
           </div>
