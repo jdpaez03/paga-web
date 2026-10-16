@@ -52,7 +52,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     </div>
     <div class="p-info">
       <p class="eyebrow"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
-      <div class="p-logo"><img src={p.logo} alt={`${p.name} logo`} /></div>
+      <span class="p-logo" role="img" aria-label={`${p.name} logo`} style={`--logo: url(${p.logo})`}></span>
       <h1>{p.name}</h1>
       <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
       {(descriptions as any)[p.slug] && <p class="p-desc">{(descriptions as any)[p.slug][lang]}</p>}
@@ -82,10 +82,10 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
   </section>
 
 
-  <section class="section tight">
+  <section class="section tight p-more">
     <div class="wrap">
       {siblings.length > 0 && (
-        <div style="margin-top:24px">
+        <div>
           <h2 class="eyebrow">{ui.masterPlan} · {masterPlans[p.masterPlan!]}</h2>
           <div class="grid" style="margin-top:24px">{siblings.map((s) => <ProjectCard p={s} lang={lang} />)}</div>
         </div>

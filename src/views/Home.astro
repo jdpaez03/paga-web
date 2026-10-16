@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import YearStrip from '../components/YearStrip.astro';
-import { type Lang, company, tx, t, paths, projects, figures, area, asOf, srcset, liveProjects, contactPath, typeLabel } from '../lib/data';
+import Figures from '../components/Figures.astro';
+import { type Lang, company, tx, t, paths, projects, figures, srcset, liveProjects, contactPath, typeLabel } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
@@ -9,8 +10,6 @@ const es = lang === 'es';
 const seo = company.seo.home;
 const f = figures();
 const live = liveProjects();
-const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
-const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="home" alt={paths.home(es ? 'en' : 'es')}>
   <section class="hero">
@@ -19,27 +18,14 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       <video id="hero-video" muted loop playsinline preload="none" width="1920" height="1080" data-src-sm="/video/hero-720.mp4" data-src-lg="/video/hero-1080.mp4"></video>
     </div>
     <div class="hero-inner">
-      <p class="eyebrow">PAGA Desarrollos · {es ? 'México y Texas, desde 2001' : 'Mexico and Texas, since 2001'}</p>
+      <p class="eyebrow">{es ? 'México · USA · Desde 2001' : 'Mexico · USA · Since 2001'}</p>
       <h1>{es ? '25 años' : '25 years'} <span class="accent">{es ? 'desarrollando valor.' : 'developing value.'}</span></h1>
-      <p class="lead">{tx(company.heroLead, lang)}</p>
-      <p class="audience">{es ? 'Trabajamos con propietarios de tierra, socios de capital, instituciones financieras y codesarrolladores.' : 'We work with landowners, capital partners, financial institutions and co-developers.'}</p>
       <div class="ctas">
         <a class="btn light arrow" href={paths.projects(lang)} data-track="cta_click" data-track-where="hero_projects">{es ? 'Proyectos' : 'Projects'}</a>
         <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Contáctanos' : 'Contact us'}</a>
       </div>
-      <div class="hero-foot">
-        <div class="kpis num">
-          <div><strong>{f.years}</strong><span>{es ? 'años' : 'years'}</span></div>
-          <div><strong>{f.developments}</strong><span>{es ? 'desarrollos' : 'developments'}</span></div>
-          <div><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
-          <div><strong>{areaShort}</strong><span>{es ? 'm² construidos y en desarrollo' : 'ft² built and in development'}</span></div>
-        </div>
-        <div class="hero-cap">
-          <p class="kpis-note">{es ? `Cifras a ${asOfLabel}.` : `Figures as of ${asOfLabel}.`} {es ? 'En video: Sonoma y Balcones, Monterrey.' : 'On video: Sonoma and Balcones, Monterrey.'}</p>
-          <button type="button" class="film-btn" id="hero-btn" aria-pressed="false" hidden>{es ? 'Pausar' : 'Pause'}</button>
-        </div>
-      </div>
     </div>
+    <button type="button" class="film-btn hero-pause" id="hero-btn" aria-pressed="false" hidden>{es ? 'Pausar' : 'Pause'}</button>
   </section>
   <script define:vars={{ es }}>
     (function () {
@@ -61,6 +47,13 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
       if (document.readyState === 'complete') setTimeout(start, 300); else window.addEventListener('load', function () { setTimeout(start, 300); });
     })();
   </script>
+
+  <section class="section tight">
+    <div class="wrap">
+      <p class="lead-home">{tx(company.heroLead, lang)}</p>
+      <div style="margin-top:40px"><Figures lang={lang} /></div>
+    </div>
+  </section>
 
   <section class="section" id="en-desarrollo">
     <div class="wrap">
@@ -120,7 +113,7 @@ const areaShort = area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '');
     <div class="wrap">
       <div class="section-head split">
         <div><p class="eyebrow">{es ? 'Trayectoria' : 'Track record'}</p><h2>{es ? 'De 2001 a hoy' : 'From 2001 to today'}</h2></div>
-        <p>{es ? 'Recorre cada año. La línea completa, con México y Texas lado a lado, está en Proyectos.' : 'Scroll through each year. The full timeline, Mexico and Texas side by side, is under Projects.'}</p>
+        <p>{es ? 'Recorre cada año. La línea completa, con México y Estados Unidos lado a lado, está en Proyectos.' : 'Scroll through each year. The full timeline, Mexico and the United States side by side, is under Projects.'}</p>
       </div>
     </div>
     <div class="wrap"><YearStrip lang={lang} /></div>
