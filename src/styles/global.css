@@ -49,8 +49,8 @@ p { margin: 0 0 1em; }
 /* header — full width so the brand sits in the corner */
 .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(245, 243, 239, 0.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .site-header .bar { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 16px; padding: 0 clamp(16px, 2.6vw, 40px); }
-.brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--navy); }
-.brand img { width: 42px; height: 42px; }
+.brand { display: flex; flex: none; align-items: center; gap: 14px; text-decoration: none; color: var(--navy); }
+.brand img { width: 42px; height: 42px; flex: none; }
 .brand span { font-weight: 500; font-size: 17px; letter-spacing: 0.34em; white-space: nowrap; line-height: 1.15; }
 .brand small { font-weight: 400; letter-spacing: 0.32em; font-size: 10.5px; display: block; color: var(--muted); }
 .nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 36px); font-size: 14px; letter-spacing: 0.08em; }
@@ -89,6 +89,7 @@ p { margin: 0 0 1em; }
 .strip > li { display: flex; scroll-snap-align: start; }
 .strip a { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 24px 20px; text-decoration: none; color: var(--white); border-right: 1px solid var(--line-dark); min-height: 180px; transition: background .2s; }
 .strip a:hover { background: rgba(255,255,255,.05); }
+.strip a:focus-visible { outline-offset: -3px; } /* the scroller clips an outer ring */
 .strip .y { font-size: 30px; font-weight: 300; }
 .strip .l { height: 44px; display: flex; align-items: center; }
 .strip .l img { max-height: 40px; max-width: 120px; width: auto; height: auto; }
@@ -153,7 +154,8 @@ p { margin: 0 0 1em; }
 .on-dark .btn:hover, .on-deep .btn:hover { background: var(--white); color: var(--navy); }
 .arrow::after { content: '→'; font-family: var(--sans); }
 .arrow-out::after { content: '↗'; font-family: var(--sans); }
-.card-cta.arrow::after, .card-cta.arrow-out::after { margin-left: .4em; }
+.arrow-back::before { content: '←'; font-family: var(--sans); margin-right: .4em; }
+.card-cta.arrow::after, .card-cta.arrow-out::after, .pager .arrow::after { margin-left: .4em; }
 
 /* timeline (vertical, two lanes) */
 .tl { position: relative; }
@@ -355,6 +357,8 @@ p { margin: 0 0 1em; }
 
 /* phones: the mark alone (the link keeps its PAGA Desarrollos label) so all four nav items fit */
 @media (max-width: 480px) { .brand span { display: none; } .nav { gap: 12px; } }
+@media (max-width: 380px) { .nav { gap: 10px; font-size: 12.5px; letter-spacing: .04em; } .nav .lang { padding-left: 8px; } .nav .nav-cta { padding: 8px 10px; letter-spacing: .1em; } }
+@media (max-width: 340px) { .nav { gap: 7px; } .nav .lang { padding-left: 7px; } .nav .nav-cta { padding: 8px 7px; } }
 .profiles.invalid legend { color: #b3261e; }
 .profiles.invalid .chip-radio span { border-color: #e2a8a3; }
 

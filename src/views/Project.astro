@@ -51,7 +51,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       )}
     </div>
     <div class="p-info">
-      <p class="eyebrow"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
+      <p class="eyebrow"><a class="arrow-back" href={paths.projects(lang)} style="text-decoration:none">{ui.backToProjects}</a></p>
       <span class="p-logo" role="img" aria-label={`${p.name} logo`} style={`--logo: url(${p.logo})`}></span>
       <h1>{p.name}</h1>
       <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
@@ -91,8 +91,8 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         </div>
       )}
       <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
-        {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
-        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? (es ? 'En planeación' : 'In planning')} →</small>{next.name}</a> : <span />}
+        {prev ? <a href={paths.project(lang, prev.slug)}><small class="arrow-back">{prev.completionYear}</small>{prev.name}</a> : <span />}
+        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small class="arrow">{next.completionYear ?? (es ? 'En planeación' : 'In planning')}</small>{next.name}</a> : <span />}
       </nav>
     </div>
   </section>

@@ -109,7 +109,10 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
     const showSales = () => {
       const sel = projSel;
       const url = sales[sel.value];
-      salesBox.hidden = !url;
+      // availability and prices only matter to buyers and brokers (or before a profile is chosen)
+      const r = form.querySelector<HTMLInputElement>('input[name=profile]:checked');
+      const forSales = !r || ['comprador', 'broker'].includes(r.value);
+      salesBox.hidden = !url || !forSales;
       if (url) { salesBox.innerHTML = ''; salesBox.append(form.dataset.salesHint + ' '); const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = url.replace(/^https?:\/\/(www\.)?/, ''); a.addEventListener('click', () => track('outbound_sales_site', { project: sel.value, from: 'contact' })); salesBox.append(a); }
     };
 
@@ -120,7 +123,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
     const proj = q.get('proyecto') || q.get('project');
     if (proj) { projSel.value = proj; keepProject = projSel.value === proj; }
     apply(); showSales();
-    form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'profile') { apply(); track('route_select', { profile: t.value }); } if (t.name === 'project') showSales(); });
+    form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'profile') { apply(); showSales(); track('route_select', { profile: t.value }); } if (t.name === 'project') showSales(); });
     let started = false;
     form.addEventListener('input', () => { if (!started) { started = true; track('form_start'); } }, { once: false });
 
@@ -145,7 +148,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
       btn.disabled = true; status.textContent = '…';
       try {
         const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
-        if (res.ok) { form.reset(); keepProject = false; apply(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
+        if (res.ok) { form.reset(); keepProject = false; apply(); showSales(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
         else if (res.status === 400) { status.textContent = form.dataset.error!; track('form_error'); }
         else if ([404, 405, 501, 503].includes(res.status)) { status.textContent = form.dataset.pending!; }
         else { status.textContent = form.dataset.sendError!; track('form_error'); }
