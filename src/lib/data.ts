@@ -1,5 +1,6 @@
 import projectsData from '../data/projects.json';
 import company from '../data/company.json';
+import contact from '../data/contact.json';
 
 export type Lang = 'es' | 'en';
 export type Project = (typeof projectsData.projects)[number];
@@ -73,6 +74,10 @@ export function srcset(src: string, naturalW: number) {
 /** Projects people can still ask about (not delivered). */
 export const liveProjects = () =>
   [...projects].filter((p) => p.status !== 'delivered').sort((a, b) => (a.completionYear ?? 9999) - (b.completionYear ?? 9999));
+
+/** Offices shown on Contact and in the footer; empty until Jurídico confirms address, phone and email. */
+export type Office = { city: { es: string; en: string }; address: string; phone?: string; email?: string };
+export const offices: Office[] = (contact as { offices?: Office[] }).offices ?? [];
 
 export const contactPath = (l: Lang, q: Record<string, string> = {}) => {
   const base = l === 'es' ? '/contacto/' : '/en/contact/';

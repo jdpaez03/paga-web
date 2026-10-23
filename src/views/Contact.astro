@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import contact from '../data/contact.json';
-import { type Lang, tx, paths, liveProjects, contactPath } from '../lib/data';
+import { type Lang, tx, paths, liveProjects, contactPath, offices } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
@@ -24,6 +24,19 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
               <li>{i === 1 ? <>{t.split(es ? 'Consulta' : 'See our')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulta nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
             ))}
           </ul>
+          {offices.length > 0 && (
+            <div class="offices">
+              <h2>{tx(contact.officesTitle, lang)}</h2>
+              {offices.map((o) => (
+                <address>
+                  <strong>{tx(o.city, lang)}</strong><br />
+                  {o.address}
+                  {o.phone && <><br /><a href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a></>}
+                  {o.email && <><br /><a href={`mailto:${o.email}`}>{o.email}</a></>}
+                </address>
+              ))}
+            </div>
+          )}
         </aside>
       </div>
 
@@ -80,15 +93,21 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
     const hint = document.getElementById('profile-hint')!;
     const salesBox = document.getElementById('sales-link')!;
     const sales = JSON.parse(form.dataset.sales || '{}');
+    const projSel = document.getElementById('f-project') as HTMLSelectElement;
+    // a visitor who arrives from a project page keeps that project in view whatever profile they choose
+    let keepProject = false;
     const track = (name: string, data: Record<string, string> = {}) => (window as any).va?.('event', { name, data });
 
     const apply = () => {
       const r = form.querySelector<HTMLInputElement>('input[name=profile]:checked');
       hint.textContent = r ? r.dataset.hint || '' : '';
-      form.querySelectorAll<HTMLElement>('.only').forEach((el) => { el.hidden = !r || !(el.dataset.for || '').split(' ').includes(r.value); });
+      form.querySelectorAll<HTMLElement>('.only').forEach((el) => {
+        const forProfile = !!r && (el.dataset.for || '').split(' ').includes(r.value);
+        el.hidden = !(forProfile || (keepProject && el.contains(projSel)));
+      });
     };
     const showSales = () => {
-      const sel = document.getElementById('f-project') as HTMLSelectElement;
+      const sel = projSel;
       const url = sales[sel.value];
       salesBox.hidden = !url;
       if (url) { salesBox.innerHTML = ''; salesBox.append(form.dataset.salesHint + ' '); const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = url.replace(/^https?:\/\/(www\.)?/, ''); a.addEventListener('click', () => track('outbound_sales_site', { project: sel.value, from: 'contact' })); salesBox.append(a); }
@@ -99,7 +118,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
     const pre = q.get('perfil') || q.get('profile');
     if (pre) { const r = form.querySelector<HTMLInputElement>(`input[name=profile][value="${CSS.escape(pre)}"]`); if (r) r.checked = true; }
     const proj = q.get('proyecto') || q.get('project');
-    if (proj) (document.getElementById('f-project') as HTMLSelectElement).value = proj;
+    if (proj) { projSel.value = proj; keepProject = projSel.value === proj; }
     apply(); showSales();
     form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'profile') { apply(); track('route_select', { profile: t.value }); } if (t.name === 'project') showSales(); });
     let started = false;
@@ -126,7 +145,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
       btn.disabled = true; status.textContent = '…';
       try {
         const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
-        if (res.ok) { form.reset(); apply(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
+        if (res.ok) { form.reset(); keepProject = false; apply(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
         else if (res.status === 400) { status.textContent = form.dataset.error!; track('form_error'); }
         else if ([404, 405, 501, 503].includes(res.status)) { status.textContent = form.dataset.pending!; }
         else { status.textContent = form.dataset.sendError!; track('form_error'); }

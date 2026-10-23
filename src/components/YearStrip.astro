@@ -9,12 +9,12 @@ const stops = [...projects]
   .sort((a, b) => (a.completionYear as number) - (b.completionYear as number))
   .filter((p) => { const k = `${p.completionYear}-${p.logo}`; if (seen.has(k)) return false; seen.add(k); return true; });
 ---
-<div class="strip" role="list">
+<ul class="strip">
   {stops.map((p) => (
-    <a role="listitem" href={paths.project(lang, p.slug)}>
+    <li><a href={paths.project(lang, p.slug)}>
       <span class="y num">{p.status !== 'delivered' && <small style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:block;color:var(--accent)">{lang === 'es' ? 'Estimado' : 'Est.'}</small>}{p.completionYear}</span>
       <span class="l"><img src={p.logo} alt="" loading="lazy" /></span>
       <span class="n">{p.name}<br />{p.city}</span>
-    </a>
+    </a></li>
   ))}
-</div>
+</ul>

@@ -191,6 +191,11 @@
     "es": "No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.",
     "en": "We couldn't send your message. Please try again in a few minutes."
   },
+  "officesTitle": {
+    "es": "Oficinas",
+    "en": "Offices"
+  },
+  "offices": [],
   "profileRequired": {
     "es": "Elige una opción.",
     "en": "Choose an option."

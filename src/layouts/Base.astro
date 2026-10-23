@@ -4,7 +4,7 @@ import '@fontsource/jost/latin-400.css';
 import '@fontsource/jost/latin-500.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import '../styles/global.css';
-import { type Lang, t, paths, contactPath } from '../lib/data';
+import { type Lang, t, paths, contactPath, offices } from '../lib/data';
 import ContactCta from '../components/ContactCta.astro';
 import siteCfg from '../data/site.json';
 
@@ -71,7 +71,7 @@ const org = {
         </a>
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
-          <a class="hide-xs" href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
+          <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
           <a class="lang" href={altHref} hreflang={other} lang={other} data-track="lang_switch">{other.toUpperCase()}</a>
           <a class="btn solid nav-cta" href={contactPath(lang)} aria-current={current === 'contact' ? 'page' : undefined} data-track="cta_click" data-track-where="header">{lang === 'es' ? 'Contacto' : 'Contact'}</a>
         </nav>
@@ -96,6 +96,7 @@ const org = {
           <div class="loc">
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
+            {offices.length > 0 && <address class="addr">{offices.map((o) => <span>{o.address}</span>)}</address>}
           </div>
         </div>
         <div class="bottom">
