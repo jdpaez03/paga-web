@@ -51,7 +51,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
       )}
     </div>
     <div class="p-info">
-      <p class="eyebrow"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
+      <p class="eyebrow"><a class="arrow-back" href={paths.projects(lang)} style="text-decoration:none">{ui.backToProjects}</a></p>
       <span class="p-logo" role="img" aria-label={`${p.name} logo`} style={`--logo: url(${p.logo})`}></span>
       <h1>{p.name}</h1>
       <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
@@ -70,11 +70,11 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         <div class="p-actions">
           {p.salesUrl ? (
             <>
-              <a class="btn solid arrow" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'} ↗</a>
-              <a class="btn" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+              <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'}</a>
+              <a class="btn" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
             </>
           ) : (
-            <a class="btn solid arrow" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+            <a class="btn solid arrow" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
           )}
         </div>
       )}
@@ -91,8 +91,8 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         </div>
       )}
       <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
-        {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
-        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? (es ? 'En planeación' : 'In planning')} →</small>{next.name}</a> : <span />}
+        {prev ? <a href={paths.project(lang, prev.slug)}><small class="arrow-back">{prev.completionYear}</small>{prev.name}</a> : <span />}
+        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small class="arrow">{next.completionYear ?? (es ? 'En planeación' : 'In planning')}</small>{next.name}</a> : <span />}
       </nav>
     </div>
   </section>
@@ -100,8 +100,8 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     <div class="p-sticky" role="region" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
       <span>{p.name}</span>
       {p.salesUrl
-        ? <a class="btn solid" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>
-        : <a class="btn solid" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
+        ? <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
+        : <a class="btn solid" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
     </div>
   )}
   <script>

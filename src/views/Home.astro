@@ -15,7 +15,7 @@ const live = liveProjects();
   <section class="hero">
     <div class="hero-media" aria-hidden="true">
       <img src="/video/hero.webp" srcset="/video/hero-960.webp 960w, /video/hero.webp 1600w" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
-      <video id="hero-video" muted loop playsinline preload="none" width="1920" height="1080" data-src-sm="/video/hero-720.mp4" data-src-lg="/video/hero-1080.mp4"></video>
+      <video id="hero-video" muted loop playsinline preload="none" width="1920" height="1080" data-src="/video/hero-1080.mp4"></video>
     </div>
     <div class="hero-inner">
       <p class="eyebrow">{es ? 'México · USA · Desde 2001' : 'Mexico · USA · Since 2001'}</p>
@@ -33,9 +33,11 @@ const live = liveProjects();
       var b = document.getElementById('hero-btn');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var save = navigator.connection && navigator.connection.saveData;
-      if (!v || reduce || save) return;
+      // phones keep the still image: the clip would cost ~2 MB of mobile data for a background
+      var small = window.matchMedia('(max-width: 760px)').matches;
+      if (!v || reduce || save || small) return;
       var start = function () {
-      v.src = window.matchMedia('(max-width: 760px)').matches ? v.dataset.srcSm : v.dataset.srcLg;
+      v.src = v.dataset.src;
       v.addEventListener('playing', function () { v.classList.add('on'); });
       var userPaused = false;
       var label = function () { b.textContent = v.paused ? (es ? 'Reproducir' : 'Play') : (es ? 'Pausar' : 'Pause'); b.setAttribute('aria-pressed', String(v.paused)); };
@@ -75,8 +77,8 @@ const live = liveProjects();
             <p style="margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center">
               <span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span>
               {p.salesUrl
-                ? <a class="card-cta" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>
-                : <a class="card-cta" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`live_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'} →</a>}
+                ? <a class="card-cta arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
+                : <a class="card-cta arrow" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`live_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
             </p>
           </article>
         ))}
