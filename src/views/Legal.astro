@@ -4,9 +4,10 @@ import { type Lang, type LegalDoc, paths } from '../lib/data';
 import siteCfg from '../data/site.json';
 interface Props { lang: Lang; doc: LegalDoc }
 const { lang, doc } = Astro.props;
-const es = import.meta.glob('../content/legal/*.md', { eager: true }) as Record<string, any>;
-const en = import.meta.glob('../content/legal/en/*.md', { eager: true }) as Record<string, any>;
-const mod = (lang === 'es' ? es : en)[`../content/legal/${lang === 'es' ? '' : 'en/'}${doc}.md`];
+// plain Markdown read with glob (not a content collection, so it lives outside src/content/)
+const es = import.meta.glob('../legal/*.md', { eager: true }) as Record<string, any>;
+const en = import.meta.glob('../legal/en/*.md', { eager: true }) as Record<string, any>;
+const mod = (lang === 'es' ? es : en)[`../legal/${lang === 'es' ? '' : 'en/'}${doc}.md`];
 const { Content, frontmatter } = mod;
 // legal texts stay drafts until Jurídico approves them; a production build (preview off) must not publish one
 if (frontmatter.draft && !siteCfg.preview) throw new Error(`Legal draft "${doc}" (${lang}) cannot be published. Remove draft: true once Jurídico approves it.`);

@@ -12,7 +12,7 @@ Nada de esto se hace antes de que Dirección apruebe el sitio.
 ## 0. Antes de empezar
 
 - [ ] Dirección aprueba el sitio. Jurídico aprueba los avisos legales.
-- [ ] Los 8 textos de `src/content/legal/` (ES y EN) ya no llevan `draft: true` ni datos entre corchetes. Con `preview: false` en `src/data/site.json`, `npm run build` falla mientras quede uno en borrador.
+- [ ] Los 8 textos de `src/legal/` (ES y EN) ya no llevan `draft: true` ni datos entre corchetes. Con `preview: false` en `src/data/site.json`, `npm run build` falla mientras quede uno en borrador.
 - [ ] Domicilio, teléfono y correo oficiales confirmados por Jurídico y cargados en `offices` de `src/data/contact.json` (`city` ES/EN, `address`, `phone`, `email`). Aparecen completos en Contacto; el footer muestra solo el domicilio.
 - [ ] Cuenta de Cloudflare **a nombre de PAGA**: correo corporativo, verificación en dos pasos y, de preferencia, un segundo administrador.
 - [ ] Repositorio en GitHub accesible para esa cuenta. Idealmente, pasado a una organización de PAGA en lugar de `jdpaez03/paga-web`.

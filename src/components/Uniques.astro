@@ -1,0 +1,10 @@
+---
+import { type Lang, company, tx } from '../lib/data';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<div class="uniques">
+  {company.uniques.map((u, i) => (
+    <div class="unique"><b>0{i + 1}</b><h3>{tx(u.name, lang)}</h3><p>{tx(u.text, lang)}</p></div>
+  ))}
+</div>
