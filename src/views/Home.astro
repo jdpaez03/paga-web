@@ -64,7 +64,7 @@ const live = liveProjects();
     <div class="wrap">
       <div class="section-head split">
         <div><p class="eyebrow">{es ? 'Trayectoria' : 'Track record'}</p><h2 id="trayectoria-h">{es ? 'De 2001 a hoy' : 'From 2001 to today'}</h2></div>
-        <p>{es ? 'Cada desarrollo de PAGA por año de conclusión, de Los Robles a Torre Acqua. La línea completa, con México y Estados Unidos lado a lado, está en Proyectos.' : 'Every PAGA development by completion year, from Los Robles to Torre Acqua. The full timeline, Mexico and the United States side by side, is under Projects.'}</p>
+        <p>{es ? 'Los desarrollos de PAGA por año de conclusión; los años por venir son estimados. La línea completa, con México y Estados Unidos lado a lado, está en Proyectos.' : 'PAGA developments by completion year; future years are estimates. The full timeline, Mexico and the United States side by side, is under Projects.'}</p>
       </div>
     </div>
     <div class="wrap"><YearStrip lang={lang} /></div>
@@ -123,7 +123,7 @@ const live = liveProjects();
           <p class="eyebrow">{es ? 'En desarrollo' : 'In development'}</p>
           <h2>{es ? 'Proyectos en curso' : 'Current projects'}</h2>
         </div>
-        <p>{es ? 'Desarrollos en planeación, permisos u obra, cada uno con su año estimado de conclusión.' : 'Developments in planning, permitting or construction, each with its estimated completion year.'}</p>
+        <p>{es ? 'Desarrollos en planeación, permisos u obra; donde ya hay fecha, con su año estimado de conclusión.' : 'Developments in planning, permitting or construction; where a date is set, with its estimated completion year.'}</p>
       </div>
       <div class="grid">
         {live.map((p) => <ProjectCard p={p} lang={lang} />)}

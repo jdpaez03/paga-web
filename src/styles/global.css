@@ -101,7 +101,7 @@ p { margin: 0 0 1em; }
 .on-dark { background: var(--navy); color: var(--white); }
 .on-deep { background: var(--navy-deep); color: var(--white); }
 .on-white { background: var(--white); }
-section[id] { scroll-margin-top: 76px; } /* in-page anchors land below the sticky header */
+section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the sticky header */
 /* in-page index under a page title */
 .page-index { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
 .page-index a { padding: 12px 0; text-decoration: none; color: var(--blue); border-bottom: 1px solid transparent; }
@@ -165,7 +165,7 @@ section[id] { scroll-margin-top: 76px; } /* in-page anchors land below the stick
 .arrow::after { content: '→'; font-family: var(--sans); }
 .arrow-out::after { content: '↗'; font-family: var(--sans); }
 .arrow-back::before { content: '←'; font-family: var(--sans); margin-right: .4em; }
-.card-cta.arrow::after, .card-cta.arrow-out::after, .pager .arrow::after { margin-left: .4em; }
+.pager .arrow::after { margin-left: .4em; }
 
 /* timeline (vertical, two lanes) */
 .tl { position: relative; }
@@ -359,7 +359,6 @@ section[id] { scroll-margin-top: 76px; } /* in-page anchors land below the stick
 
 /* live projects band */
 .live-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; }
-.card .card-cta { display: inline-block; margin-top: 12px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); }
 
 /* project sales module */
 .p-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
@@ -374,7 +373,7 @@ section[id] { scroll-margin-top: 76px; } /* in-page anchors land below the stick
 .profiles.invalid .chip-radio span { border-color: #e2a8a3; }
 
 /* full film (home) */
-.film-frame { position: relative; margin-top: 8px; background: #000; }
+.film-frame { position: relative; background: #000; }
 .film-frame video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
 /* track record actions (home): two buttons and the film as a quieter text link */
 .track-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 32px; }
