@@ -1,12 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
-import { type Lang, company, tx, paths } from '../lib/data';
+import Uniques from '../components/Uniques.astro';
+import { type Lang, company, tx, paths, figures } from '../lib/data';
 import site from '../data/site.json';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
 const seo = company.seo.about;
 const g = company.guarantee;
+const f = figures();
+const showGuarantee = !g.draft || site.preview;
+// in-page index, in the order a capital partner or co-developer reads the page
+const index = [
+  { id: 'proceso', es: 'Proceso', en: 'Process' },
+  { id: 'diferenciadores', es: 'Qué nos distingue', en: 'What sets us apart' },
+  ...(showGuarantee ? [{ id: 'garantia', es: 'Garantía', en: 'Guarantee' }] : []),
+  { id: 'valores', es: 'Valores', en: 'Values' },
+  { id: 'equipo', es: 'Equipo', en: 'Team' },
+];
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="about" alt={paths.about(es ? 'en' : 'es')}>
   <section class="section">
@@ -16,43 +27,10 @@ const g = company.guarantee;
       <div style="display:grid;gap:24px;margin-top:56px;max-width:68ch;font-size:19px">
         {company.about.paragraphs[lang].map((para) => <p style="margin:0">{para}</p>)}
       </div>
-    </div>
-  </section>
-
-  <section class="section on-white" id="equipo">
-    <div class="wrap">
-      <div class="section-head split">
-        <div><p class="eyebrow">{es ? 'Equipo' : 'Team'}</p><h2>{tx(company.team.title, lang)}</h2></div>
-        <p>{tx(company.team.lead, lang)}</p>
-      </div>
-      <div class="team partners">
-        {company.team.partners.map((m) => (
-          <div class="member lead"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
-        ))}
-      </div>
-      <div class="team">
-        {company.team.leaders.map((m) => (
-          <div class="member"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="valores">
-    <div class="wrap">
-      <div class="section-head split">
-        <div><p class="eyebrow">{es ? 'Valores' : 'Values'}</p><h2>{es ? 'Cómo trabajamos, todos los días' : 'How we work, every day'}</h2></div>
-        <p>{es ? 'Cinco valores que guían a quién contratamos, cómo decidimos y cómo respondemos a nuestros socios.' : 'Five values that guide who we hire, how we decide and how we answer to our partners.'}</p>
-      </div>
-      <div class="values">
-        {company.values.map((v, i) => (
-          <div class="value">
-            <span class="n">0{i + 1}</span>
-            <h3>{tx(v.name, lang)}</h3>
-            <div class="body"><p class="line">{tx(v.line, lang)}</p><p>{tx(v.text, lang)}</p></div>
-          </div>
-        ))}
-      </div>
+      <p style="margin-top:40px"><a class="btn arrow" href={paths.projects(lang)}>{es ? `Ver los ${f.developments} desarrollos` : `See all ${f.developments} developments`}</a></p>
+      <nav class="page-index" aria-label={es ? 'En esta página' : 'On this page'}>
+        {index.map((s) => <a href={`#${s.id}`}>{s[lang]}</a>)}
+      </nav>
     </div>
   </section>
 
@@ -70,7 +48,16 @@ const g = company.guarantee;
     </div>
   </section>
 
-  {(!g.draft || site.preview) && <section class="section" id="garantia">
+  <section class="section on-white" id="diferenciadores">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Por qué PAGA' : 'Why PAGA'}</p><h2>{es ? 'Tres cosas que nos distinguen' : 'Three things that set us apart'}</h2></div>
+      </div>
+      <Uniques lang={lang} />
+    </div>
+  </section>
+
+  {showGuarantee && <section class="section" id="garantia">
     <div class="wrap">
       <div class="guarantee">
         <p class="eyebrow">{es ? 'Nuestra garantía' : 'Our guarantee'}</p>
@@ -80,4 +67,41 @@ const g = company.guarantee;
       </div>
     </div>
   </section>}
+
+  <section class={showGuarantee ? 'section on-white' : 'section'} id="valores">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Valores' : 'Values'}</p><h2>{es ? 'Cómo trabajamos, todos los días' : 'How we work, every day'}</h2></div>
+        <p>{es ? 'Cinco valores que guían a quién contratamos, cómo decidimos y cómo respondemos a nuestros socios.' : 'Five values that guide who we hire, how we decide and how we answer to our partners.'}</p>
+      </div>
+      <div class="values">
+        {company.values.map((v, i) => (
+          <div class="value">
+            <span class="n">0{i + 1}</span>
+            <h3>{tx(v.name, lang)}</h3>
+            <div class="body"><p class="line">{tx(v.line, lang)}</p><p>{tx(v.text, lang)}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class={showGuarantee ? 'section' : 'section on-white'} id="equipo">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Equipo' : 'Team'}</p><h2>{tx(company.team.title, lang)}</h2></div>
+        <p>{tx(company.team.lead, lang)}</p>
+      </div>
+      <div class="team partners">
+        {company.team.partners.map((m) => (
+          <div class="member lead"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
+        ))}
+      </div>
+      <div class="team">
+        {company.team.leaders.map((m) => (
+          <div class="member"><span class="mono" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><div><h3>{m.name}</h3><p>{tx(m.role, lang)}</p></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
 </Base>

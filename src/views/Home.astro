@@ -2,7 +2,9 @@
 import Base from '../layouts/Base.astro';
 import YearStrip from '../components/YearStrip.astro';
 import Figures from '../components/Figures.astro';
-import { type Lang, company, tx, t, paths, projects, figures, srcset, liveProjects, contactPath, typeLabel } from '../lib/data';
+import ProjectCard from '../components/ProjectCard.astro';
+import Uniques from '../components/Uniques.astro';
+import { type Lang, company, tx, t, paths, figures, liveProjects, contactPath } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
@@ -50,10 +52,67 @@ const live = liveProjects();
     })();
   </script>
 
+
   <section class="section tight">
     <div class="wrap">
       <p class="lead-home">{tx(company.heroLead, lang)}</p>
       <div style="margin-top:40px"><Figures lang={lang} /></div>
+    </div>
+  </section>
+
+  <section class="section on-deep" id="trayectoria" aria-labelledby="trayectoria-h">
+    <div class="wrap">
+      <div class="section-head split">
+        <div><p class="eyebrow">{es ? 'Trayectoria' : 'Track record'}</p><h2 id="trayectoria-h">{es ? 'De 2001 a hoy' : 'From 2001 to today'}</h2></div>
+        <p>{es ? 'Cada desarrollo de PAGA por año de conclusión, de Los Robles a Torre Acqua. La línea completa, con México y Estados Unidos lado a lado, está en Proyectos.' : 'Every PAGA development by completion year, from Los Robles to Torre Acqua. The full timeline, Mexico and the United States side by side, is under Projects.'}</p>
+      </div>
+    </div>
+    <div class="wrap"><YearStrip lang={lang} /></div>
+    <div class="wrap">
+      <div class="track-actions">
+        <a class="btn light arrow" href={paths.projects(lang)}>{es ? `Ver los ${f.developments} desarrollos` : `See all ${f.developments} developments`}</a>
+        <a class="btn arrow" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
+        <a class="film-open" id="film-open" href={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} aria-controls="film-box" aria-expanded="false" data-track="video_play" data-track-where={`home_film_${lang}`}><span aria-hidden="true">▶</span> {es ? 'Ver en video' : 'Watch the film'} · 2:11</a>
+      </div>
+      <div class="film-frame" id="film-box" hidden>
+        <video id="film" controls playsinline preload="none" poster={es ? '/video/paga-25-anos.webp' : '/video/paga-25-years.webp'} width="1920" height="1080" aria-label={es ? '25 años en dos minutos. Video sin audio.' : '25 years in two minutes. No sound.'}>
+          <source src={es ? '/video/paga-25-anos-720.mp4' : '/video/paga-25-years-720.mp4'} type="video/mp4" media="(max-width: 760px)" />
+          <source src={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </section>
+  <script>
+    // the film is a secondary action: it opens in place under the strip; without JS the link plays the file
+    const film = document.getElementById('film') as HTMLVideoElement | null;
+    const open = document.getElementById('film-open');
+    const box = document.getElementById('film-box');
+    if (film && open && box) {
+      open.addEventListener('click', (e) => {
+        e.preventDefault();
+        box.hidden = false; open.setAttribute('aria-expanded', 'true');
+        film.focus(); film.play().catch(() => {});
+      });
+    }
+  </script>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">{es ? 'Propósito' : 'Purpose'}</p>
+      <p class="statement"><span class="accent">{tx(company.purpose, lang)}</span> {tx(company.niche, lang)}</p>
+      <p style="margin-top:40px"><a class="btn arrow" href={paths.about(lang)}>{ui.nav.about}</a></p>
+    </div>
+  </section>
+
+  <section class="section on-dark" aria-labelledby="uniques-h">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{es ? 'Por qué PAGA' : 'Why PAGA'}</p>
+          <h2 id="uniques-h">{es ? 'Tres cosas que nos distinguen' : 'Three things that set us apart'}</h2>
+        </div>
+      </div>
+      <Uniques lang={lang} />
     </div>
   </section>
 
@@ -64,84 +123,10 @@ const live = liveProjects();
           <p class="eyebrow">{es ? 'En desarrollo' : 'In development'}</p>
           <h2>{es ? 'Proyectos en curso' : 'Current projects'}</h2>
         </div>
-        <p>{es ? 'Desarrollos en planeación, permisos u obra. Si te interesa alguno, te conectamos con su equipo comercial.' : 'Developments in planning, permitting or construction. If one interests you, we will connect you with its sales team.'}</p>
+        <p>{es ? 'Desarrollos en planeación, permisos u obra, cada uno con su año estimado de conclusión.' : 'Developments in planning, permitting or construction, each with its estimated completion year.'}</p>
       </div>
       <div class="grid">
-        {live.map((p) => (
-          <article class="card">
-            <a href={paths.project(lang, p.slug)} style="text-decoration:none;color:inherit;display:block">
-              <div class="ph"><img src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading="lazy" decoding="async" /></div>
-              <h3>{p.name}</h3>
-              <div class="meta"><span>{p.city}, {p.state}</span><span>{tx(typeLabel[p.type], lang)}</span>{p.completionYear && <span class="num">{es ? 'Estimado' : 'Est.'} {p.completionYear}</span>}</div>
-            </a>
-            <p style="margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center">
-              <span class="tag live">{ui.status[p.status as keyof typeof ui.status]}</span>
-              {p.salesUrl
-                ? <a class="card-cta arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
-                : <a class="card-cta arrow" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`live_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
-            </p>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section on-dark film-full" aria-labelledby="film-h">
-    <div class="wrap">
-      <div class="section-head split">
-        <div><p class="eyebrow">{es ? `${f.developments} desarrollos` : `${f.developments} developments`}</p><h2 id="film-h">{es ? '25 años en dos minutos' : '25 years in two minutes'}</h2></div>
-        <p>{es ? 'Cada desarrollo de PAGA, de Los Robles en 2001 a Torre Acqua, con su año de conclusión, ciudad y estatus. Video sin audio.' : 'Every PAGA development, from Los Robles in 2001 to Torre Acqua, with its completion year, city and status. No sound.'}</p>
-      </div>
-      <div class="film-frame">
-        <video id="film" controls playsinline preload="none" poster={es ? '/video/paga-25-anos.webp' : '/video/paga-25-years.webp'} width="1920" height="1080">
-          <source src={es ? '/video/paga-25-anos-720.mp4' : '/video/paga-25-years-720.mp4'} type="video/mp4" media="(max-width: 760px)" />
-          <source src={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} type="video/mp4" />
-        </video>
-        <button type="button" class="film-play" id="film-play" data-track="video_play" data-track-where={`home_film_${lang}`}><span aria-hidden="true">▶</span> {es ? 'Ver el video' : 'Watch the film'} · 2:11</button>
-      </div>
-    </div>
-  </section>
-  <script>
-    const film = document.getElementById('film') as HTMLVideoElement | null;
-    const play = document.getElementById('film-play');
-    if (film && play) {
-      play.addEventListener('click', () => { play.hidden = true; film.play().catch(() => {}); });
-      film.addEventListener('play', () => { play.hidden = true; });
-    }
-  </script>
-
-
-  <section class="section tight on-deep">
-    <div class="wrap">
-      <div class="section-head split">
-        <div><p class="eyebrow">{es ? 'Trayectoria' : 'Track record'}</p><h2>{es ? 'De 2001 a hoy' : 'From 2001 to today'}</h2></div>
-        <p>{es ? 'Recorre cada año. La línea completa, con México y Estados Unidos lado a lado, está en Proyectos.' : 'Scroll through each year. The full timeline, Mexico and the United States side by side, is under Projects.'}</p>
-      </div>
-    </div>
-    <div class="wrap"><YearStrip lang={lang} /></div>
-    <div class="wrap"><p style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px"><a class="btn light arrow" href={paths.projects(lang)}>{es ? `Ver los ${f.developments} desarrollos` : `See all ${f.developments} developments`}</a><a class="btn arrow" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a></p></div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <p class="eyebrow">{es ? 'Propósito' : 'Purpose'}</p>
-      <p class="statement"><span class="accent">{tx(company.purpose, lang)}</span> {tx(company.niche, lang)}</p>
-      <p style="margin-top:40px"><a class="btn arrow" href={paths.about(lang)}>{ui.nav.about}</a></p>
-    </div>
-  </section>
-
-  <section class="section on-dark">
-    <div class="wrap">
-      <div class="section-head split">
-        <div>
-          <p class="eyebrow">{es ? 'Por qué PAGA' : 'Why PAGA'}</p>
-          <h2>{es ? 'Tres cosas que nos distinguen' : 'Three things that set us apart'}</h2>
-        </div>
-      </div>
-      <div class="uniques">
-        {company.uniques.map((u, i) => (
-          <div class="unique"><b>0{i + 1}</b><h3>{tx(u.name, lang)}</h3><p>{tx(u.text, lang)}</p></div>
-        ))}
+        {live.map((p) => <ProjectCard p={p} lang={lang} />)}
       </div>
     </div>
   </section>
