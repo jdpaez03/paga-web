@@ -1,12 +1,13 @@
 ---
-import { type Lang, projects, paths, t } from '../lib/data';
+import { type Lang, projects, paths, t, asOf } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const dated = projects.filter((p) => p.completionYear);
 const yrs = [...new Set(dated.map((p) => p.completionYear as number))].sort((a, b) => a - b);
-const nowYear = 2026;
+// derived from the data's as-of date: hard-coding the year made the labels wrong every January
+const nowYear = new Date(asOf).getFullYear();
 const statusLine = (p: (typeof projects)[number]) =>
   p.status === "delivered" ? `${p.city}, ${p.state}` : `${p.city}, ${p.state} · ${ui.status[p.status as keyof typeof ui.status]}`;
 ---

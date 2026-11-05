@@ -10,13 +10,16 @@ const seo = company.seo.about;
 const g = company.guarantee;
 const f = figures();
 const showGuarantee = !g.draft || site.preview;
+// same gate as the guarantee: the titles are marked as unconfirmed in company.json, and eight
+// people's names with a wrong title cost more credibility than the section adds
+const showTeam = !company.team.draft || site.preview;
 // in-page index, in the order a capital partner or co-developer reads the page
 const index = [
   { id: 'proceso', es: 'Proceso', en: 'Process' },
   { id: 'diferenciadores', es: 'Qué nos distingue', en: 'What sets us apart' },
   ...(showGuarantee ? [{ id: 'garantia', es: 'Garantía', en: 'Guarantee' }] : []),
   { id: 'valores', es: 'Valores', en: 'Values' },
-  { id: 'equipo', es: 'Equipo', en: 'Team' },
+  ...(showTeam ? [{ id: 'equipo', es: 'Equipo', en: 'Team' }] : []),
 ];
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="about" alt={paths.about(es ? 'en' : 'es')}>
@@ -86,10 +89,14 @@ const index = [
     </div>
   </section>
 
+  {showTeam && (
   <section class={showGuarantee ? 'section' : 'section on-white'} id="equipo">
     <div class="wrap">
       <div class="section-head split">
-        <div><p class="eyebrow">{es ? 'Equipo' : 'Team'}</p><h2>{tx(company.team.title, lang)}</h2></div>
+        <div>
+          <p class="eyebrow">{es ? 'Equipo' : 'Team'}</p><h2>{tx(company.team.title, lang)}</h2>
+          {company.team.draft && <span class="draft-note">{es ? 'Borrador · puestos pendientes de confirmación de Dirección' : 'Draft · titles pending confirmation by management'}</span>}
+        </div>
         <p>{tx(company.team.lead, lang)}</p>
       </div>
       <div class="team partners">
@@ -104,4 +111,5 @@ const index = [
       </div>
     </div>
   </section>
+  )}
 </Base>

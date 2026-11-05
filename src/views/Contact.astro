@@ -45,8 +45,9 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
       </div>
 
       <form id="contact-form" class="form" novalidate data-endpoint={endpoint} data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
-        <fieldset class="profiles">
-          <legend>{tx(F.profile, lang)}</legend>
+        <p class="form-req">* {tx(contact.required, lang)}</p>
+        <fieldset class="profiles" id="f-profiles" aria-describedby="err-profile">
+          <legend>{tx(F.profile, lang)} <b class="req" aria-hidden="true">*</b></legend>
           {contact.profiles.map((pr, i) => (
             <label class="chip-radio">
               <input type="radio" name="profile" value={pr.id} required data-hint={pr.hint[lang]} />
@@ -54,11 +55,12 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
             </label>
           ))}
         </fieldset>
+        <span class="field-error" id="err-profile">{tx(contact.errors.profile, lang)}</span>
         <p class="hint" id="profile-hint" aria-live="polite"></p>
 
         <div class="row">
-          <label class="field"><span>{tx(F.name, lang)}</span><input id="f-name" name="name" autocomplete="name" required maxlength="120" /></label>
-          <label class="field"><span>{tx(F.email, lang)}</span><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="160" /></label>
+          <label class="field"><span>{tx(F.name, lang)} <b class="req" aria-hidden="true">*</b></span><input id="f-name" name="name" autocomplete="name" required maxlength="120" aria-describedby="err-name" /><span class="field-error" id="err-name">{tx(contact.errors.name, lang)}</span></label>
+          <label class="field"><span>{tx(F.email, lang)} <b class="req" aria-hidden="true">*</b></span><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby="err-email" /><span class="field-error" id="err-email">{tx(contact.errors.email, lang)}</span></label>
         </div>
         <div class="row">
           <label class="field"><span>{tx(F.phone, lang)}</span><input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" /></label>
@@ -79,10 +81,10 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
           <p class="hint" id="sales-link" hidden></p>
         </div>
 
-        <label class="field"><span>{tx(F.message, lang)}</span><textarea id="f-message" name="message" rows="5" required maxlength="3000"></textarea></label>
+        <label class="field"><span>{tx(F.message, lang)} <b class="req" aria-hidden="true">*</b></span><textarea id="f-message" name="message" rows="5" required maxlength="3000" aria-describedby="err-message"></textarea><span class="field-error" id="err-message">{tx(contact.errors.message, lang)}</span></label>
 
         <label class="check only" data-for="inversion terreno banco"><input id="f-deck" type="checkbox" name="deck" value="1" /> <span>{tx(F.deck, lang)}</span></label>
-        <label class="check"><input id="f-consent" type="checkbox" name="consent" value="1" required /> <span>{tx(F.consent, lang)} <a href={paths.legal(lang, 'aviso-de-privacidad')} target="_blank" rel="noopener">{tx(F.consentLink, lang)}</a>.</span></label>
+        <label class="check"><input id="f-consent" type="checkbox" name="consent" value="1" required aria-describedby="err-consent" /> <span>{tx(F.consent, lang)} <a href={paths.legal(lang, 'aviso-de-privacidad')} target="_blank" rel="noopener">{tx(F.consentLink, lang)}</a>. <b class="req" aria-hidden="true">*</b><span class="field-error" id="err-consent">{tx(contact.errors.consent, lang)}</span></span></label>
         <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
 
         <button class="btn solid arrow" type="submit" id="f-submit">{tx(F.submit, lang)}</button>
@@ -137,11 +139,19 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
       if (btn.disabled) return;
       form.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
       form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      form.querySelectorAll('.field-error.on').forEach((el) => el.classList.remove('on'));
       const bad = [...form.querySelectorAll<HTMLInputElement>('input[required]:not([type=radio]), textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
       const noProfile = !form.querySelector('input[name=profile]:checked');
-      if (noProfile) form.querySelector('.profiles')!.classList.add('invalid');
+      const profiles = form.querySelector('.profiles')!;
+      if (noProfile) { profiles.classList.add('invalid'); profiles.setAttribute('aria-invalid', 'true'); document.getElementById('err-profile')!.classList.add('on'); }
       if (bad.length || noProfile) {
-        bad.forEach((el) => { el.setAttribute('aria-invalid', 'true'); (el.closest('.field, .check') || el).classList.add('invalid'); });
+        // the red border alone leaves out anyone who cannot see it: every field says what is missing
+        bad.forEach((el) => {
+          el.setAttribute('aria-invalid', 'true');
+          (el.closest('.field, .check') || el).classList.add('invalid');
+          const msg = el.getAttribute('aria-describedby');
+          if (msg) document.getElementById(msg)?.classList.add('on');
+        });
         status.textContent = form.dataset.error!; (noProfile ? form.querySelector<HTMLInputElement>('input[name=profile]')! : bad[0]).focus(); track('form_error'); return;
       }
       const fd = new FormData(form);

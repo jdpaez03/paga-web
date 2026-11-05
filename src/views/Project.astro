@@ -13,6 +13,10 @@ const i = ordered.findIndex((x) => x.slug === p.slug);
 const prev = ordered[i - 1];
 const next = ordered[i + 1];
 const siblings = p.masterPlan ? projects.filter((x) => x.masterPlan === p.masterPlan && x.slug !== p.slug) : [];
+// astro-relative-links rewrites href/src, but not data-*: the gallery paths are made relative to
+// this page so the site also works from a subfolder, like the preview at /nuevo/
+const up = es ? '../../' : '../../../';
+const rel = (s: string) => s.replace(/(^|, )\//g, `$1${up}`);
 const typeTxt = tx(typeLabel[p.type], lang);
 const title = `${p.name} · PAGA Desarrollos`;
 const typePhrase: Record<string, { es: string; en: string }> = {
@@ -38,13 +42,14 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">
-        <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 60vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+        <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1400px) 620px, (min-width: 1000px) 45vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
       </figure>
       {p.gallery.length > 0 && (
         <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>
           {[{ src: p.image, size: p.imageSize }, ...p.gallery].map((g, i) => (
-            <button type="button" class="p-thumb" data-src={g.src} data-srcset={srcset(g.src, g.size[0])} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
-              <img src={`/img/w/${g.src.split('/').pop()!.replace(/\.jpg$/, '')}-480.webp`} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
+            <button type="button" class="p-thumb" data-src={rel(g.src)} data-srcset={rel(srcset(g.src, g.size[0]))} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
+              {/* the strip renders at 107 px: the 480 px file cost 56 KB per thumbnail */}
+              <img src={`/img/w/${g.src.split('/').pop()!.replace(/\.jpg$/, '')}-256.webp`} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
             </button>
           ))}
         </div>

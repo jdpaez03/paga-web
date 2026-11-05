@@ -1,3 +1,15 @@
+/* Cormorant Garamond italica, solo para la frase "desarrollando valor" y acentos sueltos.
+   El archivo de @fontsource trae todo el latin extendido (23.6 KB) para las dos docenas de letras
+   que usamos: este es un subconjunto con ASCII, los acentos del espanol y la puntuacion (11.6 KB).
+   Se genero con fontTools; si algun dia hace falta otro signo, hay que regenerarlo (docs). */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/cormorant-garamond-italic-v1.woff2') format('woff2');
+}
+
 :root {
   --navy: #13294b;
   --navy-deep: #0b1b33;
@@ -7,7 +19,11 @@
   --ink: #16202e;
   --muted: #5b6573;
   --line: #d9d5cc;
+  /* borders of form controls and filters: WCAG 1.4.11 asks 3:1, which --line (1.3:1) does not reach.
+     --line stays for decorative rules, where no minimum applies. */
+  --line-control: #9aa1ab;
   --line-dark: rgba(255, 255, 255, 0.16);
+  --line-control-dark: rgba(255, 255, 255, 0.45);
   --accent: #b9a27a; /* warm stone, used sparingly */
   --sans: 'Jost', system-ui, sans-serif;
   --serif: 'Cormorant Garamond', Georgia, serif;
@@ -41,7 +57,10 @@ p { margin: 0 0 1em; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 :focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
 /* on navy the stone accent is the visible ring */
-.hero :focus-visible, .on-dark :focus-visible, .on-deep :focus-visible, .site-footer :focus-visible { outline-color: var(--accent); }
+.on-dark :focus-visible, .on-deep :focus-visible, .site-footer :focus-visible { outline-color: var(--accent); }
+/* over the hero photograph the accent drops to 1.98:1 against bright sky, so the ring is white
+   with a navy halo: that pair stays visible over any frame of the image or the video */
+.hero :focus-visible { outline: 2px solid var(--white); outline-offset: 2px; box-shadow: 0 0 0 5px var(--navy-deep); }
 
 /* preview banner */
 .preview { background: var(--accent); color: var(--navy-deep); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; text-align: center; padding: 6px 12px; font-weight: 500; }
@@ -72,7 +91,8 @@ p { margin: 0 0 1em; }
 .hero-media video.on { opacity: 1; }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgba(11, 27, 51, .62); }
 .hero-inner { width: 100%; max-width: 1440px; margin: 0 auto; padding: clamp(40px, 7vh, 96px) clamp(16px, 4vw, 72px) clamp(20px, 3.5vh, 36px); display: flex; flex-direction: column; justify-content: center; }
-.hero .eyebrow { color: rgba(255,255,255,.9); }
+/* solid white: at 90% opacity the eyebrow falls to 4.32:1 over the brightest sky of the photo */
+.hero .eyebrow { color: var(--white); }
 .hero h1 { font-size: clamp(48px, min(8vw, 13vh), 140px); line-height: 1.02; text-wrap: balance; max-width: 13ch; margin: 0; font-weight: 300; }
 .hero h1 .accent { display: block; color: #dfe7f1; }
 .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(32px, 6vh, 56px); }
@@ -82,7 +102,11 @@ p { margin: 0 0 1em; }
 @media (max-width: 520px) { .hero .ctas .btn { flex: 1 1 100%; justify-content: center; } }
 .btn.solid { background: var(--navy); color: var(--white); border-color: var(--navy); }
 .btn.solid:hover { background: var(--navy-deep); }
-@media (prefers-reduced-motion: reduce) { .card .ph img, .hero-media video { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card .ph img, .hero-media video { transition: none; }
+  .card:hover .ph img { transform: none; }
+}
 
 /* year strip */
 .strip { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); scrollbar-width: thin; }
@@ -181,7 +205,8 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .tl-item .txt { min-width: 0; }
 .tl-item .txt b { display: block; font-weight: 400; font-size: 15px; line-height: 1.3; }
 .tl-item .txt span { display: block; font-size: 12.5px; color: rgba(255,255,255,.62); line-height: 1.4; }
-.tl-item.future { border-style: dashed; }
+/* the page promises a dashed outline for what is underway: at .16 alpha it was 1.63:1 and invisible */
+.tl-item.future { border-style: dashed; border-color: var(--line-control-dark); }
 .tl-head { display: none; }
 @media (min-width: 900px) {
   .tl-head { display: grid; grid-template-columns: 1fr 140px 1fr; gap: 32px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); padding-bottom: 16px; }
@@ -195,10 +220,11 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .tl-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
 
 /* filters */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
-.chip { font: inherit; font-size: 13px; letter-spacing: .08em; padding: 8px 16px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.count { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 28px; }
+.chip { font: inherit; font-size: 13px; letter-spacing: .08em; padding: 8px 16px; border: 1px solid var(--line-control); background: transparent; color: var(--ink); cursor: pointer; }
 .chip[aria-pressed='true'] { background: var(--navy); border-color: var(--navy); color: var(--white); }
-.on-deep .chip, .on-dark .chip { color: var(--white); border-color: var(--line-dark); }
+.on-deep .chip, .on-dark .chip { color: var(--white); border-color: var(--line-control-dark); }
 .on-deep .chip[aria-pressed='true'], .on-dark .chip[aria-pressed='true'] { background: var(--white); color: var(--navy); }
 
 /* project detail: image at its real size, never stretched */
@@ -338,7 +364,7 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .profiles legend { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; padding: 0; }
 .chip-radio { position: relative; }
 .chip-radio input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.chip-radio span { display: inline-block; padding: 9px 14px; border: 1px solid var(--line); font-size: 14px; cursor: pointer; }
+.chip-radio span { display: inline-block; padding: 9px 14px; border: 1px solid var(--line-control); font-size: 14px; cursor: pointer; }
 .chip-radio input:checked + span { background: var(--navy); border-color: var(--navy); color: var(--white); }
 .chip-radio input:focus-visible + span { outline: 2px solid var(--navy); outline-offset: 2px; }
 .hint { font-size: 14.5px; color: var(--muted); margin: -4px 0 0; }
@@ -346,13 +372,20 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 @media (min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
 .field { display: grid; gap: 6px; min-width: 0; }
 .field span { font-size: 13px; letter-spacing: .06em; color: var(--muted); }
-.field input, .field select, .field textarea { font: inherit; font-size: 16px; padding: 12px 14px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 0; width: 100%; }
+.field input, .field select, .field textarea { font: inherit; font-size: 16px; padding: 12px 14px; border: 1px solid var(--line-control); background: var(--paper); color: var(--ink); border-radius: 0; width: 100%; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--blue); outline-offset: -1px; background: var(--white); }
 .check { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
-.check input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--navy); flex: none; }
+/* 24px: it is the consent control the law requires, and WCAG 2.5.8 asks for that size */
+.check input { margin-top: 2px; width: 24px; height: 24px; accent-color: var(--navy); flex: none; }
 .check a { color: var(--blue); }
 .invalid input, .invalid textarea, .invalid select { border-color: #b3261e; background: #fff6f5; }
 .check.invalid span { color: #b3261e; }
+/* the red border alone fails 1.4.1: every error also says in words what is missing */
+.field-error { margin: 0; font-size: 14px; color: #b3261e; display: none; }
+.field-error::before { content: '⚠ '; }
+.invalid > .field-error, .field-error.on { display: block; }
+.req { color: var(--muted); }
+.form-req { font-size: 13.5px; color: var(--muted); margin: 0; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form .btn { justify-self: start; cursor: pointer; font: inherit; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
 .form-status { min-height: 1.4em; margin: 0; font-size: 15px; color: var(--navy); }

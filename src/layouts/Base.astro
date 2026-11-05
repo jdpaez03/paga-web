@@ -2,7 +2,10 @@
 import '@fontsource/jost/latin-300.css';
 import '@fontsource/jost/latin-400.css';
 import '@fontsource/jost/latin-500.css';
-import '@fontsource/cormorant-garamond/latin-400-italic.css';
+// las rutas con hash de los tres archivos de Jost, para poder precargarlos
+import jost300 from '@fontsource/jost/files/jost-latin-300-normal.woff2?url';
+import jost400 from '@fontsource/jost/files/jost-latin-400-normal.woff2?url';
+import jost500 from '@fontsource/jost/files/jost-latin-500-normal.woff2?url';
 import '../styles/global.css';
 import { type Lang, t, paths, contactPath, offices } from '../lib/data';
 import ContactCta from '../components/ContactCta.astro';
@@ -40,6 +43,13 @@ const org = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Las tres variantes de Jost se usan en cuanto pinta la pagina: el eyebrow en 500, el
+        titulo en 300 y el texto en 400. Sin preload el navegador no las descubre hasta que
+        termina de bajar la hoja de estilos, y el texto aparece primero en la tipografia del
+        sistema. Cormorant no se precarga: es una frase y Georgia la sustituye bien. */}
+    <link rel="preload" as="font" type="font/woff2" href={jost300} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jost400} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jost500} crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     {siteCfg.preview && <meta name="robots" content="noindex" />}
@@ -66,7 +76,7 @@ const org = {
     <header class="site-header">
       <div class="bar">
         <a class="brand" href={paths.home(lang)} aria-label="PAGA Desarrollos">
-          <img src="/img/paga-icon-navy.png" alt="" width="42" height="42" />
+          <img src="/img/paga-icon-navy.webp" alt="" width="42" height="42" />
           <span>PAGA<small>DESARROLLOS</small></span>
         </a>
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
@@ -85,7 +95,7 @@ const org = {
       <div class="wrap">
         <div class="top">
           <div>
-            <img class="logo" src="/img/paga-logo-white.png" alt="PAGA Desarrollos" width="120" height="108" />
+            <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="108" loading="lazy" decoding="async" />
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>

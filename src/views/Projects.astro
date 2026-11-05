@@ -9,7 +9,12 @@ const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const seo = company.seo.projects;
-const list = [...projects].sort((a, b) => (b.completionYear ?? 9999) - (a.completionYear ?? 9999));
+// newest first; a development with no date yet closes the list instead of heading it
+const list = [...projects].sort((a, b) => (b.completionYear ?? -1) - (a.completionYear ?? -1));
+// the first and last names of the timeline come from the data, never typed into the page
+const byYear = projects.filter((p) => p.completionYear).sort((a, b) => (a.completionYear as number) - (b.completionYear as number));
+const firstName = byYear[0]?.name ?? '';
+const lastName = byYear[byYear.length - 1]?.name ?? '';
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="projects" alt={paths.projects(es ? 'en' : 'es')}>
   <section class="section tight">
@@ -25,7 +30,7 @@ const list = [...projects].sort((a, b) => (b.completionYear ?? 9999) - (a.comple
       <div class="section-head split">
         <div>
           <p class="eyebrow">{ui.timeline}</p>
-          <h2>{es ? 'De Los Robles a Torre Acqua' : 'From Los Robles to Torre Acqua'}</h2>
+          <h2>{es ? `De ${firstName} a ${lastName}` : `From ${firstName} to ${lastName}`}</h2>
         </div>
         <p>{es ? 'Cada desarrollo por año de conclusión. Los proyectos en curso aparecen con borde punteado y año estimado.' : 'Every development by completion year. Ongoing projects have a dashed outline and an estimated year.'}</p>
       </div>
@@ -45,6 +50,7 @@ const list = [...projects].sort((a, b) => (b.completionYear ?? 9999) - (a.comple
         <button class="chip" type="button" data-f="US" aria-pressed="false">{ui.countryUS}</button>
         <button class="chip" type="button" data-f="live" aria-pressed="false">{es ? 'En curso' : 'Underway'}</button>
       </div>
+      <p class="count" id="pcount" role="status" data-of={list.length} data-word={es ? 'desarrollos' : 'developments'} data-conn={es ? 'de' : 'of'}>{list.length} {es ? 'desarrollos' : 'developments'}</p>
       <div class="grid" id="pgrid">
         {list.map((p) => <ProjectCard p={p} lang={lang} />)}
       </div>
@@ -53,13 +59,21 @@ const list = [...projects].sort((a, b) => (b.completionYear ?? 9999) - (a.comple
   <script>
     const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-f]');
     const cards = document.querySelectorAll<HTMLElement>('#pgrid .card');
+    const count = document.getElementById('pcount')!;
+    const total = count.dataset.of;
+    const word = count.dataset.word;
+    const conn = count.dataset.conn;
     chips.forEach((c) => c.addEventListener('click', () => {
       chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
       const f = c.dataset.f;
+      let shown = 0;
       cards.forEach((k) => {
         const show = f === 'all' || k.dataset.country === f || (f === 'live' && k.dataset.status !== 'delivered');
         k.classList.toggle('hidden', !show);
+        if (show) shown++;
       });
+      // role="status": filtering used to drop half the grid without announcing anything
+      count.textContent = f === 'all' ? `${total} ${word}` : `${shown} ${conn} ${total} ${word}`;
     }));
   </script>
 </Base>

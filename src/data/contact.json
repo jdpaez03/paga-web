@@ -152,8 +152,34 @@
     "en": "This form is not connected yet; it will be active when the site launches."
   },
   "error": {
-    "es": "Revisa los campos marcados.",
-    "en": "Please check the highlighted fields."
+    "es": "Faltan datos. El detalle está junto a cada campo.",
+    "en": "Some details are missing. Each field says what."
+  },
+  "required": {
+    "es": "obligatorio",
+    "en": "required"
+  },
+  "errors": {
+    "profile": {
+      "es": "Elige el perfil que mejor te describe.",
+      "en": "Choose the profile that best describes you."
+    },
+    "name": {
+      "es": "Escribe tu nombre.",
+      "en": "Enter your name."
+    },
+    "email": {
+      "es": "Escribe un correo válido, como nombre@empresa.com.",
+      "en": "Enter a valid email, like name@company.com."
+    },
+    "message": {
+      "es": "Cuéntanos brevemente en qué podemos ayudarte.",
+      "en": "Tell us briefly how we can help."
+    },
+    "consent": {
+      "es": "Necesitamos tu consentimiento para tratar tus datos.",
+      "en": "We need your consent to process your data."
+    }
   },
   "side": {
     "title": {

@@ -32,6 +32,17 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 RewriteCond %{HTTP_HOST} ^pagadesarrollos\.com$ [NC]
 RewriteRule ^ https://www.pagadesarrollos.com%{REQUEST_URI} [R=301,L]
 
+# Compresión. Sin esto la portada viaja en 25.8 KB en vez de 5.7, y /proyectos/ en 39.5 en vez de 6.
+# Las imágenes, el video y las fuentes woff2 ya vienen comprimidos: no se tocan.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml \
+    application/javascript application/json application/rss+xml image/svg+xml
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml application/xml \
+    application/javascript application/json application/rss+xml image/svg+xml
+</IfModule>
+
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -49,8 +60,14 @@ RewriteRule ^ https://www.pagadesarrollos.com%{REQUEST_URI} [R=301,L]
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # Imágenes y video: un mes.
-  <FilesMatch "\.(jpe?g|png|webp|avif|svg|ico|mp4|webm)$">
+  # Imágenes: una semana. No llevan hash en el nombre, así que un mes significaba que al cambiar
+  # la foto de un proyecto los visitantes seguían viendo la vieja hasta 30 días.
+  <FilesMatch "\.(jpe?g|png|webp|avif|svg|ico)$">
+    Header set Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
+  </FilesMatch>
+
+  # Video: un mes. Pesa y casi nunca cambia.
+  <FilesMatch "\.(mp4|webm)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 
