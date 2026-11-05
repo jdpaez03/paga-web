@@ -112,3 +112,78 @@ Con el bloque completo: **Inicio en escritorio de 5,591 KB a ~1,600 KB (−71 %)
 4. ¿Se publica el equipo ahora o se espera a que Dirección confirme los puestos?
 5. ¿Usted o tú en el formulario?
 6. ¿Se agregan a `projects.json` los campos de terreno, niveles e inicio de obra, y la marca de render?
+
+---
+
+## Lo que ya se aplicó — 5 de noviembre de 2026
+
+Se hicieron los bloques A y C completos. B y D quedan pendientes porque dependen
+de decisiones de Dirección.
+
+### Peso de la primera carga
+
+| | Antes | Ahora |
+|---|---|---|
+| Loop del hero (solo escritorio) | 5,060 KB · 1920×1080 | 1,827 KB · 1280×720 |
+| Inicio, sin el loop | 531 KB | 336 KB |
+| Proyectos y Contacto | — | 55 KB |
+| **Inicio en escritorio, con todo** | **5,591 KB** | **2,163 KB** |
+
+El loop conserva el material tal como está aprobado: los mismos tres planos, los
+mismos 22.5 segundos, el mismo fundido de entrada y salida a negro. Lo único que
+cambia es la resolución y la tasa de bits. Se descartó recortarlo a 8–10 segundos
+—que es lo que recomendaba el bloque C— porque eso quita dos de los tres planos,
+y eso ya no es peso: es edición, y la aprueba Dirección.
+
+Comparación a tamaño real de un cuadro del primer plano, el más exigente porque
+es monte denso: `docs/img/hero-comparacion-720.jpg`.
+
+El comando, por si hay que regenerarlo con otro material:
+
+```
+ffmpeg -i hero-1080.mp4 -an -vf "scale=1280:720:flags=lanczos,hqdn3d=2:1:2:3,fps=25" \
+  -c:v libx264 -profile:v high -preset slow -b:v 650k -maxrate 975k -bufsize 1950k \
+  -pix_fmt yuv420p -g 50 -movflags +faststart -pass 1|2 hero-720.mp4
+```
+
+Lo demás del bloque C:
+
+- Los 31 logos de proyecto a WebP: 573 → 249 KB. Los PNG de origen se borraron
+  del árbol; están en el historial de git, en el commit «Revisión UX y peso de
+  la primera carga».
+- La marca del encabezado y del pie a WebP, al doble del tamaño al que se
+  dibujan: 38 → 12 KB. El logo del pie, además, en diferido. El PNG se conserva
+  porque es el favicon y el que declara el JSON-LD de la organización.
+- Cormorant Garamond como subconjunto propio (ASCII, acentos del español,
+  puntuación): 23.6 → 11.6 KB. Si alguna vez hace falta otro signo, hay que
+  regenerarlo con `fontTools`.
+- Las tres variantes de Jost se precargan con su nombre con hash, importado
+  desde la plantilla para que coincida con el que pone la hoja de estilos.
+- Las miniaturas de la galería a 256 px, que es como se dibujan.
+- `.htaccess` comprime HTML, CSS y JS. Esto faltaba y es mío: la portada viajaba
+  en 25.8 KB en vez de 5.7.
+
+Todo lo de imágenes lo regenera `npm run imagenes`.
+
+### Lo que se revisó y no se tocó
+
+- **Las fotografías de los proyectos** ya están bien comprimidas. Recomprimir
+  `hero.webp` (281 KB) solo la degradaba: a calidad 82 pesaba más que el
+  original, y a 68 bajaba 12 KB con pérdida visible. Se quedan como están.
+- **El video institucional de 2:11** (23.7 MB en escritorio, 13.9 en móvil)
+  sigue igual. Dónde debe vivir es una de las decisiones pendientes.
+- **Los .jpg de origen de los proyectos** siguen en `dist/` (unos 11 MB). No los
+  baja ningún navegador moderno —el `srcset` sirve los WebP de `/img/w/`— pero
+  son el `src` de respaldo y la fuente desde la que se regeneran las variantes.
+
+### Correcciones del bloque A
+
+Las doce, aplicadas y verificadas en el navegador. Están detalladas en el
+mensaje del commit y en la descripción del pull request. Las dos que conviene
+recordar porque no se ven:
+
+- Las rutas de `data-src` de la galería y del hero ahora son relativas a la
+  página. Sin esto, la vista previa en `/nuevo/` que documenta
+  `docs/LANZAMIENTO.md` se habría visto sin galería y sin video.
+- El póster del video institucional se adjunta al abrirlo. Chrome lo bajaba en
+  cada visita a Inicio aunque el video estuviera oculto.
