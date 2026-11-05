@@ -46,7 +46,16 @@ Project partners and co-developers are NOT mentioned on the site for now (decide
 
 ## Stack
 
-Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR. Hosted on **Cloudflare Pages** (decided by Juan Diego, Oct 14, 2026): Git integration with previews per branch; the contact form is a Pages Function in `functions/api/contact.js`; security and cache headers in `public/_headers`. Public address is **www.pagadesarrollos.com** (canonical); the bare domain redirects to www from the old Neubox hosting. DNS stays at Neubox (managed with Maparnet): at launch only the `www` CNAME changes; never touch the Microsoft 365 mail records (MX, autodiscover, SPF, DKIM, DMARC, Lync/SIP). Single files must stay under 25 MiB (Cloudflare limit). Launch steps: `docs/LANZAMIENTO.md`.
+Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR.
+
+Hosted on the **cPanel of Neubox**, the same server and the same hosting plan that already serve the domain and the Microsoft 365 mail (decided by Juan Diego, Nov 5, 2026 — it replaces the Cloudflare Pages decision of Oct 14: the Neubox plan cannot be cancelled because the mail depends on it, and it is not known yet through whom the domain was bought, so nothing moves out of there). What this means for the code:
+
+- `npm run build` is run on a computer and the contents of `dist/` are uploaded to `public_html`. The server does not build.
+- The contact form is **PHP**: `public/api/contact.php`, which sends each message with `mail()` to a Microsoft 365 mailbox of the domain. Recipients are configured at the top of that file, or without recompiling in `/home/<user>/paga-contacto-config.php`. `functions/api/contact.js` is the Cloudflare version: it is kept for the future and is not published.
+- Apache configuration (security headers, cache, 404) in `public/.htaccess`. `public/_headers` is the Cloudflare equivalent and does nothing here.
+- **DNS does not change at all**: `www` and the bare domain already point to this server. Never touch the Microsoft 365 mail records (MX, autodiscover, SPF, DKIM, DMARC, Lync/SIP). The SPF must keep authorizing this server (today with `+a`) or the form's mail ends up in spam.
+
+Public address is **www.pagadesarrollos.com** (canonical); `.htaccess` redirects the bare domain to www. Launch steps, checks and rollback: `docs/LANZAMIENTO.md`.
 
 ## Legal
 

@@ -9,6 +9,10 @@ const F = contact.fields;
 const live = liveProjects();
 const sales = Object.fromEntries(live.filter((p) => p.salesUrl).map((p) => [p.slug, p.salesUrl]));
 const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), error: tx(contact.error, lang), sendError: tx(contact.sendError, lang), salesHint: tx(contact.salesHint, lang) };
+// The form posts to the PHP connector of the cPanel (public/api/contact.php). The path is relative
+// to this page — /contacto/ is one level deep, /en/contact/ two — so the site also works from a
+// subfolder, as in the preview at /nuevo/.
+const endpoint = (es ? '../' : '../../') + 'api/contact.php';
 ---
 <Base lang={lang} title={`${tx(contact.title, lang)} · PAGA Desarrollos`} description={tx(contact.lead, lang)} current="contact" alt={contactPath(es ? 'en' : 'es')} hideCta>
   <section class="section contact">
@@ -40,7 +44,7 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
         </aside>
       </div>
 
-      <form id="contact-form" class="form" novalidate data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
+      <form id="contact-form" class="form" novalidate data-endpoint={endpoint} data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
         <fieldset class="profiles">
           <legend>{tx(F.profile, lang)}</legend>
           {contact.profiles.map((pr, i) => (
@@ -144,10 +148,12 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
       form.querySelectorAll<HTMLElement>('.only[hidden] [name]').forEach((el) => fd.delete((el as HTMLInputElement).name));
       const data: Record<string, any> = Object.fromEntries(fd as any);
       data.lang = form.dataset.lang; data.page = location.pathname;
+      // the slug alone ("torre-acqua") says little in the email: send the name as it reads on screen
+      if (data.project) data.projectName = (projSel.selectedOptions[0]?.textContent || '').trim();
       try { const src = JSON.parse(sessionStorage.getItem('paga_src') || '{}'); data.srcLanding = src.landing || ''; data.srcRef = src.ref || ''; data.srcUtm = src.utm || ''; } catch { /* no session storage */ }
       btn.disabled = true; status.textContent = '…';
       try {
-        const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
+        const res = await fetch(form.dataset.endpoint || 'api/contact.php', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
         if (res.ok) { form.reset(); keepProject = false; apply(); showSales(); status.textContent = form.dataset.ok!; track('form_submit', { profile: String(data.profile) }); }
         else if (res.status === 400) { status.textContent = form.dataset.error!; track('form_error'); }
         else if ([404, 405, 501, 503].includes(res.status)) { status.textContent = form.dataset.pending!; }

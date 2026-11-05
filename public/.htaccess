@@ -1,0 +1,70 @@
+# pagadesarrollos.com — configuración de Apache para el cPanel de Neubox.
+#
+# Este archivo hace en el cPanel lo que public/_headers hace en Cloudflare: encabezados de
+# seguridad, caché y la página 404 del sitio. Se publica junto con el sitio, en public_html/.
+#
+# El sitio se compila en carpetas con index.html (/proyectos/, /nosotros/), así que Apache lo sirve
+# tal cual: no hacen falta reglas de reescritura para las rutas.
+#
+# IMPORTANTE: si al extraer el zip este archivo queda en permisos 0600, todo el sitio responde 403.
+# Revisa en el Administrador de archivos que esté en 0644 (docs/LANZAMIENTO.md).
+# Si el cPanel ya había puesto bloques propios aquí (por ejemplo "# php -- BEGIN cPanel-generated
+# handler"), consérvalos: de ellos depende la versión de PHP.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# La 404 del sitio, con sus ligas a Proyectos y Contacto.
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Validaciones del certificado (AutoSSL): nunca se reescriben.
+RewriteRule ^\.well-known/ - [L]
+
+# Todo por HTTPS.
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# La dirección pública es www. Quien escriba el dominio sin www llega al mismo servidor y se le
+# redirige, para que la dirección canónica del sitio y la del navegador coincidan.
+RewriteCond %{HTTP_HOST} ^pagadesarrollos\.com$ [NC]
+RewriteRule ^ https://www.pagadesarrollos.com%{REQUEST_URI} [R=301,L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+
+  # Las páginas se revalidan siempre (con su ETag): un cambio se ve de inmediato.
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  # Los archivos de /assets/ llevan hash en el nombre: nunca cambian.
+  <FilesMatch "\.(css|js|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Imágenes y video: un mes.
+  <FilesMatch "\.(jpe?g|png|webp|avif|svg|ico|mp4|webm)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  # El conector del formulario no se guarda en caché.
+  <FilesMatch "\.php$">
+    Header set Cache-Control "no-store"
+  </FilesMatch>
+</IfModule>
+
+# _headers es la configuración de Cloudflare: en Apache no sirve de nada y no tiene por qué ser
+# pública. Igual los archivos de respaldo o configuración que alguna vez queden por aquí.
+<FilesMatch "^(_headers|_redirects|.*\.(log|bak|zip|sql|json\.bak))$">
+  Require all denied
+</FilesMatch>
+
+AddType image/avif .avif
+AddType video/mp4 .mp4
