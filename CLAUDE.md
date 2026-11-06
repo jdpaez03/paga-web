@@ -16,7 +16,7 @@ Core line: **"25 años desarrollando valor."** (EN: "25 years developing value."
 2. `src/data/company.json` — purpose, niche, values, Three Uniques, Proven Process, Guarantee, headline figures. Public parts of the EOS V/TO (May 2026) only.
 3. Facts confirmed by Juan Diego in writing override the institutional deck (e.g. Torre Pietra completed 2022; Torre Acqua has 136 units; Balcones 500 and 400 were not developed by PAGA — PAGA's Balcones work starts with Balcones 300, then 600).
 
-**Distrito Amāra**, with the macron, is the name — in prose and in the data (decided by Juan Diego, Nov 6, 2026, from the brand mark, which carries it). It replaces Amāra Centro, the name before the rebranding. Do not normalise it to "Amara": only the logo's file name is plain ASCII. The URL and the CRM key did not change — the page is still `/proyectos/amara-centro-primera-fase/` and the Suite's catalogue key is still `AMARA`.
+**Distrito Amāra**, with the macron, is the name — in prose and in the data (decided by Juan Diego, Nov 6, 2026, from the brand mark, which carries it). It replaces Amāra Centro, the name before the rebranding. Do not normalise it to "Amara": only the logo's file name is plain ASCII. The page moved with the name, to `/proyectos/distrito-amara-primera-fase/` (and `/en/projects/…`), and the image files were renamed with it. What did not change is the Suite's catalogue key, still `AMARA`: it is theirs, not ours, and `crm.php` maps the new slug to it.
 
 **Not PAGA projects — never add them:** Balcones 500, Balcones 400, and the earlier Sonoma towers Alberi, Vento and Foresta (developed by others). Fortek and Nawa were planned but never built; they do not go in the portfolio or timeline.
 

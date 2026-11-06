@@ -103,7 +103,7 @@ const CRM_PROYECTOS_VALIDOS = [
  * Si algún día se agrega un proyecto al CRM, se agrega aquí y en CRM_PROYECTOS_VALIDOS.
  */
 const CRM_PROYECTOS = [
-    'amara-centro-primera-fase' => 'AMARA',
+    'distrito-amara-primera-fase' => 'AMARA',
     'andenes-hermosillo' => 'ANDENES HERMOSILLO',
     'artesanias-tercera-fase' => 'ARTESANIAS',
     'balcones-200' => 'BALCONES',
