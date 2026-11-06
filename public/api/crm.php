@@ -409,7 +409,7 @@ function crm_enviar(array $payload, array $cfg): array
 
 
 /**
- * Vacía la cola. La corre el cron, nunca una petición web.
+ * Vacía la cola. La corre el cron, nunca una petición web. Una sola corrida a la vez.
  *
  * Solo toca los «pendiente». Los «revisar» y los «rechazado» se quedan para que los vea una
  * persona. Hay dos topes, porque la API no tiene rate limiting y el único freno es este: intentos
@@ -423,7 +423,31 @@ function crm_drenar(array $cfg): array
     $cuenta = [
         'revisados' => 0, 'enviados' => 0, 'pendientes' => 0,
         'rechazados' => 0, 'agotados' => 0, 'esperando' => 0, 'revisar' => 0,
+        'bloqueado' => false, 'sin_candado' => false,
     ];
+
+    // El candado de la cola. El cron corre cada cinco minutos y una corrida puede tardar más:
+    // 20 leads, hasta crm_timeout por intento y, cuando el desarrollo está cerrado, un segundo
+    // intento sin proyecto. Sin candado, la corrida siguiente hace glob() sobre los mismos
+    // archivos —que todavía dicen «pendiente», porque la primera no los ha escrito de vuelta— y
+    // las dos mandan el mismo lead. Hoy la ventana de la Suite lo devolvería como duplicado, pero
+    // esa ventana es la red de abajo: el freno lo ponemos nosotros.
+    //
+    // LOCK_NB a propósito: si ya hay una corrida, esta no espera, se salta. Hay otra en cinco
+    // minutos. El archivo queda vacío —el candado es el flock, no lo que diga dentro— y no se
+    // borra nunca: borrarlo mientras otro proceso lo tiene abierto es la forma clásica de quedarse
+    // sin candado. Tampoco hace falta soltarlo a mano si el proceso se muere: el sistema lo suelta
+    // al cerrar el descriptor, y este script es de una sola corrida.
+    $candado = @fopen($dir . '/.candado', 'c');
+    if ($candado === false) {
+        // No se pudo ni abrir el archivo (permisos, disco). Se sigue sin candado: no entregar los
+        // leads es peor que el riesgo de un envío repetido, que allá se resuelve como duplicado.
+        $cuenta['sin_candado'] = true;
+    } elseif (!flock($candado, LOCK_EX | LOCK_NB)) {
+        fclose($candado);
+        $cuenta['bloqueado'] = true;
+        return $cuenta;
+    }
 
     $archivos = glob($dir . '/*.json') ?: [];
     sort($archivos);
@@ -476,6 +500,11 @@ function crm_drenar(array $cfg): array
         } else {
             $cuenta['pendientes']++;
         }
+    }
+
+    if ($candado !== false) {
+        flock($candado, LOCK_UN);
+        fclose($candado);
     }
     return $cuenta;
 }

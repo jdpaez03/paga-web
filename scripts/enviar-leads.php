@@ -87,6 +87,17 @@ if ((string) ($CONFIG['crm_key'] ?? '') === '') {
 }
 
 $cuenta = crm_drenar($CONFIG);
+
+// Dos corridas no se pisan: la segunda no espera, se salta. No es un error —el cron vuelve en
+// cinco minutos— así que se sale con 0 y el cPanel no manda correo de fallo.
+if (!empty($cuenta['bloqueado'])) {
+    echo "  otra corrida sigue en marcha: esta se salta\n";
+    exit(0);
+}
+if (!empty($cuenta['sin_candado'])) {
+    echo "  aviso: no se pudo abrir el candado de la cola; se corrió sin él\n";
+}
+
 printf(
     "  intentados=%d enviados=%d pendientes=%d revisar=%d rechazados=%d agotados=%d esperando=%d\n",
     $cuenta['revisados'],

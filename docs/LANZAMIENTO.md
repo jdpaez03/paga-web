@@ -220,6 +220,15 @@ Para ver cómo va la cola, sin tocar la API:
 php /home/<usuario>/paga-enviar-leads.php --estado
 ```
 
+**Una corrida a la vez.** Una corrida puede pasar de los cinco minutos (20 leads, hasta 12 s por
+intento, y un segundo intento cuando el desarrollo está cerrado), así que la siguiente se encimaría
+y las dos mandarían el mismo lead. El script toma un candado —`flock` sobre
+`/home/<usuario>/paga-leads/.candado`, un archivo vacío que no se borra— y si ya hay una corrida en
+marcha, la nueva no espera: escribe `otra corrida sigue en marcha: esta se salta` y sale con 0, sin
+correo de fallo del cPanel. Si eso aparece en `cron.log` una vez, es normal; si aparece corrida tras
+corrida, la API está respondiendo muy lento y hay que mirarla. `--estado` no toma el candado: se
+puede consultar la cola mientras una corrida trabaja.
+
 **La cola.** Cada lead se escribe en `/home/<usuario>/paga-leads/<REFERENCIA>.json` antes de
 intentar nada, así que no se pierde aunque se caiga el proceso. Estados:
 
