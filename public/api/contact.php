@@ -26,14 +26,11 @@ declare(strict_types=1);
 // ———————————————————————————————————————————————— Configuración
 
 $CONFIG = [
-    // Buzón que recibe todo lo que no tenga buzón propio.
-    'to' => 'contacto@pagadesarrollos.com',
-    // Opcional: un buzón por perfil. Los perfiles son los de src/data/contact.json.
-    'to_by_profile' => [
-        // 'inversion' => 'inversion@pagadesarrollos.com',
-        // 'terreno'   => 'terrenos@pagadesarrollos.com',
-        // 'empleo'    => 'rh@pagadesarrollos.com',
-    ],
+    // Buzón que recibe todo. Es el mismo que se publica en Contacto y en el pie.
+    'to' => 'notificaciones@pagadesarrollos.com',
+    // Opcional: un buzón por perfil. Se queda vacío por decisión del 5 de noviembre: el reparto
+    // lo hace el CRM, no el correo. La capacidad se conserva por si alguna vez hace falta.
+    'to_by_profile' => [],
     // El CRM (PAGA Suite) se configura aparte: sus valores por omisión están en crm.php y la
     // llave va en /home/<usuario>/paga-contacto-config.php, nunca aquí.
     // Remitente. Tiene que ser una dirección del propio dominio para que el SPF cuadre.

@@ -24,11 +24,11 @@ Nada de esto se hace antes de que Dirección apruebe el sitio.
       (`[DOMICILIO FISCAL]`, `[CORREO DE CONTACTO DE DATOS PERSONALES]`, `[FECHA DE ÚLTIMA
       ACTUALIZACIÓN]`, las `[DECISIÓN DE JURÍDICO: …]`). Con `preview: false` en
       `src/data/site.json`, `npm run build` **falla** mientras quede uno en borrador.
-- [ ] Domicilio, teléfono y correo oficiales confirmados por Jurídico y cargados en `offices` de
-      `src/data/contact.json` (`city` ES/EN, `address`, `phone`, `email`). Hoy `offices` está vacío,
-      así que Contacto no muestra domicilio y el footer tampoco.
-- [ ] **Buzón del Suite que recibe el formulario**, confirmado y probado (por ejemplo
-      `contacto@pagadesarrollos.com`). Si va a haber uno por perfil, la lista completa.
+- [x] Teléfono y correo oficiales cargados en `offices` de `src/data/contact.json`: oficina
+      general de Monterrey, `+52 (81) 8363 3737` y `notificaciones@pagadesarrollos.com`. Sin
+      domicilio, por decisión del 5 de noviembre; el campo `address` sigue disponible.
+- [ ] **Que `notificaciones@pagadesarrollos.com` exista en Microsoft 365 y alguien lo lea.** Es el
+      buzón que se publica en el sitio y también al que entrega el formulario.
 
 **Respaldos, antes de tocar el cPanel:**
 
@@ -145,8 +145,8 @@ El conector es [`public/api/contact.php`](../public/api/contact.php) y queda pub
 MX del dominio: Microsoft 365.
 
 - **Destinatarios del correo.** Están al principio del archivo (`$CONFIG`): `to` es el buzón que
-  recibe los mensajes y `from` tiene que ser una dirección **del propio dominio** para que el SPF
-  cuadre. Existe `to_by_profile` para dar un buzón distinto a cada perfil, pero no se usa: el
+  recibe los mensajes —`notificaciones@pagadesarrollos.com`, el mismo que el sitio publica— y
+  `from` tiene que ser una dirección **del propio dominio** para que el SPF cuadre. Existe `to_by_profile` para dar un buzón distinto a cada perfil, pero no se usa: el
   reparto lo hace el CRM.
 - **Cambiarlos sin recompilar:** crea `/home/<usuario>/paga-contacto-config.php` (fuera de
   `public_html`) con lo que quieras sobrescribir. Este archivo es también donde vive la llave del
@@ -155,7 +155,7 @@ MX del dominio: Microsoft 365.
   ```php
   <?php
   return [
-      'to' => 'contacto@pagadesarrollos.com',
+      'to' => 'notificaciones@pagadesarrollos.com',
       'crm_key' => 'LA-LLAVE-QUE-SE-GENERA-EN-EL-VPS',
   ];
   ```
