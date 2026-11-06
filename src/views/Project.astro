@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import descriptions from '../data/descriptions.json';
-import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf, srcset, contactPath } from '../lib/data';
+import { type Lang, type Project, t, tx, paths, typeLabel, masterPlans, countryLabel, area, num, sortedByYear, projects, asOf, srcset, contactPath, sourceLine } from '../lib/data';
 interface Props { lang: Lang; p: Project }
 const { lang, p } = Astro.props;
 const ui = t(lang);
@@ -13,6 +13,10 @@ const i = ordered.findIndex((x) => x.slug === p.slug);
 const prev = ordered[i - 1];
 const next = ordered[i + 1];
 const siblings = p.masterPlan ? projects.filter((x) => x.masterPlan === p.masterPlan && x.slug !== p.slug) : [];
+// astro-relative-links rewrites href/src, but not data-*: the gallery paths are made relative to
+// this page so the site also works from a subfolder, like the preview at /nuevo/
+const up = es ? '../../' : '../../../';
+const rel = (s: string) => s.replace(/(^|, )\//g, `$1${up}`);
 const typeTxt = tx(typeLabel[p.type], lang);
 const title = `${p.name} · PAGA Desarrollos`;
 const typePhrase: Record<string, { es: string; en: string }> = {
@@ -32,26 +36,46 @@ const ld = {
   address: { '@type': 'PostalAddress', addressLocality: p.city, addressRegion: p.state, addressCountry: p.country === 'MX' ? 'MX' : 'US' },
   ...(p.units ? { numberOfAccommodationUnits: p.units } : {}),
 };
+// D7: las 72 fichas no decian donde estaban paradas. El rastro de migas en datos estructurados
+// es lo que hace que Google muestre «Inicio > Proyectos > Torre Acqua» en lugar de la URL cruda.
+const SITE = 'https://www.pagadesarrollos.com';
+const crumbs = [
+  { name: es ? 'Inicio' : 'Home', url: paths.home(lang) },
+  { name: ui.nav.projects, url: paths.projects(lang) },
+  { name: p.name, url: paths.project(lang, p.slug) },
+];
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.url, SITE).href,
+  })),
+};
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
+// De donde sale cada cifra de esta ficha. Es la linea mas barata y mas institucional del sitio:
+// un banco que lee un numero quiere saber quien lo sostiene.
+const src = sourceLine(p, lang);
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld}>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={[ld, breadcrumb]}>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">
-        <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 60vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+        <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1400px) 620px, (min-width: 1000px) 45vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+        {p.imagesAreRenders && <figcaption class="render-note">{es ? 'Las imágenes de este desarrollo son renders, no fotografías de obra terminada.' : 'The images of this development are renderings, not photographs of the finished building.'}</figcaption>}
       </figure>
       {p.gallery.length > 0 && (
         <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>
           {[{ src: p.image, size: p.imageSize }, ...p.gallery].map((g, i) => (
-            <button type="button" class="p-thumb" data-src={g.src} data-srcset={srcset(g.src, g.size[0])} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
-              <img src={`/img/w/${g.src.split('/').pop()!.replace(/\.jpg$/, '')}-480.webp`} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
+            <button type="button" class="p-thumb" data-src={rel(g.src)} data-srcset={rel(srcset(g.src, g.size[0]))} data-w={g.size[0]} data-h={g.size[1]} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`} data-alt={`${p.name}, ${es ? 'imagen' : 'image'} ${i + 1} ${es ? 'de' : 'of'} ${p.gallery.length + 1}`}>
+              {/* the strip renders at 107 px: the 480 px file cost 56 KB per thumbnail */}
+              <img src={`/img/w/${g.src.split('/').pop()!.replace(/\.jpg$/, '')}-256.webp`} alt="" loading="lazy" width={g.size[0]} height={g.size[1]} />
             </button>
           ))}
         </div>
       )}
     </div>
     <div class="p-info">
-      <p class="eyebrow"><a href={paths.projects(lang)} style="text-decoration:none">← {ui.backToProjects}</a></p>
+      <p class="eyebrow"><a class="arrow-back" href={paths.projects(lang)} style="text-decoration:none">{ui.backToProjects}</a></p>
       <span class="p-logo" role="img" aria-label={`${p.name} logo`} style={`--logo: url(${p.logo})`}></span>
       <h1>{p.name}</h1>
       <p class="loc">{p.city}, {p.state} · {countryLabel(p.country, lang)}</p>
@@ -65,16 +89,16 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         {p.masterPlan && <div><dt>{ui.masterPlan}</dt><dd>{masterPlans[p.masterPlan]}</dd></div>}
         {p.partners.length > 0 && <div><dt>{ui.developedWith}</dt><dd>{p.partners.join(', ')}</dd></div>}
       </dl>
-      <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}</p>
+      <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}{src && <><br />{es ? 'Fuente' : 'Source'}: {src}</>}</p>
       {live && (
         <div class="p-actions">
           {p.salesUrl ? (
             <>
-              <a class="btn solid arrow" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'} ↗</a>
-              <a class="btn" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+              <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'}</a>
+              <a class="btn" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
             </>
           ) : (
-            <a class="btn solid arrow" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
+            <a class="btn solid arrow" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
           )}
         </div>
       )}
@@ -91,8 +115,8 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
         </div>
       )}
       <nav class="pager" aria-label={es ? 'Otros proyectos' : 'Other projects'}>
-        {prev ? <a href={paths.project(lang, prev.slug)}><small>← {prev.completionYear}</small>{prev.name}</a> : <span />}
-        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small>{next.completionYear ?? (es ? 'En planeación' : 'In planning')} →</small>{next.name}</a> : <span />}
+        {prev ? <a href={paths.project(lang, prev.slug)}><small class="arrow-back">{prev.completionYear}</small>{prev.name}</a> : <span />}
+        {next ? <a href={paths.project(lang, next.slug)} style="text-align:right"><small class="arrow">{next.completionYear ?? (es ? 'En planeación' : 'In planning')}</small>{next.name}</a> : <span />}
       </nav>
     </div>
   </section>
@@ -100,8 +124,8 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     <div class="p-sticky" role="region" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
       <span>{p.name}</span>
       {p.salesUrl
-        ? <a class="btn solid" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'} ↗</a>
-        : <a class="btn solid" href={contactPath(lang, { perfil: 'comprador', proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
+        ? <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
+        : <a class="btn solid" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
     </div>
   )}
   <script>

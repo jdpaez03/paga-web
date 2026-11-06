@@ -6,7 +6,7 @@ Corporate website of PAGA Desarrollos. Owner: Juan Diego Páez (Mejora Continua)
 
 Make PAGA read as an **institutional developer**: 25 years, Mexico and the United States, every development dated and documented. Primary audience: capital partners, landowners, banks and co-developers. Buyers are served by each project's own sales site; the corporate site links out to them.
 
-Calls to action stay institutional, not salesy (decided by Juan Diego, Oct 13, 2026): the hero offers only **"Proyectos"** and **"Contáctanos"**. Do not add audience-specific CTAs such as "Invertir o asociarse" or "Tengo un terreno" to the hero or project pages; the visitor picks their profile inside the contact form.
+Calls to action stay institutional, not salesy (decided by Juan Diego, Oct 13, 2026): the hero offers only **"Proyectos"** and **"Contáctenos"** (it read "Contáctanos" until the usted decision of Nov 5, 2026). Do not add audience-specific CTAs such as "Invertir o asociarse" or "Tengo un terreno" to the hero or project pages; the visitor picks their profile inside the contact form.
 
 Core line: **"25 años desarrollando valor."** (EN: "25 years developing value.") It pairs with the EOS purpose *Desarrollamos valor*.
 
@@ -15,6 +15,8 @@ Core line: **"25 años desarrollando valor."** (EN: "25 years developing value."
 1. `src/data/projects.json` — every project fact (year, city, units, area, status). Pages, the timeline and the figures band all read from it. Never type a project fact into a page.
 2. `src/data/company.json` — purpose, niche, values, Three Uniques, Proven Process, Guarantee, headline figures. Public parts of the EOS V/TO (May 2026) only.
 3. Facts confirmed by Juan Diego in writing override the institutional deck (e.g. Torre Pietra completed 2022; Torre Acqua has 136 units; Balcones 500 and 400 were not developed by PAGA — PAGA's Balcones work starts with Balcones 300, then 600).
+
+**Distrito Amāra**, with the macron, is the name — in prose and in the data (decided by Juan Diego, Nov 6, 2026, from the brand mark, which carries it). It replaces Amāra Centro, the name before the rebranding. Do not normalise it to "Amara": only the logo's file name is plain ASCII. The page moved with the name, to `/proyectos/distrito-amara-primera-fase/` (and `/en/projects/…`), and the image files were renamed with it. What did not change is the Suite's catalogue key, still `AMARA`: it is theirs, not ours, and `crm.php` maps the new slug to it.
 
 **Not PAGA projects — never add them:** Balcones 500, Balcones 400, and the earlier Sonoma towers Alberi, Vento and Foresta (developed by others). Fortek and Nawa were planned but never built; they do not go in the portfolio or timeline.
 
@@ -30,8 +32,12 @@ Project partners and co-developers are NOT mentioned on the site for now (decide
 
 - **Years** = completion year (decided Oct 12, 2026). Future years are labelled as estimated completion.
 - **Area** = m² in Spanish, ft² in English. Data is stored in ft²; convert with 1 ft² = 0.092903 m², rounded to the nearest 10 m² (or 1,000 for totals).
-- **Figures** always carry an as-of date.
+- **Figures** always carry an as-of date, and a next-update date (`nextUpdate` in projects.json, confirmed by Juan Diego as **January 2027**, Nov 6 2026). The site publishes when the numbers will next be checked, so a reader can tell the operation is alive. That date is a promise: when it arrives, either refresh `asOf` and the figures and move `nextUpdate` forward, or empty the field. Builds made after the date has passed drop the line rather than show a promise already broken.
 - **Language**: Spanish first (`/`), English mirror (`/en/`). Write natively in each language; do not translate word for word.
+- **Register (Spanish)**: **usted**, everywhere, the contact form included (decided by Juan Diego, Nov 5, 2026). The site speaks to banks, capital partners and landowners; tú was splitting the voice right at first contact. English has no equivalent split — keep it plain and direct.
+- **Renders**: `imagesAreRenders` in projects.json says whether a development's images are renderings rather than photographs of finished work. Seven are marked today. A render is always labelled, on the card and on the project page. If you add a project, look at its images and set the flag; never leave it to guesswork.
+- **No video on the server** (decided by Juan Diego, Nov 5, 2026). The two 2:11 institutional films were removed: 75 MB on a shared plan, and one desktop viewer held an Apache process for ~47 seconds. Trayectoria on the home page carries a still photograph instead. The hero background loop stays (720p, 1.8 MB, desktop only, after load). Do not put another film on this server.
+- **Links inside a sentence** live in the data, not in the view: write them `[visible text](doc-key)`, where the key is one of `legalSlugs` (`aviso-de-privacidad`, `aviso-de-cookies`, `terminos`, `canales-oficiales`) — the same key in both languages, since `paths.legal()` translates the slug. Used today by the Contacto sidebar. Keep the marker when rewording a sentence; a key that does not exist renders as plain text, never as a dead link.
 - **Tone**: calm and specific, like an annual report. Numbers, places, names. No superlatives ("el mejor", "líder", "exclusivo", "de clase mundial"), no exclamation marks, no emoji.
 - **Values** (V/TO May 2026, five, in this order): Generación de valor · Eficiencia · Comunicación · Proactividad · Entrega / Compromiso.
 - **Proven Process** (adopted Oct 12, 2026): Identificamos · Estructuramos · Desarrollamos · Ejecutamos · Comercializamos · Entregamos.
@@ -46,7 +52,28 @@ Project partners and co-developers are NOT mentioned on the site for now (decide
 
 ## Stack
 
-Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR. Hosted on **Cloudflare Pages** (decided by Juan Diego, Oct 14, 2026): Git integration with previews per branch; the contact form is a Pages Function in `functions/api/contact.js`; security and cache headers in `public/_headers`. Public address is **www.pagadesarrollos.com** (canonical); the bare domain redirects to www from the old Neubox hosting. DNS stays at Neubox (managed with Maparnet): at launch only the `www` CNAME changes; never touch the Microsoft 365 mail records (MX, autodiscover, SPF, DKIM, DMARC, Lync/SIP). Single files must stay under 25 MiB (Cloudflare limit). Launch steps: `docs/LANZAMIENTO.md`.
+Astro (static output), no client framework. Data in JSON, pages in `src/pages`, shared pieces in `src/components`. `npm run build` must pass with zero warnings before a PR.
+
+Hosted on the **cPanel of Neubox**, the same server and the same hosting plan that already serve the domain and the Microsoft 365 mail (decided by Juan Diego, Nov 5, 2026 — it replaces the Cloudflare Pages decision of Oct 14: the Neubox plan cannot be cancelled because the mail depends on it, and it is not known yet through whom the domain was bought, so nothing moves out of there). What this means for the code:
+
+- `npm run build` is run on a computer and the contents of `dist/` are uploaded to `public_html`. The server does not build.
+- The contact form is **PHP**: `public/api/contact.php`, which sends each message with `mail()` to a Microsoft 365 mailbox of the domain. `functions/api/contact.js` is the Cloudflare version: it is kept for the future and is not published.
+- **Leads go to PAGA Suite by API** (decided by Juan Diego, Nov 5, 2026), not to a mailbox: `POST https://pagasuite.com/api/leads` with a Bearer key, client in `public/api/crm.php`. Four properties of that API shape the code and must not be forgotten:
+  - It **deduplicates for 60 minutes**, matching on email or on the last 10 digits of the phone, against every lead including hand-captured ones. A repeat returns 200 with the existing `id_lead` and `"duplicado": true` — always a success. That window is what makes a timeout retryable, so `crm_ventana_dedup` must be kept in step with the Suite's own env var, and the retry schedule must finish inside it: six attempts at 5, 10, 15, 25, 35 and 45 minutes, against a 50-minute cut-off. Raising `crm_max_intentos` or `crm_espera_max` without redoing that arithmetic silently kills the last attempts.
+  - A timeout goes to `revisar` **only** when retrying could duplicate: no email and no 10-digit phone, or the window has passed. Otherwise it stays `pendiente` and the cron retries it.
+  - **403 has two causes.** Wrong route is permanent (`rechazado`). A closed development is not: the lead is resent once with `nom_proyecto_interes` null and logged `sin_proyecto`.
+  - No **rate limiting**, so the caps live on our side; and `nom_proyecto_interes` is **not validated**, so the slug is translated against a closed list of 8 names and anything that does not match goes as `null`. Marena maps to `LAS PERLAS` (same development, renamed commercially; the Suite keeps the old catalogue key). Las Joyas and Las Velas have no entry and go as `null`. The table is static on purpose — the ingest key cannot read `GET /projects`.
+
+  Delivery is by cron (`scripts/enviar-leads.php`), never from the form, so the visitor never waits on the API. The lead is queued **before** the mail is attempted — the two deliveries are independent, and a mail outage must not take the lead with it. One run at a time: `crm_drenar()` holds a `flock` on `paga-leads/.candado`, and a run that finds it taken skips rather than waiting, because a run can outlast the five-minute cron interval and two runs would send the same lead. The key lives only in `/home/<user>/paga-contacto-config.php` — never in the repository, never in browser JavaScript. Only the five commercial profiles go to the CRM; the message, profile and campaign have no field in the leads API and travel in the email, which is why the email is not redundant.
+- Apache configuration (security headers, cache, 404) in `public/.htaccess`. `public/_headers` is the Cloudflare equivalent and does nothing here.
+- **DNS does not change at all**: `www` and the bare domain already point to this server. Never touch the Microsoft 365 mail records (MX, autodiscover, SPF, DKIM, DMARC, Lync/SIP). The SPF must keep authorizing this server (today with `+a`) or the form's mail ends up in spam.
+
+Public address is **www.pagadesarrollos.com** (canonical); `.htaccess` redirects the bare domain to www. Launch steps, checks and rollback: `docs/LANZAMIENTO.md`.
+
+## Pending Dirección
+
+- **The team is not published** until Dirección confirms the eight titles (`team.draft` in company.json). The footer link to `#equipo` hides itself with the section, so nothing points at an anchor that is not there.
+- **Contact publishes phone and email, no street address** (decided by Juan Diego, Nov 5, 2026). `offices` in contact.json is still empty: `address` is optional, `phone` and `email` are what goes in.
 
 ## Legal
 

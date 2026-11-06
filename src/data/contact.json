@@ -4,8 +4,8 @@
     "en": "Let's talk"
   },
   "lead": {
-    "es": "Cuéntanos quién eres y en qué podemos ayudarte. Cada mensaje llega directo al área que corresponde.",
-    "en": "Tell us who you are and how we can help. Each message goes straight to the right team."
+    "es": "Cuéntenos quién es y en qué podemos ayudarle. Su perfil nos dice con qué información responderle.",
+    "en": "Tell us who you are and how we can help. Your profile tells us what to send back."
   },
   "profiles": [
     {
@@ -13,7 +13,7 @@
       "es": "Inversión o socio de capital",
       "en": "Investment or capital partnership",
       "hint": {
-        "es": "Te compartimos cómo estructuramos cada proyecto y nuestra trayectoria.",
+        "es": "Le compartimos cómo estructuramos cada proyecto y nuestra trayectoria.",
         "en": "We'll share how we structure each project and our track record."
       }
     },
@@ -40,7 +40,7 @@
       "es": "Quiero comprar",
       "en": "I want to buy",
       "hint": {
-        "es": "Te conectamos con el equipo comercial del proyecto que te interesa.",
+        "es": "Le conectamos con el equipo comercial del proyecto que le interesa.",
         "en": "We'll connect you with the sales team of the project you're interested in."
       }
     },
@@ -76,7 +76,7 @@
       "es": "Bolsa de trabajo",
       "en": "Careers",
       "hint": {
-        "es": "Cuéntanos tu experiencia y el área que te interesa.",
+        "es": "Cuéntenos su experiencia y el área que le interesa.",
         "en": "Tell us about your experience and the area you're interested in."
       }
     }
@@ -135,7 +135,7 @@
       "en": "Send message"
     },
     "profile": {
-      "es": "¿Quién eres?",
+      "es": "¿Quién es usted?",
       "en": "Who are you?"
     }
   },
@@ -144,7 +144,7 @@
     "en": "This project has its own sales site, with availability and prices:"
   },
   "ok": {
-    "es": "Gracias. Recibimos tu mensaje y te responderemos pronto.",
+    "es": "Gracias. Recibimos su mensaje y le responderemos pronto.",
     "en": "Thank you. We received your message and will reply soon."
   },
   "pending": {
@@ -152,8 +152,34 @@
     "en": "This form is not connected yet; it will be active when the site launches."
   },
   "error": {
-    "es": "Revisa los campos marcados.",
-    "en": "Please check the highlighted fields."
+    "es": "Faltan datos. El detalle está junto a cada campo.",
+    "en": "Some details are missing. Each field says what."
+  },
+  "required": {
+    "es": "obligatorio",
+    "en": "required"
+  },
+  "errors": {
+    "profile": {
+      "es": "Elija el perfil que mejor corresponda.",
+      "en": "Choose the profile that best describes you."
+    },
+    "name": {
+      "es": "Escriba su nombre.",
+      "en": "Enter your name."
+    },
+    "email": {
+      "es": "Escriba un correo válido, como nombre@empresa.com.",
+      "en": "Enter a valid email, like name@company.com."
+    },
+    "message": {
+      "es": "Cuéntenos brevemente en qué podemos ayudarle.",
+      "en": "Tell us briefly how we can help."
+    },
+    "consent": {
+      "es": "Necesitamos su consentimiento para tratar sus datos.",
+      "en": "We need your consent to process your data."
+    }
   },
   "side": {
     "title": {
@@ -162,37 +188,48 @@
     },
     "items": {
       "es": [
-        "Te contactamos a la brevedad.",
-        "PAGA nunca solicita depósitos por cuentas personales ni por mensajes no oficiales. Consulta nuestros canales oficiales.",
-        "Si buscas un departamento, indícanos el proyecto y te conectamos con su equipo comercial."
+        "Le respondemos a la brevedad.",
+        "PAGA nunca solicita depósitos por cuentas personales ni por mensajes no oficiales. [Consulte nuestros canales oficiales.](canales-oficiales)",
+        "Si busca un departamento, indíquenos el proyecto y le conectamos con su equipo comercial."
       ],
       "en": [
         "We'll get back to you shortly.",
-        "PAGA never asks for deposits through personal accounts or unofficial messages. See our official channels.",
+        "PAGA never asks for deposits through personal accounts or unofficial messages. [See our official channels.](canales-oficiales)",
         "If you're looking for a home, tell us the project and we'll connect you with its sales team."
       ]
     }
   },
   "cta": {
     "title": {
-      "es": "¿Tienes un terreno, un proyecto o una inversión en mente?",
+      "es": "¿Tiene un terreno, un proyecto o una inversión en mente?",
       "en": "Do you have land, a project or an investment in mind?"
     },
     "text": {
-      "es": "Hablemos. Cuéntanos qué tienes en mente y te contactamos a la brevedad.",
+      "es": "Hablemos. Cuéntenos qué tiene en mente y le respondemos a la brevedad.",
       "en": "Let's talk. Tell us what you have in mind and we'll get back to you shortly."
     },
     "button": {
-      "es": "Contáctanos",
+      "es": "Contáctenos",
       "en": "Contact us"
     }
   },
   "sendError": {
-    "es": "No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.",
+    "es": "No pudimos enviar su mensaje. Inténtelo de nuevo en unos minutos.",
     "en": "We couldn't send your message. Please try again in a few minutes."
   },
+  "officesTitle": {
+    "es": "Oficina general",
+    "en": "Head office"
+  },
+  "offices": [
+    {
+      "city": { "es": "Monterrey", "en": "Monterrey" },
+      "phone": "+52 (81) 8363 3737",
+      "email": "notificaciones@pagadesarrollos.com"
+    }
+  ],
   "profileRequired": {
-    "es": "Elige una opción.",
+    "es": "Elija una opción.",
     "en": "Choose an option."
   }
 }

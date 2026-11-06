@@ -1,0 +1,58 @@
+# Revisa cada push y cada pull request: que el sitio compile sin warnings y que el conector del
+# formulario no tenga errores de sintaxis de PHP. El sitio se publica a mano en el cPanel de Neubox
+# (docs/LANZAMIENTO.md); este CI no publica nada.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sitio:
+    name: Build del sitio
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # CLAUDE.md: npm run build debe pasar sin un solo warning antes de un PR.
+      - name: Compilar sin warnings
+        shell: bash
+        run: |
+          npm run build 2>&1 | tee build.log
+          if grep -q "\[WARN\]" build.log; then
+            echo "::error::El build dejó warnings. Revísalos en el registro de arriba."
+            exit 1
+          fi
+
+      # Lo que se sube al cPanel es el contenido de dist/: el conector del formulario y la
+      # configuración de Apache tienen que quedar ahí.
+      - name: Revisar que el conector y el .htaccess queden en dist
+        shell: bash
+        run: |
+          test -f dist/api/contact.php || { echo "::error::falta dist/api/contact.php"; exit 1; }
+          test -f dist/api/crm.php || { echo "::error::falta dist/api/crm.php"; exit 1; }
+          test -f dist/.htaccess || { echo "::error::falta dist/.htaccess"; exit 1; }
+          test -f dist/404.html || { echo "::error::falta dist/404.html"; exit 1; }
+
+  php:
+    name: Sintaxis del conector PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # El cPanel de Neubox corre PHP 8.x; el runner de Ubuntu ya trae PHP instalado.
+      - name: php -l
+        shell: bash
+        run: |
+          php -v
+          # También scripts/: enviar-leads.php se copia al servidor a mano y no lo toca el build,
+          # así que si no se revisa aquí, un error de sintaxis ahí solo se ve en el log del cron.
+          find public scripts -name '*.php' -print0 | xargs -0 -r -n1 php -l

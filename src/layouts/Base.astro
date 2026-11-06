@@ -2,9 +2,12 @@
 import '@fontsource/jost/latin-300.css';
 import '@fontsource/jost/latin-400.css';
 import '@fontsource/jost/latin-500.css';
-import '@fontsource/cormorant-garamond/latin-400-italic.css';
+// las rutas con hash de los tres archivos de Jost, para poder precargarlos
+import jost300 from '@fontsource/jost/files/jost-latin-300-normal.woff2?url';
+import jost400 from '@fontsource/jost/files/jost-latin-400-normal.woff2?url';
+import jost500 from '@fontsource/jost/files/jost-latin-500-normal.woff2?url';
 import '../styles/global.css';
-import { type Lang, t, paths, contactPath } from '../lib/data';
+import { type Lang, t, paths, contactPath, offices, showTeam } from '../lib/data';
 import ContactCta from '../components/ContactCta.astro';
 import siteCfg from '../data/site.json';
 
@@ -16,7 +19,7 @@ interface Props {
   alt?: string; // path of this page in the other language
   image?: string; // og:image path
   hideCta?: boolean;
-  jsonLd?: Record<string, unknown>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 const { lang, title, description, current, alt, image, hideCta, jsonLd } = Astro.props;
 const ui = t(lang);
@@ -40,6 +43,13 @@ const org = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Las tres variantes de Jost se usan en cuanto pinta la pagina: el eyebrow en 500, el
+        titulo en 300 y el texto en 400. Sin preload el navegador no las descubre hasta que
+        termina de bajar la hoja de estilos, y el texto aparece primero en la tipografia del
+        sistema. Cormorant no se precarga: es una frase y Georgia la sustituye bien. */}
+    <link rel="preload" as="font" type="font/woff2" href={jost300} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jost400} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jost500} crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     {siteCfg.preview && <meta name="robots" content="noindex" />}
@@ -66,13 +76,13 @@ const org = {
     <header class="site-header">
       <div class="bar">
         <a class="brand" href={paths.home(lang)} aria-label="PAGA Desarrollos">
-          <img src="/img/paga-icon-navy.png" alt="" width="42" height="42" />
+          <img src="/img/paga-icon-navy.webp" alt="" width="42" height="42" />
           <span>PAGA<small>DESARROLLOS</small></span>
         </a>
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
-          <a class="hide-xs" href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
-          <a class="lang" href={altHref} hreflang={other} lang={other} data-track="lang_switch">{other.toUpperCase()}</a>
+          <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
+          <a class="lang" href={altHref} hreflang={other} lang={other} aria-label={other === 'en' ? 'Switch to English' : 'Cambiar a español'} data-track="lang_switch">{other.toUpperCase()}</a>
           <a class="btn solid nav-cta" href={contactPath(lang)} aria-current={current === 'contact' ? 'page' : undefined} data-track="cta_click" data-track-where="header">{lang === 'es' ? 'Contacto' : 'Contact'}</a>
         </nav>
       </div>
@@ -85,17 +95,29 @@ const org = {
       <div class="wrap">
         <div class="top">
           <div>
-            <img class="logo" src="/img/paga-logo-white.png" alt="PAGA Desarrollos" width="120" height="108" />
+            <a href={paths.home(lang)} aria-label={lang === 'es' ? 'PAGA Desarrollos, ir al inicio' : 'PAGA Desarrollos, go to home'}>
+              <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="108" loading="lazy" decoding="async" />
+            </a>
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
-            <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
+            {/* mientras el equipo siga en borrador no se publica, y esta liga apuntaria a un ancla que no existe */}
+            {showTeam && <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>}
             <a href={contactPath(lang)}>{lang === 'es' ? 'Contacto' : 'Contact'}</a>
           </nav>
           <div class="loc">
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
+            {offices.length > 0 && (
+              <address class="addr">{offices.map((o) => (
+                <span>{o.address ?? <>
+                  {o.phone && <a href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a>}
+                  {o.phone && o.email && ' · '}
+                  {o.email && <a href={`mailto:${o.email}`}>{o.email}</a>}
+                </>}</span>
+              ))}</address>
+            )}
           </div>
         </div>
         <div class="bottom">
