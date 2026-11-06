@@ -271,10 +271,15 @@ deduplicación: la Suite casa por los últimos diez dígitos.
 - Si no llega: revisa el enrutamiento del correo (punto 1), la carpeta de spam del buzón, y el
   `error_log` de `public_html/api/`. Cada envío deja ahí una línea con su referencia (`PAGA-…`) y el
   código, sin datos personales.
-- Si `mail()` falla, el formulario responde "No pudimos enviar tu mensaje" y guarda el mensaje
+- Si `mail()` falla, el formulario responde "No pudimos enviar su mensaje" y guarda el mensaje
   completo en `/home/<usuario>/paga-contacto-fallidos.log`, fuera de `public_html`, para que ningún
   contacto se pierda. Es el único caso en que se guardan datos personales en el servidor: revísalo y
-  vacíalo cuando se resuelva.
+  vacíalo cuando se resuelva. **El lead sí llega al CRM**: se encola antes de intentar el correo,
+  así que una caída del correo no se lo lleva. Cada línea del log lo dice: `crm=encolado` significa
+  que el lead ya está en la cola y el cron lo entrega —solo hay que contestar el mensaje—, y
+  `crm=no` que no se encoló, porque el perfil no va al CRM (prensa, proveedores, bolsa de trabajo)
+  o porque la llave no está puesta. El formato de la línea es: fecha, referencia, `crm=…` y los
+  datos del envío en JSON.
 - Límites: 10 envíos por hora por dirección IP, 32 KB por mensaje, campo trampa contra robots y solo
   se aceptan envíos desde el propio dominio.
 

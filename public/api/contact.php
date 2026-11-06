@@ -341,6 +341,33 @@ $cuerpo = '--' . $frontera . "\r\n"
     . '--' . $frontera . "--\r\n";
 $para = implode(', ', $destinos);
 
+// ———————————————————————————————————————————————— El lead, al CRM
+// La cola va ANTES de intentar el correo. Son dos entregas independientes —la cola la drena el
+// cron (scripts/enviar-leads.php), el correo sale por mail()— y el correo no debe poder llevarse
+// al lead. Con el orden anterior, una caida del correo (exim detenido, buzon sin cuota, MX
+// rechazando) terminaba en responder(502) y el lead no se encolaba nunca, aunque la API del Suite
+// estuviera sana: habia que recapturarlo a mano desde paga-contacto-fallidos.log.
+//
+// No agrega espera para el visitante: es una escritura en disco, no una llamada a la API. El
+// intento inmediato (crm_inline) si sale a la red, y ese se queda despues del correo.
+//
+// Si el correo falla, el visitante ve «no pudimos enviar» y puede volver a mandar el formulario:
+// ese segundo envio encola otro lead, y lo absorbe la ventana de deduplicacion del Suite, que
+// devuelve el lead que ya existia en vez de crear otro.
+//
+// Nada de esto puede tumbar la respuesta del formulario.
+$encolado = false;
+$rutaLead = '';
+try {
+    if ((string) ($CONFIG['crm_key'] ?? '') !== '' && crm_aplica($d['profile'], $CONFIG)) {
+        $rutaLead = crm_encolar(REFERENCIA, crm_payload($d), $CONFIG);
+        $encolado = true;
+    }
+} catch (Throwable $e) {
+    error_log('PAGA ' . REFERENCIA . ' crm: ' . $e->getMessage());
+}
+
+// ———————————————————————————————————————————————— El aviso por correo
 // El sobre va con el remitente del dominio, para que el SPF del dominio sea el que se revise.
 $enviado = @mail($para, $asunto, $cuerpo, implode("\r\n", $encabezados), '-f' . $from);
 if (!$enviado) {
@@ -350,33 +377,32 @@ if (!$enviado) {
 
 if (!$enviado) {
     // Único caso en que se guardan los datos: si no se guardaran, el contacto se perdería.
+    // La linea dice si el lead ya quedo en la cola del CRM, para que quien la lea sepa si tiene
+    // que capturarlo a mano o solo contestar el mensaje.
     $respaldo = dirname(__DIR__, 2) . '/paga-contacto-fallidos.log';
     @file_put_contents(
         $respaldo,
-        gmdate('c') . ' ' . REFERENCIA . ' ' . json_encode($d, JSON_UNESCAPED_UNICODE) . "\n",
+        gmdate('c') . ' ' . REFERENCIA . ' ' . ($encolado ? 'crm=encolado' : 'crm=no') . ' '
+            . json_encode($d, JSON_UNESCAPED_UNICODE) . "\n",
         FILE_APPEND | LOCK_EX
     );
     responder(502, ['error' => 'send_failed']);
 }
 
-// ———————————————————————————————————————————————— El lead, al CRM
-// Se deja en la cola en disco y lo entrega el cron (scripts/enviar-leads.php). El visitante no
-// espera a la API: si estuviera lenta, el formulario tardaria lo mismo en contestar. Que el
-// reintento de un timeout sea seguro o no lo decide crm.php, con la ventana de deduplicacion.
+// ———————————————————————————————————————————————— El intento inmediato al CRM
+// Apagado por omision: lo normal es que el lead espere al cron. Encendido (crm_inline), este si
+// sale a la red, y por eso va aqui, cuando el correo ya salio.
 //
-// Nada de esto puede tumbar la respuesta del formulario: el correo ya salio.
-try {
-    if ((string) ($CONFIG['crm_key'] ?? '') !== '' && crm_aplica($d['profile'], $CONFIG)) {
-        $rutaLead = crm_encolar(REFERENCIA, crm_payload($d), $CONFIG);
-        if (($CONFIG['crm_inline'] ?? false) === true) {
-            $sobre = json_decode((string) @file_get_contents($rutaLead), true);
-            if (is_array($sobre)) {
-                crm_guardar($rutaLead, $sobre, crm_enviar($sobre['lead'], $CONFIG), $CONFIG);
-            }
+// Nada de esto puede tumbar la respuesta del formulario.
+if ($encolado && ($CONFIG['crm_inline'] ?? false) === true) {
+    try {
+        $sobre = json_decode((string) @file_get_contents($rutaLead), true);
+        if (is_array($sobre)) {
+            crm_guardar($rutaLead, $sobre, crm_enviar($sobre['lead'], $CONFIG), $CONFIG);
         }
+    } catch (Throwable $e) {
+        error_log('PAGA ' . REFERENCIA . ' crm: ' . $e->getMessage());
     }
-} catch (Throwable $e) {
-    error_log('PAGA ' . REFERENCIA . ' crm: ' . $e->getMessage());
 }
 
 responder(200, ['ok' => true]);
