@@ -53,4 +53,6 @@ jobs:
         shell: bash
         run: |
           php -v
-          find public -name '*.php' -print0 | xargs -0 -r -n1 php -l
+          # También scripts/: enviar-leads.php se copia al servidor a mano y no lo toca el build,
+          # así que si no se revisa aquí, un error de sintaxis ahí solo se ve en el log del cron.
+          find public scripts -name '*.php' -print0 | xargs -0 -r -n1 php -l

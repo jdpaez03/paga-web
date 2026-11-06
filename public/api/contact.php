@@ -361,8 +361,8 @@ if (!$enviado) {
 
 // ———————————————————————————————————————————————— El lead, al CRM
 // Se deja en la cola en disco y lo entrega el cron (scripts/enviar-leads.php). El visitante no
-// espera a la API: si estuviera lenta, el formulario tardaria lo mismo en contestar, y un timeout
-// nunca se puede reintentar solo porque la API no deduplica (ver crm.php).
+// espera a la API: si estuviera lenta, el formulario tardaria lo mismo en contestar. Que el
+// reintento de un timeout sea seguro o no lo decide crm.php, con la ventana de deduplicacion.
 //
 // Nada de esto puede tumbar la respuesta del formulario: el correo ya salio.
 try {

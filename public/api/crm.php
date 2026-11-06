@@ -9,16 +9,25 @@
  * Lo incluyen dos programas: api/contact.php, cuando alguien manda el formulario, y el script de
  * reintentos que corre por cron (scripts/enviar-leads.php). No se puede abrir por web.
  *
- * Tres límites de la API mandan sobre el diseño de este archivo:
+ * Cuatro propiedades de la API mandan sobre el diseño de este archivo:
  *
- *   1. No hay deduplicación. Dos POST del mismo mensaje crean dos leads distintos. Por eso un
- *      timeout NUNCA se reintenta solo: la petición pudo haber entrado. Queda en «revisar» y lo
- *      mira una persona. Solo se reintenta lo que con seguridad no se proceso: un fallo de red
- *      antes de conectar, un 429 o un 5xx.
- *   2. No hay rate limiting. El tope lo ponemos nosotros: intentos por lead y leads por corrida.
- *   3. nom_proyecto_interes es texto libre y la API no lo valida. Un «Sonoma» o un «SONOMA » con
+ *   1. Deduplica durante 60 minutos, por correo o por los últimos 10 dígitos del teléfono, contra
+ *      todos los leads, incluidos los capturados a mano. Un repetido contesta 200 con el id_lead
+ *      que ya existía y «duplicado»: siempre es un éxito. Esa ventana es lo que vuelve
+ *      reintentable un timeout: si el lead es reconocible y seguimos dentro de ella, reintentar no
+ *      puede duplicar, así que se reintenta. Pasa a «revisar» solo cuando reintentar sí podría
+ *      duplicar: sin correo y sin teléfono de 10 dígitos, o con la ventana ya vencida.
+ *   2. El 403 tiene dos causas. La ruta equivocada es permanente y va a «rechazado». Un desarrollo
+ *      cerrado no: el lead se reenvía una vez sin nom_proyecto_interes y se anota sin_proyecto.
+ *   3. No hay rate limiting. El tope lo ponemos nosotros: intentos por lead y leads por corrida.
+ *   4. nom_proyecto_interes es texto libre y la API no lo valida. Un «Sonoma» o un «SONOMA » con
  *      espacio entra con 200 y después ese lead no sale en ningún filtro. Se valida aquí contra la
  *      lista cerrada de abajo, y lo que no case va en null, que es un estado legítimo.
+ *
+ * La ventana de 60 minutos es un dato de allá, no de aquí: vive en crm_ventana_dedup y tiene que
+ * seguir a la variable de entorno de la Suite. De ella depende que el calendario de reintentos
+ * —5, 10, 15, 25, 35 y 45 minutos, con corte a los 50— alcance a correr completo. Subir
+ * crm_max_intentos o crm_espera_max sin rehacer esa cuenta mata los últimos intentos en silencio.
  *
  * El correo del formulario no es el respaldo técnico de esto: no hay buzón que alimente al CRM.
  * El respaldo es la cola en disco. El correo es el aviso a una persona, y además es donde viajan
@@ -112,8 +121,8 @@ const CRM_PROYECTOS = [
 /** Estados de un lead en la cola. */
 const CRM_PENDIENTE = 'pendiente';   // no se ha procesado; el cron lo reintenta
 const CRM_ENVIADO = 'enviado';       // 200, con id_lead
-const CRM_RECHAZADO = 'rechazado';   // 400, 401, 403, 422: reintentar no lo arregla
-const CRM_REVISAR = 'revisar';       // timeout: pudo haber entrado, NO se reintenta solo
+const CRM_RECHAZADO = 'rechazado';   // 400, 401, 403, 404, 422: reintentar no lo arregla
+const CRM_REVISAR = 'revisar';       // timeout que reintentar podría duplicar; lo ve una persona
 const CRM_AGOTADO = 'agotado';       // se acabaron los intentos
 
 /** El nombre del proyecto que entiende el CRM, o null si no hay uno que case. */

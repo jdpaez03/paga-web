@@ -10,11 +10,11 @@
  *     php paga-enviar-leads.php            entrega lo que esté pendiente
  *     php paga-enviar-leads.php --estado   solo reporta la cola, sin tocar la API
  *
- * Por qué existe, en vez de llamar a la API desde el formulario: la API de leads no deduplica, así
- * que un reintento crea un lead repetido. Teniendo una sola ruta de entrega, con un tiempo de
- * espera holgado y topes propios, hay un solo lugar donde pueden aparecer duplicados y es más
- * fácil razonar sobre él. De paso, el visitante nunca espera a la API para que el formulario le
- * conteste. Los detalles del criterio de reintento están en public_html/api/crm.php.
+ * Por qué existe, en vez de llamar a la API desde el formulario: así el visitante nunca espera a
+ * la API para que el formulario le conteste, y los reintentos tienen una sola ruta, con un tiempo
+ * de espera holgado y topes propios. La API deduplica 60 minutos por correo o teléfono, pero esa
+ * es la red de abajo, no el diseño: aquí se decide qué se reintenta y qué no, y teniendo un solo
+ * lugar donde eso se decide es más fácil razonar sobre él. El criterio está en api/crm.php.
  */
 
 if (PHP_SAPI !== 'cli') {
