@@ -109,7 +109,11 @@ const org = {
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
             {offices.length > 0 && (
               <address class="addr">{offices.map((o) => (
-                <span>{o.address ?? [o.phone, o.email].filter(Boolean).join(' · ')}</span>
+                <span>{o.address ?? <>
+                  {o.phone && <a href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a>}
+                  {o.phone && o.email && ' · '}
+                  {o.email && <a href={`mailto:${o.email}`}>{o.email}</a>}
+                </>}</span>
               ))}</address>
             )}
           </div>

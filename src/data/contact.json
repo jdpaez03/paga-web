@@ -218,10 +218,15 @@
     "en": "We couldn't send your message. Please try again in a few minutes."
   },
   "officesTitle": {
-    "es": "Oficinas",
-    "en": "Offices"
+    "es": "Oficina general",
+    "en": "Head office"
   },
-  "offices": [],
+  "offices": [
+    {
+      "city": { "es": "Monterrey", "en": "Monterrey" },
+      "phone": "+52 (81) 8363 3737"
+    }
+  ],
   "profileRequired": {
     "es": "Elija una opción.",
     "en": "Choose an option."
