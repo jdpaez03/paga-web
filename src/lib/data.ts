@@ -38,7 +38,12 @@ export function area(ft2: number, lang: Lang, round = 10) {
 export const num = (n: number, lang: Lang) => nf(lang).format(n);
 
 export const FOUNDED = 2001;
-export const years = new Date(asOf).getFullYear() - FOUNDED;
+// El año de `asOf`, leído del texto y no de un Date. `new Date('2027-01-01')` es medianoche UTC
+// y `getFullYear()` la lee en hora local: en Monterrey (UTC-6) eso cae el 31 de diciembre y el
+// año sale uno menos. Con asOf en enero —y la próxima revisión es enero de 2027— la cifra del
+// encabezado diría 25 años en lugar de 26, en todas las páginas. La fecha ya trae el año escrito.
+export const asOfYear = Number(asOf.slice(0, 4));
+export const years = asOfYear - FOUNDED;
 
 // Las cifras de la banda, todas calculadas: nunca se escribe un numero de proyecto en una pagina.
 // Lo entregado y lo que esta en curso van separados a proposito. Mezclados en un solo dato, un

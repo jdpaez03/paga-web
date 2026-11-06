@@ -1,13 +1,15 @@
 ---
-import { type Lang, projects, paths, t, asOf } from '../lib/data';
+import { type Lang, projects, paths, t, asOfYear } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const dated = projects.filter((p) => p.completionYear);
 const yrs = [...new Set(dated.map((p) => p.completionYear as number))].sort((a, b) => a - b);
-// derived from the data's as-of date: hard-coding the year made the labels wrong every January
-const nowYear = new Date(asOf).getFullYear();
+// derived from the data's as-of date: hard-coding the year made the labels wrong every January.
+// El año sale de data.ts ya resuelto: new Date(asOf).getFullYear() devuelve el año anterior
+// cuando asOf cae el 1 de enero, y entonces un desarrollo de ese año deja de marcarse estimado.
+const nowYear = asOfYear;
 const statusLine = (p: (typeof projects)[number]) =>
   p.status === "delivered" ? `${p.city}, ${p.state}` : `${p.city}, ${p.state} · ${ui.status[p.status as keyof typeof ui.status]}`;
 ---
