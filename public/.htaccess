@@ -77,6 +77,13 @@ RewriteRule ^ https://www.pagadesarrollos.com%{REQUEST_URI} [R=301,L]
   </FilesMatch>
 </IfModule>
 
+# crm.php es una biblioteca que incluye contact.php, no una página. Ya se defiende sola (contesta
+# 403 si la abren directo), pero si algún día PHP dejara de correr, Apache serviría el código en
+# texto plano. Esto lo impide. El require desde contact.php no pasa por aquí y sigue funcionando.
+<Files "crm.php">
+  Require all denied
+</Files>
+
 # _headers es la configuración de Cloudflare: en Apache no sirve de nada y no tiene por qué ser
 # pública. Igual los archivos de respaldo o configuración que alguna vez queden por aquí.
 <FilesMatch "^(_headers|_redirects|.*\.(log|bak|zip|sql|json\.bak))$">

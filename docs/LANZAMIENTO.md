@@ -144,64 +144,106 @@ El conector es [`public/api/contact.php`](../public/api/contact.php) y queda pub
 `/api/contact.php`. Manda cada mensaje con `mail()`, o sea con el Exim del cPanel, que lo entrega al
 MX del dominio: Microsoft 365.
 
-- **Destinatarios.** Están al principio del archivo (`$CONFIG`): `to` es el buzón general y
-  `to_by_profile` permite uno por perfil (`inversion`, `terreno`, `banco`, `comprador`, `broker`,
-  `proveedor`, `prensa`, `empleo`). `from` tiene que ser una dirección **del propio dominio** para
-  que el SPF cuadre.
+- **Destinatarios del correo.** Están al principio del archivo (`$CONFIG`): `to` es el buzón que
+  recibe los mensajes y `from` tiene que ser una dirección **del propio dominio** para que el SPF
+  cuadre. Existe `to_by_profile` para dar un buzón distinto a cada perfil, pero no se usa: el
+  reparto lo hace el CRM.
 - **Cambiarlos sin recompilar:** crea `/home/<usuario>/paga-contacto-config.php` (fuera de
-  `public_html`) con lo que quieras sobrescribir:
+  `public_html`) con lo que quieras sobrescribir. Este archivo es también donde vive la llave del
+  CRM, y por eso nunca está en el repositorio:
 
   ```php
   <?php
   return [
       'to' => 'contacto@pagadesarrollos.com',
-      'to_by_profile' => [
-          'inversion' => 'inversion@pagadesarrollos.com',
-          'terreno'   => 'terrenos@pagadesarrollos.com',
-          'banco'     => 'inversion@pagadesarrollos.com',
-          'comprador' => 'ventas@pagadesarrollos.com',
-          'broker'    => 'ventas@pagadesarrollos.com',
-          'proveedor' => 'compras@pagadesarrollos.com',
-          'prensa'    => 'contacto@pagadesarrollos.com',
-          'empleo'    => 'rh@pagadesarrollos.com',
-      ],
-      'crm' => 'intake@TU-CRM.com',
+      'crm_key' => 'LA-LLAVE-QUE-SE-GENERA-EN-EL-VPS',
   ];
   ```
 
-  Esa tabla es una propuesta: **cada buzón o alias tiene que existir en Microsoft 365 antes de
-  lanzar**, o el correo rebota y el mensaje termina en el archivo de respaldo. Los perfiles son los
-  ocho de `src/data/contact.json` y no se pueden inventar otros.
+  Permisos: `chmod 600`. Lo lee PHP y nadie más.
 
-- **CRM.** `crm` es la dirección de entrada del CRM y recibe copia de **todos** los mensajes,
-  además del buzón que corresponda por perfil. Vacío significa que no se manda nada. El correo
-  sale en dos partes: una de texto, que es la que leen los analizadores de los CRM, y una de HTML
-  para quien lo lea a mano. La de texto trae una línea por campo, con los identificadores sin
-  traducir para poder mapearlos:
+### El CRM: módulo de Leads de PAGA Suite
 
-  ```
-  perfil: inversion
-  perfil_texto: Inversión / socio de capital
-  nombre: ...
-  correo: ...
-  proyecto: torre-acqua
-  proyecto_texto: Torre Acqua · Hermosillo
-  idioma: es
-  primera_pagina: /proyectos/torre-acqua/
-  llego_desde: google
-  campana_utm: utm_source=google&utm_medium=cpc
-  referencia: PAGA-XXXXXXXXXX
-  etiquetas: web, perfil-inversion, idioma-es, proyecto-torre-acqua, pide-presentacion
-  ```
+Cada mensaje de un perfil comercial crea un **lead** en `POST https://pagasuite.com/api/leads`, con
+la llave en la cabecera `Authorization: Bearer`. El cliente es
+[`public/api/crm.php`](../public/api/crm.php) y la entrega la hace un cron, no el formulario.
 
-  Los mismos datos van también en encabezados, por si el CRM o una regla de bandeja filtra por
-  ahí: `X-PAGA-Perfil`, `X-PAGA-Idioma`, `X-PAGA-Proyecto` y `X-PAGA-Etiquetas`.
+**Por qué por cron y no al momento.** La API no deduplica: dos POST del mismo mensaje crean dos
+leads distintos. Si el formulario llamara a la API y se le acabara el tiempo de espera, no habría
+forma de saber si el lead entró, y reintentar sería justamente cómo se producen los duplicados. Con
+una sola ruta de entrega hay un solo lugar donde razonar sobre eso. De paso, el visitante nunca
+espera a la API para que el formulario le conteste.
+
+**Lo que se manda.** Solo `nombre` es obligatorio. `fuente` va siempre en `web`.
+`nom_proyecto_interes` se traduce del slug del sitio al nombre que el CRM reconoce, y **si no hay
+uno que case, va en `null`**: la API no valida ese campo, así que un nombre inventado entraría con
+200 y después ese lead no saldría en ningún filtro. Hoy casan seis de los nueve proyectos del
+desplegable; Las Joyas (2), Las Velas (6, 7) y Marena no existen en el CRM y por eso van sin
+proyecto. La tabla está en `crm.php` y es el único lugar donde se toca.
+
+**Lo que NO se manda.** El perfil, el mensaje, la página de entrada y la campaña: la API de leads no
+tiene dónde guardarlos y no se meten a la fuerza en otro campo. Esos datos viajan en el correo, que
+por eso no es redundante.
+
+**Perfiles.** Solo van al CRM los cinco comerciales: inversión, terreno, banco, comprador y broker.
+Prensa, proveedores y bolsa de trabajo llegan por correo y nada más, para no ensuciar un módulo de
+leads de venta. Se cambia con `crm_perfiles` en la configuración.
+
+**El cron.** Copia `scripts/enviar-leads.php` a `/home/<usuario>/paga-enviar-leads.php` —**fuera de
+`public_html`**— y prográmalo cada cinco minutos en *Trabajos cron* del cPanel:
+
+```
+/usr/local/bin/php /home/<usuario>/paga-enviar-leads.php >> /home/<usuario>/paga-leads/cron.log 2>&1
+```
+
+Para ver cómo va la cola, sin tocar la API:
+
+```
+php /home/<usuario>/paga-enviar-leads.php --estado
+```
+
+**La cola.** Cada lead se escribe en `/home/<usuario>/paga-leads/<REFERENCIA>.json` antes de
+intentar nada, así que no se pierde aunque se caiga el proceso. Estados:
+
+| Estado | Qué pasó | ¿Se reintenta? |
+|---|---|---|
+| `pendiente` | Aún no se entrega, o la API contestó 429 o 5xx, o no hubo red | Sí, con espera creciente |
+| `enviado` | 200 con `id_lead` | — el archivo se borra |
+| `rechazado` | 400, 401, 403 o 422 | No: reintentar con el mismo cuerpo da lo mismo |
+| `revisar` | Se acabó el tiempo de espera | **No**, a propósito: el lead pudo haberse creado |
+| `agotado` | Se acabaron los intentos | No |
+
+Cuando un lead se entrega, **el archivo se borra** y solo queda una línea en
+`paga-leads/enviados.log` con la referencia y el `id_lead`, sin datos personales. Los otros estados
+se quedan en disco para que una persona los capture a mano: son el único caso, junto con
+`paga-contacto-fallidos.log`, en que hay datos personales en el servidor.
+
+Topes, porque la API no tiene rate limiting y el único freno es éste: **6 intentos por lead** y
+**20 leads por corrida** (`crm_max_intentos` y `crm_max_por_corrida`).
+
+**Dos cosas que hay que revisar en el servidor** antes de dar esto por hecho:
+
+1. **Que el PHP del cPanel pueda salir por HTTPS.** En hosting compartido a veces está bloqueado o
+   pasa por proxy. Pruébalo por SSH o con un cron de una sola vez:
+   `php -r 'var_dump(curl_version()["version"] ?? null);'` y después un `curl -I https://pagasuite.com`
+   desde el servidor. Si hay proxy, se pone en `crm_proxy` (`'host:puerto'`).
+2. **Que la extensión cURL esté activa** (*Selector de PHP → Extensiones* en el cPanel). Sin ella el
+   cliente no intenta nada y lo dice en el log.
+
+Si la salida HTTPS estuviera bloqueada, **no hay plan B automático**: no existe un buzón que
+alimente al CRM. Los leads se quedarían en la cola y habría que capturarlos a mano desde el correo.
+
+**Lo único que hay que confirmar con un envío real:** que el teléfono se acepte. Se manda solo con
+dígitos (`528112345678`), que es el formato del contrato; si la API lo rechazara con 400, se ve en
+`--estado` y se cambia en una línea de `crm.php`.
 
 - **Prueba de humo**, antes de probar el formulario completo: abre `https://www.pagadesarrollos.com/api/contact.php`
   en el navegador. Tiene que responder un JSON `{"error":"method_not_allowed",…}`. Si sale el código
   PHP en pantalla, el PHP no está corriendo; si sale un 500, revisa el `error_log` de la carpeta.
-- **Prueba de verdad:** manda un mensaje por cada perfil que tenga buzón propio y revisa que llegue
-  al Suite, que el **Responder** del correo vaya al visitante y que los acentos se vean bien.
+- **Prueba de verdad:** manda un mensaje de perfil comercial y uno de bolsa de trabajo. Los dos
+  tienen que llegar al Suite, con el **Responder** apuntando al visitante y los acentos bien. A los
+  cinco minutos, `--estado` tiene que mostrar la cola vacía y una línea nueva en `enviados.log`
+  para el comercial, y nada para el de bolsa de trabajo.
 - Si no llega: revisa el enrutamiento del correo (punto 1), la carpeta de spam del buzón, y el
   `error_log` de `public_html/api/`. Cada envío deja ahí una línea con su referencia (`PAGA-…`) y el
   código, sin datos personales.

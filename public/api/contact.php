@@ -34,11 +34,8 @@ $CONFIG = [
         // 'terreno'   => 'terrenos@pagadesarrollos.com',
         // 'empleo'    => 'rh@pagadesarrollos.com',
     ],
-    // Buzón de entrada del CRM. Recibe copia de TODOS los mensajes, además del buzón de arriba.
-    // El correo va en dos partes: una de texto con «campo: valor» y las etiquetas, que es la que
-    // leen los analizadores de correo de los CRM, y una de HTML para quien lo lea a mano.
-    // Vacío = no se manda nada al CRM.
-    'crm' => '',
+    // El CRM (PAGA Suite) se configura aparte: sus valores por omisión están en crm.php y la
+    // llave va en /home/<usuario>/paga-contacto-config.php, nunca aquí.
     // Remitente. Tiene que ser una dirección del propio dominio para que el SPF cuadre.
     'from' => 'web@pagadesarrollos.com',
     'from_name' => 'PAGA Desarrollos (web)',
@@ -69,6 +66,12 @@ const PROFILES = [
 ];
 
 define('REFERENCIA', 'PAGA-' . strtoupper(bin2hex(random_bytes(5))));
+
+// El cliente del CRM. La constante es la que le permite cargarse: por web, solo, responde 403.
+define('PAGA_CRM', true);
+require __DIR__ . '/crm.php';
+// Lo que el archivo de configuración no diga, lo pone crm.php.
+$CONFIG = array_replace(crm_defectos(), $CONFIG);
 
 ini_set('display_errors', '0');
 header('Content-Type: application/json; charset=utf-8');
@@ -224,10 +227,6 @@ if ($faltan) {
 
 $porPerfil = is_array($CONFIG['to_by_profile'] ?? null) ? $CONFIG['to_by_profile'] : [];
 $to = una_linea($porPerfil[$d['profile']] ?? $CONFIG['to'] ?? '', 320);
-$crm = una_linea($CONFIG['crm'] ?? '', 320);
-if ($crm !== '') {
-    $to .= ',' . $crm;
-}
 $from = una_linea($CONFIG['from'] ?? '', 320);
 $destinos = array_values(array_filter(array_map('trim', explode(',', $to)), static function ($dir) {
     return filter_var($dir, FILTER_VALIDATE_EMAIL) !== false;
@@ -361,6 +360,26 @@ if (!$enviado) {
         FILE_APPEND | LOCK_EX
     );
     responder(502, ['error' => 'send_failed']);
+}
+
+// ———————————————————————————————————————————————— El lead, al CRM
+// Se deja en la cola en disco y lo entrega el cron (scripts/enviar-leads.php). El visitante no
+// espera a la API: si estuviera lenta, el formulario tardaria lo mismo en contestar, y un timeout
+// nunca se puede reintentar solo porque la API no deduplica (ver crm.php).
+//
+// Nada de esto puede tumbar la respuesta del formulario: el correo ya salio.
+try {
+    if ((string) ($CONFIG['crm_key'] ?? '') !== '' && crm_aplica($d['profile'], $CONFIG)) {
+        $rutaLead = crm_encolar(REFERENCIA, crm_payload($d), $CONFIG);
+        if (($CONFIG['crm_inline'] ?? false) === true) {
+            $sobre = json_decode((string) @file_get_contents($rutaLead), true);
+            if (is_array($sobre)) {
+                crm_guardar($rutaLead, $sobre, crm_enviar($sobre['lead'], $CONFIG), $CONFIG);
+            }
+        }
+    }
+} catch (Throwable $e) {
+    error_log('PAGA ' . REFERENCIA . ' crm: ' . $e->getMessage());
 }
 
 responder(200, ['ok' => true]);

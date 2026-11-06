@@ -38,6 +38,7 @@ jobs:
         shell: bash
         run: |
           test -f dist/api/contact.php || { echo "::error::falta dist/api/contact.php"; exit 1; }
+          test -f dist/api/crm.php || { echo "::error::falta dist/api/crm.php"; exit 1; }
           test -f dist/.htaccess || { echo "::error::falta dist/.htaccess"; exit 1; }
           test -f dist/404.html || { echo "::error::falta dist/404.html"; exit 1; }
 
