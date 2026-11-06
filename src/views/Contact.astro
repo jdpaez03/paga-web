@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import contact from '../data/contact.json';
-import { type Lang, tx, paths, liveProjects, contactPath, offices } from '../lib/data';
+import { type Lang, type LegalDoc, tx, paths, liveProjects, contactPath, offices, legalSlugs } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
@@ -13,6 +13,29 @@ const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), err
 // to this page — /contacto/ is one level deep, /en/contact/ two — so the site also works from a
 // subfolder, as in the preview at /nuevo/.
 const endpoint = (es ? '../' : '../../') + 'api/contact.php';
+
+// Las vinetas de la barra pueden traer una liga escrita en el propio dato, en forma
+// [texto visible](clave-del-documento), con las claves de legalSlugs. Antes la liga se armaba
+// aqui: la vista partia la cadena en una palabra escrita a mano («Consulte») y pegaba su propio
+// texto de liga, en la vineta numero 1 fija. Reescribir la frase en contact.json sin tocar este
+// archivo imprimia la oracion dos veces, sin error de compilacion, y meter una vineta arriba
+// movia la liga a la frase equivocada. Ya paso una vez, al pasar el sitio de tu a usted.
+//
+// Una clave que no exista se queda como texto plano: mejor una frase sin liga que una liga muerta.
+type Trozo = { texto: string; doc?: LegalDoc };
+const DOCS = new Set(Object.keys(legalSlugs));
+function trozos(linea: string): Trozo[] {
+  const salida: Trozo[] = [];
+  const re = /\[([^\]]+)\]\(([a-z-]+)\)/g;
+  let desde = 0;
+  for (let m = re.exec(linea); m; m = re.exec(linea)) {
+    if (m.index > desde) salida.push({ texto: linea.slice(desde, m.index) });
+    salida.push(DOCS.has(m[2]) ? { texto: m[1], doc: m[2] as LegalDoc } : { texto: m[1] });
+    desde = m.index + m[0].length;
+  }
+  if (desde < linea.length) salida.push({ texto: linea.slice(desde) });
+  return salida;
+}
 ---
 <Base lang={lang} title={`${tx(contact.title, lang)} · PAGA Desarrollos`} description={tx(contact.lead, lang)} current="contact" alt={contactPath(es ? 'en' : 'es')} hideCta>
   <section class="section contact">
@@ -24,8 +47,8 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
         <aside class="contact-side">
           <h2>{tx(contact.side.title, lang)}</h2>
           <ul>
-            {contact.side.items[lang].map((t, i) => (
-              <li>{i === 1 ? <>{t.split(es ? 'Consulte' : 'See our')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulte nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
+            {contact.side.items[lang].map((t) => (
+              <li>{trozos(t).map((p) => (p.doc ? <a href={paths.legal(lang, p.doc)}>{p.texto}</a> : p.texto))}</li>
             ))}
           </ul>
           {offices.length > 0 && (

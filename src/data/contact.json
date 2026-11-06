@@ -189,12 +189,12 @@
     "items": {
       "es": [
         "Le respondemos a la brevedad.",
-        "PAGA nunca solicita depósitos por cuentas personales ni por mensajes no oficiales. Consulte nuestros canales oficiales.",
+        "PAGA nunca solicita depósitos por cuentas personales ni por mensajes no oficiales. [Consulte nuestros canales oficiales.](canales-oficiales)",
         "Si busca un departamento, indíquenos el proyecto y le conectamos con su equipo comercial."
       ],
       "en": [
         "We'll get back to you shortly.",
-        "PAGA never asks for deposits through personal accounts or unofficial messages. See our official channels.",
+        "PAGA never asks for deposits through personal accounts or unofficial messages. [See our official channels.](canales-oficiales)",
         "If you're looking for a home, tell us the project and we'll connect you with its sales team."
       ]
     }
