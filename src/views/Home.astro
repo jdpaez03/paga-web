@@ -94,6 +94,40 @@ const up = es ? '' : '../';
     </div>
   </section>
 
+  {/* El proceso, en el Inicio y no solo en Nosotros. A un socio de capital o a un banco le dice
+      mas «asi se estructura un proyecto aqui, de la oportunidad a la entrega» que cualquier
+      adjetivo. Los seis pasos salen de company.json, los mismos que en Nosotros. */}
+  <section class="section" id="proceso" aria-labelledby="proceso-h">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{es ? 'Proceso' : 'Process'}</p>
+          <h2 id="proceso-h">{es ? 'Seis pasos, de la oportunidad a la entrega' : 'Six steps, from opportunity to delivery'}</h2>
+        </div>
+        <p>{es ? 'El mismo proceso en los 36 desarrollos, en México y en Estados Unidos.' : 'The same process across all 36 developments, in Mexico and the United States.'}</p>
+      </div>
+      <ol class="process-line">
+        {company.process.map((s, i) => (
+          <li><b class="num">0{i + 1}</b><span>{tx(s.name, lang)}</span></li>
+        ))}
+      </ol>
+      <p style="margin-top:32px"><a class="btn arrow" href={`${paths.about(lang)}#proceso`}>{es ? 'Cómo trabajamos' : 'How we work'}</a></p>
+    </div>
+  </section>
+
+  {/* Despues del proceso, con quien. El texto es `partnerTeaser` de company.json, escrito para
+      propietarios de terrenos, socios de capital y codesarrolladores, y hasta hoy no se
+      renderizaba en ninguna parte. La liga va al formulario sin perfil preseleccionado: el
+      visitante elige el suyo ahi (decision de Juan Diego, 13 oct 2026). */}
+  <section class="section on-white" id="socios" aria-labelledby="socios-h">
+    <div class="wrap partner-block">
+      <p class="eyebrow">{es ? 'Con quién desarrollamos' : 'Who we develop with'}</p>
+      <h2 id="socios-h">{tx(company.partnerTeaser.title, lang)}</h2>
+      <p class="partner-text">{tx(company.partnerTeaser.text, lang)}</p>
+      <p style="margin-top:32px"><a class="btn solid arrow" href={contactPath(lang)} data-track="cta_click" data-track-where="partners">{tx(company.partnerTeaser.cta, lang)}</a></p>
+    </div>
+  </section>
+
   <section class="section on-dark" aria-labelledby="uniques-h">
     <div class="wrap">
       <div class="section-head split">

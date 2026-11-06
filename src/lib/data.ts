@@ -30,10 +30,25 @@ export const num = (n: number, lang: Lang) => nf(lang).format(n);
 export const FOUNDED = 2001;
 export const years = new Date(asOf).getFullYear() - FOUNDED;
 
+// Las cifras de la banda, todas calculadas: nunca se escribe un numero de proyecto en una pagina.
+// Lo entregado y lo que esta en curso van separados a proposito. Mezclados en un solo dato, un
+// banco descuenta el total entero porque no puede saber que parte ya existe.
 export function figures() {
   const delivered = projects.filter((p) => p.status === 'delivered');
-  const totalFt2 = projects.reduce((s, p) => s + p.builtAreaFt2, 0);
-  return { years, developments: projects.length, delivered: delivered.length, totalFt2 };
+  const pipeline = projects.filter((p) => p.status !== 'delivered');
+  const sum = (list: Project[], k: 'units' | 'builtAreaFt2') =>
+    list.reduce((s, p) => s + (p[k] ?? 0), 0);
+  return {
+    years,
+    developments: projects.length,
+    delivered: delivered.length,
+    pipeline: pipeline.length,
+    units: sum(projects, 'units'),
+    deliveredUnits: sum(delivered, 'units'),
+    totalFt2: sum(projects, 'builtAreaFt2'),
+    deliveredFt2: sum(delivered, 'builtAreaFt2'),
+    pipelineFt2: sum(pipeline, 'builtAreaFt2'),
+  };
 }
 
 export const typeLabel: Record<string, { es: string; en: string }> = {
@@ -50,6 +65,36 @@ export const masterPlans: Record<string, string> = {
 };
 export const countryLabel = (c: string, lang: Lang) =>
   c === 'MX' ? t(lang).countryMX : t(lang).countryUS;
+
+// La fuente que se publica en cada ficha.
+//
+// `sources` en projects.json son notas internas de trabajo —«54 units confirmed by juan diego,
+// 2026-10-12»— y no se imprimen tal cual: traen el nombre de quien confirmo el dato y estan a
+// medias en ingles. Lo que se publica es de donde salio la cifra, que es lo que un banco quiere
+// saber, y si se reviso despues. Nunca quien la confirmo.
+const DECK = /presentaci[óo]n institucional/i;
+export function sourceLine(p: Project, lang: Lang): string {
+  const es = lang === 'es';
+  const list = ((p as { sources?: string[] }).sources ?? []).filter(Boolean);
+  const base = list.some((s) => DECK.test(s))
+    ? es
+      ? 'Presentación institucional de PAGA, junio 2026 (v6)'
+      : 'PAGA institutional presentation, June 2026 (v6)'
+    : '';
+  // Cualquier nota que no sea la presentacion es una revision posterior de la cifra.
+  const notes = list.filter((s) => !DECK.test(s));
+  if (notes.length === 0) return base;
+  const stamps = notes.map((s) => s.match(/\d{4}-\d{2}-\d{2}/)?.[0]).filter(Boolean) as string[];
+  const last = stamps.sort()[stamps.length - 1];
+  const when = last
+    ? new Date(last + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' })
+    : '';
+  const revised = es
+    ? `con cifras revisadas por Dirección${when ? ` en ${when}` : ''}`
+    : `with figures reviewed by management${when ? ` in ${when}` : ''}`;
+  if (!base) return revised.charAt(0).toUpperCase() + revised.slice(1);
+  return `${base}, ${revised}`;
+}
 
 export type LegalDoc = 'aviso-de-privacidad' | 'aviso-de-cookies' | 'terminos' | 'canales-oficiales';
 export const legalSlugs: Record<LegalDoc, { es: string; en: string }> = {

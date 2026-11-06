@@ -225,3 +225,58 @@ La recomendación original no se puede aplicar tal cual. Los 36 proyectos traen
 diego, 2026-10-12»—, no citas publicables. Si se quiere la línea de fuente en
 cada ficha, hay que redactarla primero: algo como «Fuente: presentación
 institucional de PAGA, junio 2026». Queda para el bloque B.
+
+## El bloque B, aplicado — 6 de noviembre de 2026
+
+Seis de los siete puntos. B3 (rotular los renders) ya se había hecho al resolver las decisiones
+del 5 de noviembre.
+
+**B1. La fuente de cada proyecto.** La recomendación original no se podía aplicar tal cual, y por
+eso quedó pendiente: los 36 `sources` son notas internas —«54 units confirmed by juan diego,
+2026-10-12»— que traen el nombre de quien confirmó el dato. Lo que se publica ahora lo arma
+`sourceLine()` en `src/lib/data.ts` a partir de esas mismas notas, sin tocar los datos: de dónde
+salió la cifra («Presentación institucional de PAGA, junio 2026 (v6)») y, cuando hubo una revisión
+posterior, que la hubo y en qué mes. Nunca quién. Va bajo «Datos a octubre de 2026» en cada ficha.
+
+**B2. Entregado y en curso, separados.** La banda pasa de cuatro cifras a cuatro cifras que dicen
+el doble, todas calculadas desde `projects.json`:
+
+| | |
+|---|---|
+| 25 | años desde 2001 |
+| 36 | desarrollos en México y Estados Unidos, 27 de ellos entregados |
+| 1,826 | unidades de vivienda, 948 entregadas |
+| 410,000 | m² entregados, y 218,000 m² en desarrollo |
+
+El cuarto número era antes un solo dato de 628,000 m² que mezclaba lo construido con lo que
+todavía no existe.
+
+**B4. Escala en la tarjeta.** Unidades y superficie, que ya estaban en el dato y no se imprimían.
+Las unidades solo donde las hay: los cuatro centros comerciales y el edificio de oficinas muestran
+superficie y nada más.
+
+**B5. Filtros que se combinan y viven en la dirección.** De cuatro chips a cuatro filtros —país,
+estatus, tipo y ciudad— que se cruzan entre sí. El resultado queda en la URL
+(`/proyectos/?pais=US&tipo=residencial`), así que un enlace filtrado se puede mandar por correo, que
+era justo lo que no se podía hacer. La página lee los nombres en los dos idiomas y escribe el del
+idioma en que está. Las opciones salen del propio listado: un desarrollo en una ciudad nueva
+aparece en el filtro solo.
+
+**B6. El texto para socios, renderizado.** `partnerTeaser` de `company.json` estaba escrito para
+propietarios de terrenos, socios de capital y codesarrolladores, y no se mostraba en ninguna parte.
+Ahora es una sección del Inicio, después del proceso. La liga va al formulario **sin perfil
+preseleccionado**, conforme a la decisión del 13 de octubre: el visitante elige su perfil ahí.
+
+**B7. El proceso, en el Inicio.** Los seis pasos como una línea, con liga a Nosotros para los
+textos completos. No se tocaron los Tres Diferenciadores.
+
+### Lo que no se hizo, y por qué
+
+- **La página de socios como tal.** B6 pedía «una página de primer nivel». Se renderizó el texto,
+  que era lo que faltaba, pero una entrada nueva en el menú principal cambia la estructura del
+  sitio y eso es el bloque D, no este. `ui.nav.partners` ya existe en `company.json` («Socios» /
+  «Partners») esperando esa decisión.
+- **Reescribir «Mejor producto».** B7 observa, de paso, que el texto del primer diferenciador
+  —«que cada desarrollo sea un activo superior dentro de su segmento»— roza la prohibición de
+  superlativos. Es cierto, pero los Tres Diferenciadores son contenido del V/TO y se cambian en
+  Dirección, no aquí.

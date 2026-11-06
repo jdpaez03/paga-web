@@ -6,11 +6,25 @@ const f = figures();
 const d = new Date(asOf + 'T12:00:00');
 const asOfLabel = d.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 const es = lang === 'es';
+// Sin unidad, para que el numero grande no se parta: la unidad va en el pie de cada cifra.
+const bare = (ft2: number) => area(ft2, lang, 1000).replace(/ (m²|ft²)$/, '');
+const unit = es ? 'm²' : 'ft²';
 ---
+{/* Lo entregado y lo que esta en curso van en cifras distintas. Mezclados en un solo dato, quien
+    evalua a PAGA descuenta el total entero porque no puede saber que parte ya existe. */}
 <div class="figures num">
   <div class="figure"><strong>{f.years}</strong><span>{es ? 'años desde 2001' : 'years, since 2001'}</span></div>
-  <div class="figure"><strong>{f.developments}</strong><span>{es ? 'desarrollos en México y Estados Unidos, incluidos los que están en curso' : 'developments in Mexico and the United States, including those underway'}</span></div>
-  <div class="figure"><strong>{f.delivered}</strong><span>{es ? 'entregados' : 'delivered'}</span></div>
-  <div class="figure"><strong>{area(f.totalFt2, lang, 1000).replace(/ (m²|ft²)$/, '')}</strong><span>{es ? 'm² de superficie construida y en desarrollo' : 'ft² of built area, completed and in development'}</span></div>
+  <div class="figure">
+    <strong>{f.developments}</strong>
+    <span>{es ? `desarrollos en México y Estados Unidos, ${f.delivered} de ellos entregados` : `developments in Mexico and the United States, ${f.delivered} of them delivered`}</span>
+  </div>
+  <div class="figure">
+    <strong>{num(f.units, lang)}</strong>
+    <span>{es ? `unidades de vivienda, ${num(f.deliveredUnits, lang)} entregadas` : `homes, ${num(f.deliveredUnits, lang)} delivered`}</span>
+  </div>
+  <div class="figure">
+    <strong>{bare(f.deliveredFt2)}</strong>
+    <span>{es ? `${unit} entregados, y ${bare(f.pipelineFt2)} ${unit} en desarrollo` : `${unit} delivered, plus ${bare(f.pipelineFt2)} ${unit} in development`}</span>
+  </div>
 </div>
 <p class="asof">{es ? `Cifras a ${asOfLabel}, con base en los desarrollos documentados.` : `Figures as of ${asOfLabel}, based on documented developments.`}</p>

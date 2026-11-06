@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Timeline from '../components/Timeline.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Figures from '../components/Figures.astro';
-import { type Lang, company, tx, t, paths, projects } from '../lib/data';
+import { type Lang, company, tx, t, paths, projects, typeLabel } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
@@ -15,6 +15,10 @@ const list = [...projects].sort((a, b) => (b.completionYear ?? -1) - (a.completi
 const byYear = projects.filter((p) => p.completionYear).sort((a, b) => (a.completionYear as number) - (b.completionYear as number));
 const firstName = byYear[0]?.name ?? '';
 const lastName = byYear[byYear.length - 1]?.name ?? '';
+// Las opciones de los filtros salen del propio listado: si manana entra un desarrollo en una
+// ciudad nueva, el filtro la trae solo.
+const types = [...new Set(projects.map((p) => p.type))].sort();
+const cities = [...new Set(projects.map((p) => p.city))].sort((x, y) => x.localeCompare(y, 'es'));
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="projects" alt={paths.projects(es ? 'en' : 'es')}>
   <section class="section tight">
@@ -44,36 +48,145 @@ const lastName = byYear[byYear.length - 1]?.name ?? '';
         <p class="eyebrow">{es ? 'Portafolio' : 'Portfolio'}</p>
         <h2>{es ? 'Todos los desarrollos' : 'All developments'}</h2>
       </div>
-      <div class="chips" role="group" aria-label={es ? 'Filtrar por país' : 'Filter by country'}>
-        <button class="chip" type="button" data-f="all" aria-pressed="true">{ui.filterAll}</button>
-        <button class="chip" type="button" data-f="MX" aria-pressed="false">{ui.countryMX}</button>
-        <button class="chip" type="button" data-f="US" aria-pressed="false">{ui.countryUS}</button>
-        <button class="chip" type="button" data-f="live" aria-pressed="false">{es ? 'En curso' : 'Underway'}</button>
+      {/* Cuatro filtros que se combinan, y el resultado queda en la direccion: asi se puede
+          mandar por correo «el portafolio comercial en Estados Unidos». Las opciones salen de
+          los datos, no escritas aqui. */}
+      <div class="filters">
+        <div class="filter">
+          <span class="flabel" id="f-pais">{es ? 'País' : 'Country'}</span>
+          <div class="chips" role="group" aria-labelledby="f-pais">
+            <button class="chip" type="button" data-k="country" data-v="" aria-pressed="true">{ui.filterAll}</button>
+            <button class="chip" type="button" data-k="country" data-v="MX" aria-pressed="false">{ui.countryMX}</button>
+            <button class="chip" type="button" data-k="country" data-v="US" aria-pressed="false">{ui.countryUS}</button>
+          </div>
+        </div>
+        <div class="filter">
+          <span class="flabel" id="f-estado">{es ? 'Estatus' : 'Status'}</span>
+          <div class="chips" role="group" aria-labelledby="f-estado">
+            <button class="chip" type="button" data-k="status" data-v="" aria-pressed="true">{ui.filterAll}</button>
+            <button class="chip" type="button" data-k="status" data-v="delivered" aria-pressed="false">{es ? 'Entregados' : 'Delivered'}</button>
+            <button class="chip" type="button" data-k="status" data-v="live" aria-pressed="false">{es ? 'En curso' : 'Underway'}</button>
+          </div>
+        </div>
+        <div class="filter">
+          <span class="flabel" id="f-tipo">{es ? 'Tipo' : 'Type'}</span>
+          <div class="chips" role="group" aria-labelledby="f-tipo">
+            <button class="chip" type="button" data-k="type" data-v="" aria-pressed="true">{ui.filterAll}</button>
+            {types.map((ty) => (
+              <button class="chip" type="button" data-k="type" data-v={ty} aria-pressed="false">{tx(typeLabel[ty], lang)}</button>
+            ))}
+          </div>
+        </div>
+        <div class="filter">
+          <label class="flabel" for="f-ciudad">{es ? 'Ciudad' : 'City'}</label>
+          <select id="f-ciudad" class="fselect" data-k="city">
+            <option value="">{es ? 'Todas' : 'All'}</option>
+            {cities.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </div>
       </div>
-      <p class="count" id="pcount" role="status" data-of={list.length} data-word={es ? 'desarrollos' : 'developments'} data-conn={es ? 'de' : 'of'}>{list.length} {es ? 'desarrollos' : 'developments'}</p>
-      <div class="grid" id="pgrid">
+      <div class="count-row">
+        <p class="count" id="pcount" role="status" data-of={list.length} data-word={es ? 'desarrollos' : 'developments'} data-conn={es ? 'de' : 'of'} data-none={es ? 'Ningún desarrollo con estos filtros' : 'No developments match these filters'}>{list.length} {es ? 'desarrollos' : 'developments'}</p>
+        <button class="linklike" type="button" id="pclear" hidden>{es ? 'Quitar filtros' : 'Clear filters'}</button>
+      </div>
+      <div class="grid" id="pgrid" data-lang={lang}>
         {list.map((p) => <ProjectCard p={p} lang={lang} />)}
       </div>
     </div>
   </section>
   <script>
-    const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-f]');
-    const cards = document.querySelectorAll<HTMLElement>('#pgrid .card');
+    // Cuatro filtros que se combinan (pais, estatus, tipo, ciudad) y viven en la direccion, para
+    // que un enlace filtrado se pueda mandar por correo. Se leen las dos juegos de nombres, en
+    // espanol y en ingles, y se escribe el del idioma de la pagina.
+    const grid = document.getElementById('pgrid')!;
+    const cards = [...grid.querySelectorAll<HTMLElement>('.card')];
     const count = document.getElementById('pcount')!;
+    const clear = document.getElementById('pclear') as HTMLButtonElement;
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip[data-k]')];
+    const citySel = document.getElementById('f-ciudad') as HTMLSelectElement;
+    // El idioma viene del servidor, no del atributo lang del html: ese dice «es-MX» y una
+    // comparacion con «es» falla en silencio, dejando la direccion en ingles en la pagina en
+    // espanol.
+    const es = grid.dataset.lang === 'es';
     const total = count.dataset.of;
     const word = count.dataset.word;
     const conn = count.dataset.conn;
-    chips.forEach((c) => c.addEventListener('click', () => {
-      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
-      const f = c.dataset.f;
-      let shown = 0;
-      cards.forEach((k) => {
-        const show = f === 'all' || k.dataset.country === f || (f === 'live' && k.dataset.status !== 'delivered');
-        k.classList.toggle('hidden', !show);
-        if (show) shown++;
+    const none = count.dataset.none;
+
+    // El mismo filtro tiene nombre en los dos idiomas: se lee cualquiera, se escribe el de aqui.
+    const KEYS = {
+      country: ['pais', 'country'],
+      status: ['estado', 'status'],
+      type: ['tipo', 'type'],
+      city: ['ciudad', 'city'],
+    } as const;
+    type Key = keyof typeof KEYS;
+    const nameOf = (k: Key) => KEYS[k][es ? 0 : 1];
+
+    const state: Record<Key, string> = { country: '', status: '', type: '', city: '' };
+
+    const read = () => {
+      const q = new URLSearchParams(location.search);
+      (Object.keys(KEYS) as Key[]).forEach((k) => {
+        for (const alias of KEYS[k]) {
+          const v = q.get(alias);
+          if (v) { state[k] = v; break; }
+        }
       });
-      // role="status": filtering used to drop half the grid without announcing anything
-      count.textContent = f === 'all' ? `${total} ${word}` : `${shown} ${conn} ${total} ${word}`;
-    }));
+    };
+
+    const matches = (c: HTMLElement) =>
+      (!state.country || c.dataset.country === state.country) &&
+      (!state.type || c.dataset.type === state.type) &&
+      (!state.city || c.dataset.city === state.city) &&
+      (!state.status ||
+        (state.status === 'live' ? c.dataset.status !== 'delivered' : c.dataset.status === state.status));
+
+    const paint = (push: boolean) => {
+      let shown = 0;
+      cards.forEach((c) => {
+        const ok = matches(c);
+        c.classList.toggle('hidden', !ok);
+        if (ok) shown++;
+      });
+
+      chips.forEach((b) => {
+        const k = b.dataset.k as Key;
+        b.setAttribute('aria-pressed', String(state[k] === (b.dataset.v ?? '')));
+      });
+      if (citySel.value !== state.city) citySel.value = state.city;
+
+      const any = (Object.keys(state) as Key[]).some((k) => state[k]);
+      clear.hidden = !any;
+      // role="status": filtrar quitaba media rejilla sin anunciar nada
+      count.textContent = !any
+        ? `${total} ${word}`
+        : shown === 0
+          ? none!
+          : `${shown} ${conn} ${total} ${word}`;
+
+      if (push) {
+        const q = new URLSearchParams(location.search);
+        (Object.keys(KEYS) as Key[]).forEach((k) => KEYS[k].forEach((alias) => q.delete(alias)));
+        (Object.keys(state) as Key[]).forEach((k) => { if (state[k]) q.set(nameOf(k), state[k]); });
+        const qs = q.toString();
+        history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+      }
+    };
+
+    chips.forEach((b) =>
+      b.addEventListener('click', () => {
+        state[b.dataset.k as Key] = b.dataset.v ?? '';
+        paint(true);
+      }),
+    );
+    citySel.addEventListener('change', () => { state.city = citySel.value; paint(true); });
+    clear.addEventListener('click', () => {
+      (Object.keys(state) as Key[]).forEach((k) => { state[k] = ''; });
+      paint(true);
+    });
+
+    read();
+    paint(false);
   </script>
 </Base>
