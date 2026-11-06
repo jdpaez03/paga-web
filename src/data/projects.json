@@ -897,7 +897,7 @@
     },
     {
       "slug": "amara-centro-primera-fase",
-      "name": "Amāra Centro, primera fase",
+      "name": "Distrito Amara, primera fase",
       "country": "MX",
       "city": "Monterrey",
       "state": "N.L.",
@@ -910,8 +910,8 @@
       "partners": [],
       "image": "/img/projects/amara-centro-primera-fase.jpg",
       "imageSize": [
-        871,
-        882
+        1600,
+        901
       ],
       "imagesAreRenders": true,
       "logo": "/img/logos/amara-centro.webp",
@@ -939,6 +939,20 @@
           "size": [
             1246,
             1254
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/amara-centro-primera-fase-4.jpg",
+          "size": [
+            1600,
+            900
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/amara-centro-primera-fase-5.jpg",
+          "size": [
+            1600,
+            900
           ]
         }
       ]

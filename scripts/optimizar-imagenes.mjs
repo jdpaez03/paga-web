@@ -1,11 +1,14 @@
 // Generates the image variants the site needs, with the sharp that Astro already brings.
 // Run with `npm run imagenes` after adding a project, a gallery image or a logo.
 //
-//  1. 256 px thumbnails for the project gallery: the strip renders them at 107 px and used to load
-//     the 480 px file (56 KB for a 107 px box).
+//  1. The WebP variants of every project image: the widths that srcset() asks for in src/lib/data.ts
+//     (480, 800, 1200 and 1600, the ones that fit the original) plus the 256 px thumbnail of the
+//     gallery strip, which renders at 107 px and used to load the 480 px file.
 //  2. The 31 project logos as WebP with alpha: as PNG they weighed 587 KB in total.
 //
-// It never overwrites a variant that is already up to date, and it leaves the sources untouched.
+// A variant is rebuilt when it is missing or older than its source, and the sources are left
+// untouched. Lo segundo importa: antes solo se miraba si el archivo existia, asi que cambiar la
+// foto de un proyecto —misma ruta, imagen nueva— dejaba publicadas las variantes de la anterior.
 
 import { readdir, stat, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -19,25 +22,50 @@ const THUMB_W = 256;
 
 const kb = (n) => `${(n / 1024).toFixed(1)} KB`;
 
-// ——— 1. Thumbnails ———————————————————————————————————————————————
-const withGallery = data.projects.filter((p) => p.gallery?.length);
-const thumbSources = withGallery.flatMap((p) => [p.image, ...p.gallery.map((g) => g.src)]);
+// ——— 1. Variantes de las imagenes de proyecto ————————————————————————
+// Las mismas anchuras que pide srcset() en src/lib/data.ts, y con el mismo criterio: la de 480
+// siempre, y las mayores solo si el original da para ellas. Si las dos listas se separan, el
+// navegador pide un archivo que no existe.
+const SRCSET_W = [480, 800, 1200, 1600];
+// La miniatura de 256 solo la usa la tira de la galeria, asi que solo la llevan los proyectos que
+// tienen galeria; para los demas seria un archivo que nadie pide.
+const anchuras = (natural, conTira) =>
+  [...(conTira ? [THUMB_W] : []), ...SRCSET_W.filter((w) => w === 480 || w <= natural)];
+
+// Cada imagen con la anchura que declara projects.json, que es la que srcset() usa para decidir.
+const fuentes = data.projects.flatMap((p) => {
+  const tira = (p.gallery?.length ?? 0) > 0;
+  return [
+    { src: p.image, natural: p.imageSize?.[0] ?? 0, tira },
+    ...(p.gallery ?? []).map((g) => ({ src: g.src, natural: g.size?.[0] ?? 0, tira: true })),
+  ];
+});
 
 await mkdir(path.join(pub, 'img', 'w'), { recursive: true });
 let made = 0;
-for (const src of thumbSources) {
-  const base = path.basename(src).replace(/\.jpg$/, '');
-  const out = path.join(pub, 'img', 'w', `${base}-${THUMB_W}.webp`);
-  if (existsSync(out)) continue;
+let total = 0;
+for (const { src, natural, tira } of fuentes) {
   const input = path.join(pub, src.replace(/^\//, ''));
   if (!existsSync(input)) {
     console.warn(`  falta el original: ${src}`);
     continue;
   }
-  await sharp(input).resize({ width: THUMB_W, withoutEnlargement: true }).webp({ quality: 74 }).toFile(out);
-  made++;
+  const fuenteMs = (await stat(input)).mtimeMs;
+  const base = path.basename(src).replace(/\.jpg$/, '');
+  for (const w of anchuras(natural, tira)) {
+    total++;
+    const out = path.join(pub, 'img', 'w', `${base}-${w}.webp`);
+    // Se rehace si falta o si la fuente es mas nueva: cambiar la foto sin cambiar la ruta es un
+    // caso real, y con solo mirar si existe quedaban publicadas las variantes de la anterior.
+    if (existsSync(out) && (await stat(out)).mtimeMs >= fuenteMs) continue;
+    await sharp(input)
+      .resize({ width: w, withoutEnlargement: true })
+      .webp({ quality: w === THUMB_W ? 74 : 80 })
+      .toFile(out);
+    made++;
+  }
 }
-console.log(`miniaturas ${THUMB_W}w: ${made} nuevas de ${thumbSources.length}`);
+console.log(`variantes webp: ${made} generadas de ${total}`);
 
 // ——— 2. Logos a WebP —————————————————————————————————————————————
 const logoDir = path.join(pub, 'img', 'logos');

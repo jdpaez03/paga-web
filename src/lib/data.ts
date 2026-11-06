@@ -76,7 +76,7 @@ export const typeLabel: Record<string, { es: string; en: string }> = {
 export const masterPlans: Record<string, string> = {
   sonoma: 'Sonoma Club & Residences',
   balcones: 'Balcones Residencial',
-  amara: 'Amāra',
+  amara: 'Distrito Amara',
   'cinnamon-shore': 'Cinnamon Shore',
 };
 export const countryLabel = (c: string, lang: Lang) =>
