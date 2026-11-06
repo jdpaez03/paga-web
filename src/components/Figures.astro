@@ -14,16 +14,22 @@ const bare = (ft2: number) => area(ft2, lang, 1000).replace(/ (m²|ft²)$/, '');
 const unit = es ? 'm²' : 'ft²';
 ---
 {/* Lo entregado y lo que esta en curso van en cifras distintas. Mezclados en un solo dato, quien
-    evalua a PAGA descuenta el total entero porque no puede saber que parte ya existe. */}
+    evalua a PAGA descuenta el total entero porque no puede saber que parte ya existe.
+
+    Y el resto se nombra siempre, no se deja implicito. «36 desarrollos, 27 de ellos entregados»
+    invitaba a la peor lectura posible de los otros 9 —cancelados, detenidos, fallidos— cuando lo
+    que son es obra, permisos y planeacion. Decir «y 9 en obra, permisos o planeacion» cuesta una
+    linea y cierra la pregunta (dicho por Juan Diego, 6 de noviembre de 2026). Los tres numeros
+    salen de projects.json, nunca escritos a mano. */}
 <div class="figures num">
   <div class="figure"><strong>{f.years}</strong><span>{es ? 'años desde 2001' : 'years, since 2001'}</span></div>
   <div class="figure">
     <strong>{f.developments}</strong>
-    <span>{es ? `desarrollos en México y Estados Unidos, ${f.delivered} de ellos entregados` : `developments in Mexico and the United States, ${f.delivered} of them delivered`}</span>
+    <span>{es ? `desarrollos en México y Estados Unidos: ${f.delivered} entregados y ${f.pipeline} en obra, permisos o planeación` : `developments in Mexico and the United States: ${f.delivered} delivered and ${f.pipeline} in construction, permitting or planning`}</span>
   </div>
   <div class="figure">
     <strong>{num(f.units, lang)}</strong>
-    <span>{es ? `unidades de vivienda, ${num(f.deliveredUnits, lang)} entregadas` : `homes, ${num(f.deliveredUnits, lang)} delivered`}</span>
+    <span>{es ? `unidades de vivienda: ${num(f.deliveredUnits, lang)} entregadas y ${num(f.pipelineUnits, lang)} en desarrollo` : `homes: ${num(f.deliveredUnits, lang)} delivered and ${num(f.pipelineUnits, lang)} in development`}</span>
   </div>
   <div class="figure">
     <strong>{bare(f.deliveredFt2)}</strong>

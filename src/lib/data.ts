@@ -60,6 +60,7 @@ export function figures() {
     pipeline: pipeline.length,
     units: sum(projects, 'units'),
     deliveredUnits: sum(delivered, 'units'),
+    pipelineUnits: sum(pipeline, 'units'),
     totalFt2: sum(projects, 'builtAreaFt2'),
     deliveredFt2: sum(delivered, 'builtAreaFt2'),
     pipelineFt2: sum(pipeline, 'builtAreaFt2'),
