@@ -337,6 +337,10 @@ sitio.
 
 ## 9. Después del lanzamiento
 
+- **En enero de 2027 hay que actualizar las cifras.** El sitio lo promete: la banda dice «Próxima
+  actualización: enero de 2027», confirmado por Juan Diego el 6 de noviembre. Es revisar `asOf` y
+  los datos de `projects.json`, mover `nextUpdate` al siguiente corte y volver a subir. Si se
+  decide no seguir publicando la promesa, se vacía `nextUpdate` y la frase desaparece sola.
 - **Cada cambio del sitio** es volver a compilar y volver a subir: `npm run build`, armar el zip del
   punto 2 y extraerlo en `public_html`. Los videos solo se vuelven a subir si cambiaron.
 - **Analítica: pendiente de decidir.** Cloudflare Web Analytics ya no aplica. Hoy el sitio no mide

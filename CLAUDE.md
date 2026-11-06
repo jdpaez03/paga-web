@@ -30,7 +30,7 @@ Project partners and co-developers are NOT mentioned on the site for now (decide
 
 - **Years** = completion year (decided Oct 12, 2026). Future years are labelled as estimated completion.
 - **Area** = m² in Spanish, ft² in English. Data is stored in ft²; convert with 1 ft² = 0.092903 m², rounded to the nearest 10 m² (or 1,000 for totals).
-- **Figures** always carry an as-of date.
+- **Figures** always carry an as-of date, and a next-update date (`nextUpdate` in projects.json, confirmed by Juan Diego as **January 2027**, Nov 6 2026). The site publishes when the numbers will next be checked, so a reader can tell the operation is alive. That date is a promise: when it arrives, either refresh `asOf` and the figures and move `nextUpdate` forward, or empty the field. Builds made after the date has passed drop the line rather than show a promise already broken.
 - **Language**: Spanish first (`/`), English mirror (`/en/`). Write natively in each language; do not translate word for word.
 - **Register (Spanish)**: **usted**, everywhere, the contact form included (decided by Juan Diego, Nov 5, 2026). The site speaks to banks, capital partners and landowners; tú was splitting the voice right at first contact. English has no equivalent split — keep it plain and direct.
 - **Renders**: `imagesAreRenders` in projects.json says whether a development's images are renderings rather than photographs of finished work. Seven are marked today. A render is always labelled, on the card and on the project page. If you add a project, look at its images and set the flag; never leave it to guesswork.

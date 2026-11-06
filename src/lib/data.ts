@@ -9,8 +9,14 @@ export type Project = (typeof projectsData.projects)[number];
 export const asOf = projectsData.asOf;
 // Cuando se vuelven a revisar las cifras. Un banco que mira un sitio no puede saber si la
 // operacion sigue viva: decir cuando vuelve a actualizarse es la forma mas barata de decirselo.
-// Vacio = no se publica la linea.
-export const nextUpdate: string = (projectsData as { nextUpdate?: string }).nextUpdate ?? '';
+// Confirmado por Juan Diego el 6 de noviembre de 2026: enero de 2027. Vacio = no se publica.
+//
+// Si la fecha ya paso, la linea no se imprime. Una promesa vencida a la vista hace mas dano que
+// no haberla hecho, y este sitio se compila a mano: nadie garantiza que se recompile a tiempo.
+// Se compara por mes, en texto, para no pelearse con zonas horarias.
+const nextUpdateRaw: string = (projectsData as { nextUpdate?: string }).nextUpdate ?? '';
+const thisMonth = new Date().toISOString().slice(0, 7);
+export const nextUpdate: string = nextUpdateRaw && nextUpdateRaw >= thisMonth ? nextUpdateRaw : '';
 export const projects: Project[] = projectsData.projects;
 export { company };
 

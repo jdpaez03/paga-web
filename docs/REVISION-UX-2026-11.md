@@ -302,8 +302,10 @@ equipo siga en borrador esperando a Dirección.
 
 **D5. Fecha de la próxima actualización.** `nextUpdate` en `projects.json`, hoy en enero de 2027,
 se imprime junto a la fecha de corte: «Cifras a octubre de 2026… Próxima actualización: enero de
-2027.» **Es un compromiso, no un dato**: si Dirección prefiere otra fecha o ninguna, se cambia o se
-vacía ese campo y la frase desaparece sola.
+2027.» **Es un compromiso, no un dato**, y Juan Diego lo confirmó el 6 de noviembre: enero de 2027.
+Llegada esa fecha hay que actualizar las cifras y mover `nextUpdate`, o vaciarlo. Una compilación
+hecha después de que la fecha pasó ya no imprime la línea: vale más no decir nada que exhibir una
+promesa vencida.
 
 **D6. Ya hecho**, y quedaba un resto: la 404 seguía tuteando («la página que buscas», «Puedes
 ver»). Corregido.
