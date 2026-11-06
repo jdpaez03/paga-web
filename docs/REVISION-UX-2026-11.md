@@ -187,3 +187,41 @@ recordar porque no se ven:
   `docs/LANZAMIENTO.md` se habría visto sin galería y sin video.
 - El póster del video institucional se adjunta al abrirlo. Chrome lo bajaba en
   cada visita a Inicio aunque el video estuviera oculto.
+
+---
+
+## Las seis decisiones, resueltas — 5 de noviembre de 2026
+
+| # | Pregunta | Decisión de Juan Diego |
+|---|---|---|
+| 1 | ¿Los films a YouTube/Vimeo o solo 720p? | **Ninguna: fuera del sitio.** Queda una fotografía en Trayectoria. |
+| 2 | ¿Domicilio, teléfono y correo? | **Solo teléfono y correo**, sin domicilio. Faltan los datos. |
+| 3 | ¿Buzones por perfil? | **Sí**, y además copia al CRM con etiquetas. Falta saber cuál es el CRM. |
+| 4 | ¿Se publica el equipo? | **No**, hasta que Dirección confirme los ocho puestos. |
+| 5 | ¿Usted o tú? | **Usted**, en todo el español. |
+| 6 | ¿Campos nuevos en projects.json? | **Solo la marca de render.** |
+
+### Lo que apareció al revisar las imágenes
+
+Se miraron una por una las 36 imágenes principales y las 12 de galería de los
+proyectos en curso. Son renders siete:
+
+- **En curso**, como es de esperarse: Torre Fiori, Amara Centro Primera Fase,
+  Marena, Torre Acqua y Balcones 200. Sus galerías completas también son
+  renders, así que la marca es por proyecto y no por imagen.
+- **Entregados**, y esto sí llama la atención: **Parkview Pitic** (2020) y
+  **Cinnamon Shore Six Town Center** (2024). Son obra terminada y la imagen que
+  las representa es un render. Quedan marcadas, que es lo honesto, pero lo
+  congruente es fotografiarlas.
+
+Las otras cuatro en curso —Las Velas 6-7, Los Corales Bay Tower, Artesanías
+Tercera Fase y Las Joyas 2— sí son fotografías: son fases nuevas de planes
+maestros que ya tienen obra construida.
+
+### Nota sobre B1, publicar la fuente de cada proyecto
+
+La recomendación original no se puede aplicar tal cual. Los 36 proyectos traen
+`sources`, pero son notas internas de trabajo —«54 units confirmed by juan
+diego, 2026-10-12»—, no citas publicables. Si se quiere la línea de fuente en
+cada ficha, hay que redactarla primero: algo como «Fuente: presentación
+institucional de PAGA, junio 2026». Queda para el bloque B.
