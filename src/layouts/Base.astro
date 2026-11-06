@@ -19,7 +19,7 @@ interface Props {
   alt?: string; // path of this page in the other language
   image?: string; // og:image path
   hideCta?: boolean;
-  jsonLd?: Record<string, unknown>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 const { lang, title, description, current, alt, image, hideCta, jsonLd } = Astro.props;
 const ui = t(lang);
@@ -82,7 +82,7 @@ const org = {
         <nav class="nav" aria-label={lang === 'es' ? 'Principal' : 'Main'}>
           <a href={paths.projects(lang)} aria-current={current === 'projects' ? 'page' : undefined}>{ui.nav.projects}</a>
           <a href={paths.about(lang)} aria-current={current === 'about' ? 'page' : undefined}>{ui.nav.about}</a>
-          <a class="lang" href={altHref} hreflang={other} lang={other} data-track="lang_switch">{other.toUpperCase()}</a>
+          <a class="lang" href={altHref} hreflang={other} lang={other} aria-label={other === 'en' ? 'Switch to English' : 'Cambiar a español'} data-track="lang_switch">{other.toUpperCase()}</a>
           <a class="btn solid nav-cta" href={contactPath(lang)} aria-current={current === 'contact' ? 'page' : undefined} data-track="cta_click" data-track-where="header">{lang === 'es' ? 'Contacto' : 'Contact'}</a>
         </nav>
       </div>
@@ -95,7 +95,9 @@ const org = {
       <div class="wrap">
         <div class="top">
           <div>
-            <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="108" loading="lazy" decoding="async" />
+            <a href={paths.home(lang)} aria-label={lang === 'es' ? 'PAGA Desarrollos, ir al inicio' : 'PAGA Desarrollos, go to home'}>
+              <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="108" loading="lazy" decoding="async" />
+            </a>
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>

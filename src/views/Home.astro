@@ -55,11 +55,28 @@ const up = es ? '' : '../';
     })();
   </script>
 
-
   <section class="section tight">
     <div class="wrap">
       <p class="lead-home">{tx(company.heroLead, lang)}</p>
       <div style="margin-top:40px"><Figures lang={lang} /></div>
+    </div>
+  </section>
+
+  {/* D1: lo que esta en obra va arriba, no a cinco pantallas de scroll. Un socio de capital
+      vino a ver el pipeline —878 unidades y 218,000 m2— y antes se topaba primero con dos
+      secciones de mensaje. La trayectoria viene despues: primero lo que pasa hoy. */}
+  <section class="section on-white" id="en-desarrollo">
+    <div class="wrap">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">{es ? 'En desarrollo' : 'In development'}</p>
+          <h2>{es ? 'Proyectos en curso' : 'Current projects'}</h2>
+        </div>
+        <p>{es ? 'Desarrollos en planeación, permisos u obra; donde ya hay fecha, con su año estimado de conclusión.' : 'Developments in planning, permitting or construction; where a date is set, with its estimated completion year.'}</p>
+      </div>
+      <div class="grid">
+        {live.map((p) => <ProjectCard p={p} lang={lang} />)}
+      </div>
     </div>
   </section>
 
@@ -137,21 +154,6 @@ const up = es ? '' : '../';
         </div>
       </div>
       <Uniques lang={lang} />
-    </div>
-  </section>
-
-  <section class="section" id="en-desarrollo">
-    <div class="wrap">
-      <div class="section-head split">
-        <div>
-          <p class="eyebrow">{es ? 'En desarrollo' : 'In development'}</p>
-          <h2>{es ? 'Proyectos en curso' : 'Current projects'}</h2>
-        </div>
-        <p>{es ? 'Desarrollos en planeación, permisos u obra; donde ya hay fecha, con su año estimado de conclusión.' : 'Developments in planning, permitting or construction; where a date is set, with its estimated completion year.'}</p>
-      </div>
-      <div class="grid">
-        {live.map((p) => <ProjectCard p={p} lang={lang} />)}
-      </div>
     </div>
   </section>
 

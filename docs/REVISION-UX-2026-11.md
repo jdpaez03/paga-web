@@ -280,3 +280,47 @@ textos completos. No se tocaron los Tres Diferenciadores.
   —«que cada desarrollo sea un activo superior dentro de su segmento»— roza la prohibición de
   superlativos. Es cierto, pero los Tres Diferenciadores son contenido del V/TO y se cambian en
   Dirección, no aquí.
+
+## El bloque D, aplicado — 6 de noviembre de 2026
+
+Cinco de los siete puntos. D2 y D6 ya se habían resuelto antes de llegar aquí.
+
+**D1. El pipeline subió.** «Proyectos en curso» era la última sección del Inicio, a cinco
+pantallas de scroll y después de dos secciones de mensaje. Ahora va inmediatamente después de la
+banda de cifras: primero lo que está pasando hoy, luego los 25 años. Queda a 1,300 px del
+encabezado en lugar de a 4,500.
+
+**D2. Ya hecho.** Teléfono y correo publicados el 6 de noviembre. Sin domicilio, por decisión.
+
+**D3. La promesa del formulario, corregida.** Decía «cada mensaje llega directo al área que
+corresponde», y desde que los leads van al CRM eso no es lo que ocurre: todo el correo llega a un
+solo buzón y la clasificación la hace la Suite. Ahora dice lo que sí es cierto y lo que de verdad
+justifica preguntar el perfil: «Su perfil nos dice con qué información responderle».
+
+**D4. No se puede hacer todavía.** La trayectoria de cada persona no se puede publicar mientras el
+equipo siga en borrador esperando a Dirección.
+
+**D5. Fecha de la próxima actualización.** `nextUpdate` en `projects.json`, hoy en enero de 2027,
+se imprime junto a la fecha de corte: «Cifras a octubre de 2026… Próxima actualización: enero de
+2027.» **Es un compromiso, no un dato**: si Dirección prefiere otra fecha o ninguna, se cambia o se
+vacía ese campo y la frase desaparece sola.
+
+**D6. Ya hecho**, y quedaba un resto: la 404 seguía tuteando («la página que buscas», «Puedes
+ver»). Corregido.
+
+**D7. Los cuatro huecos de navegación.**
+
+- La 404 es ahora simétrica en los dos idiomas: el mismo mensaje y las mismas dos salidas en
+  español y en inglés, en vez de una página en español con una frase en inglés al pie.
+- El logotipo del pie liga al Inicio, con su etiqueta para lector de pantalla.
+- `BreadcrumbList` en las 72 fichas de proyecto, en los dos idiomas.
+- El conmutador de idioma tiene `aria-label`: antes un lector de pantalla solo leía «EN».
+
+### Lo que no se hizo, y por qué
+
+- **Una 404 propia en `/en/404/`.** Apache sirve un solo `ErrorDocument` para todo el sitio, así
+  que una 404 en inglés solo entraría en funcionamiento con un segundo `.htaccess` dentro de
+  `/en/`. Ese archivo viajaría en el zip, y un zip hecho en Windows puede dejarlo en permisos 0600
+  —que es exactamente lo que tira una carpeta entera con 403, y la razón por la que el `.htaccess`
+  de la raíz se pega a mano—. Por un riesgo así no vale la pena: la 404 bilingüe resuelve lo mismo
+  sin tocar la configuración del servidor.

@@ -1,18 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
 import { paths, contactPath } from '../lib/data';
+// Una sola 404 para los dos idiomas, y simétrica: el servidor sirve este archivo para cualquier
+// ruta muerta, también las de /en/, así que un visitante en inglés no puede caer en una página
+// que solo le hable en español. Se dice lo mismo en los dos, con las dos salidas.
 ---
-<Base lang="es" title="Página no encontrada · PAGA Desarrollos" description="La página que buscas no existe o cambió de dirección." alt={paths.home('en')} hideCta>
+<Base lang="es" title="Página no encontrada · Page not found · PAGA Desarrollos" description="La página que busca no existe o cambió de dirección." alt={paths.home('en')} hideCta>
   <section class="section">
     <div class="wrap">
       <p class="eyebrow">Error 404</p>
-      <h1 style="font-size:clamp(40px,6vw,84px);color:var(--navy);max-width:16ch">Esta página no existe o cambió de dirección.</h1>
-      <p style="margin-top:28px;max-width:56ch;font-size:19px;color:var(--muted)">Renovamos el sitio de PAGA Desarrollos. Puedes ver todos nuestros desarrollos o escribirnos.</p>
-      <p lang="en" style="margin-top:12px;max-width:56ch;font-size:16px;color:var(--muted)">This page does not exist or has moved. We have redesigned our website.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:36px">
+      <h1 style="font-size:clamp(36px,5vw,72px);color:var(--navy);max-width:18ch">Esta página no existe o cambió de dirección.</h1>
+      <p style="margin-top:24px;max-width:56ch;font-size:19px;color:var(--muted)">Renovamos el sitio de PAGA Desarrollos. Puede ver todos nuestros desarrollos o escribirnos.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
         <a class="btn solid arrow" href={paths.projects('es')}>Proyectos</a>
         <a class="btn" href={contactPath('es')}>Contáctenos</a>
-        <a class="btn" href={paths.home('en')} lang="en">English</a>
+      </div>
+
+      <div lang="en" style="margin-top:56px;padding-top:40px;border-top:1px solid var(--line)">
+        <h2 style="font-size:clamp(28px,3.4vw,44px);color:var(--navy);font-weight:300;max-width:18ch">This page does not exist or has moved.</h2>
+        <p style="margin-top:20px;max-width:56ch;font-size:17px;color:var(--muted)">We have redesigned the PAGA Desarrollos website. You can browse every development or write to us.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:24px">
+          <a class="btn solid arrow" href={paths.projects('en')}>Projects</a>
+          <a class="btn" href={contactPath('en')}>Contact us</a>
+        </div>
       </div>
     </div>
   </section>

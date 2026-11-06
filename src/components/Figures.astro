@@ -1,11 +1,14 @@
 ---
-import { type Lang, figures, area, num, asOf } from '../lib/data';
+import { type Lang, figures, area, num, asOf, nextUpdate } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const f = figures();
 const d = new Date(asOf + 'T12:00:00');
 const asOfLabel = d.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 const es = lang === 'es';
+const nextLabel = nextUpdate
+  ? new Date(nextUpdate + '-15T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' })
+  : '';
 // Sin unidad, para que el numero grande no se parta: la unidad va en el pie de cada cifra.
 const bare = (ft2: number) => area(ft2, lang, 1000).replace(/ (m²|ft²)$/, '');
 const unit = es ? 'm²' : 'ft²';
@@ -27,4 +30,7 @@ const unit = es ? 'm²' : 'ft²';
     <span>{es ? `${unit} entregados, y ${bare(f.pipelineFt2)} ${unit} en desarrollo` : `${unit} delivered, plus ${bare(f.pipelineFt2)} ${unit} in development`}</span>
   </div>
 </div>
-<p class="asof">{es ? `Cifras a ${asOfLabel}, con base en los desarrollos documentados.` : `Figures as of ${asOfLabel}, based on documented developments.`}</p>
+<p class="asof">
+  {es ? `Cifras a ${asOfLabel}, con base en los desarrollos documentados.` : `Figures as of ${asOfLabel}, based on documented developments.`}
+  {nextLabel && (es ? ` Próxima actualización: ${nextLabel}.` : ` Next update: ${nextLabel}.`)}
+</p>

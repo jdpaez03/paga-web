@@ -36,12 +36,27 @@ const ld = {
   address: { '@type': 'PostalAddress', addressLocality: p.city, addressRegion: p.state, addressCountry: p.country === 'MX' ? 'MX' : 'US' },
   ...(p.units ? { numberOfAccommodationUnits: p.units } : {}),
 };
+// D7: las 72 fichas no decian donde estaban paradas. El rastro de migas en datos estructurados
+// es lo que hace que Google muestre «Inicio > Proyectos > Torre Acqua» en lugar de la URL cruda.
+const SITE = 'https://www.pagadesarrollos.com';
+const crumbs = [
+  { name: es ? 'Inicio' : 'Home', url: paths.home(lang) },
+  { name: ui.nav.projects, url: paths.projects(lang) },
+  { name: p.name, url: paths.project(lang, p.slug) },
+];
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.url, SITE).href,
+  })),
+};
 const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' });
 // De donde sale cada cifra de esta ficha. Es la linea mas barata y mas institucional del sitio:
 // un banco que lee un numero quiere saber quien lo sostiene.
 const src = sourceLine(p, lang);
 ---
-<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={ld}>
+<Base lang={lang} title={title} description={desc} current="projects" alt={paths.project(es ? 'en' : 'es', p.slug)} image={`/img/og/${p.slug}.jpg`} jsonLd={[ld, breadcrumb]}>
   <section class="p-top">
     <div class="p-media">
       <figure class="p-main">

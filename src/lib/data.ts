@@ -7,6 +7,10 @@ export type Lang = 'es' | 'en';
 export type Project = (typeof projectsData.projects)[number];
 
 export const asOf = projectsData.asOf;
+// Cuando se vuelven a revisar las cifras. Un banco que mira un sitio no puede saber si la
+// operacion sigue viva: decir cuando vuelve a actualizarse es la forma mas barata de decirselo.
+// Vacio = no se publica la linea.
+export const nextUpdate: string = (projectsData as { nextUpdate?: string }).nextUpdate ?? '';
 export const projects: Project[] = projectsData.projects;
 export { company };
 
