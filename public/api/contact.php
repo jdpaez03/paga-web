@@ -34,6 +34,11 @@ $CONFIG = [
         // 'terreno'   => 'terrenos@pagadesarrollos.com',
         // 'empleo'    => 'rh@pagadesarrollos.com',
     ],
+    // Buzón de entrada del CRM. Recibe copia de TODOS los mensajes, además del buzón de arriba.
+    // El correo va en dos partes: una de texto con «campo: valor» y las etiquetas, que es la que
+    // leen los analizadores de correo de los CRM, y una de HTML para quien lo lea a mano.
+    // Vacío = no se manda nada al CRM.
+    'crm' => '',
     // Remitente. Tiene que ser una dirección del propio dominio para que el SPF cuadre.
     'from' => 'web@pagadesarrollos.com',
     'from_name' => 'PAGA Desarrollos (web)',
@@ -219,6 +224,10 @@ if ($faltan) {
 
 $porPerfil = is_array($CONFIG['to_by_profile'] ?? null) ? $CONFIG['to_by_profile'] : [];
 $to = una_linea($porPerfil[$d['profile']] ?? $CONFIG['to'] ?? '', 320);
+$crm = una_linea($CONFIG['crm'] ?? '', 320);
+if ($crm !== '') {
+    $to .= ',' . $crm;
+}
 $from = una_linea($CONFIG['from'] ?? '', 320);
 $destinos = array_values(array_filter(array_map('trim', explode(',', $to)), static function ($dir) {
     return filter_var($dir, FILTER_VALIDATE_EMAIL) !== false;
@@ -263,20 +272,77 @@ $html .= '</table><p style="font:400 14px/1.6 Arial,sans-serif;white-space:pre-w
     . 'border-left:3px solid #13294B;padding-left:12px;margin-top:16px">'
     . esc($d['message']) . '</p>';
 
+// La parte de texto es la que leen los analizadores de correo de los CRM: una linea por campo,
+// «campo: valor», con los identificadores sin traducir (el perfil y el slug del proyecto) para
+// que se puedan mapear, y una linea de etiquetas al final.
+$etiquetas = ['web', 'perfil-' . $d['profile'], 'idioma-' . $d['lang']];
+if ($d['project'] !== '') {
+    $etiquetas[] = 'proyecto-' . $d['project'];
+}
+if ($d['deck']) {
+    $etiquetas[] = 'pide-presentacion';
+}
+
+$planas = [
+    ['perfil', $d['profile']],
+    ['perfil_texto', PROFILES[$d['profile']]],
+    ['nombre', $d['name']],
+    ['correo', $d['email']],
+    ['telefono', $d['phone']],
+    ['empresa', $d['company']],
+    ['proyecto', $d['project']],
+    ['proyecto_texto', $d['projectName']],
+    ['terreno_ubicacion', $d['landLocation']],
+    ['terreno_superficie_m2', $d['landArea']],
+    ['presentacion_corporativa', $d['deck'] ? 'si' : 'no'],
+    ['idioma', $d['lang']],
+    ['pagina', $d['page']],
+    ['primera_pagina', $d['srcLanding']],
+    ['llego_desde', $d['srcRef']],
+    ['campana_utm', $d['srcUtm']],
+    ['consentimiento_aviso_privacidad', 'si'],
+    ['fecha_utc', gmdate('c')],
+    ['referencia', REFERENCIA],
+    ['etiquetas', implode(', ', $etiquetas)],
+];
+$texto = '';
+foreach ($planas as $linea) {
+    if ((string) $linea[1] === '') {
+        continue;
+    }
+    $texto .= $linea[0] . ': ' . str_replace(["\r", "\n"], ' ', (string) $linea[1]) . "\r\n";
+}
+$texto .= "\r\nmensaje:\r\n" . str_replace("\n", "\r\n", $d['message']) . "\r\n";
+
 $asunto = encabezado('[Web] ' . PROFILES[$d['profile']] . ' · ' . $d['name']);
 $deNombre = una_linea($CONFIG['from_name'] ?? '', 80);
+$frontera = 'paga-' . bin2hex(random_bytes(12));
 
 $encabezados = [
     'From: ' . ($deNombre !== '' ? encabezado($deNombre) . ' ' : '') . '<' . $from . '>',
     'Reply-To: ' . encabezado($d['name']) . ' <' . $d['email'] . '>',
     'MIME-Version: 1.0',
-    'Content-Type: text/html; charset=UTF-8',
-    'Content-Transfer-Encoding: base64',
+    'Content-Type: multipart/alternative; boundary="' . $frontera . '"',
     'X-Mailer: pagadesarrollos.com',
     'X-Entity-Ref-ID: ' . REFERENCIA,
+    // Para los CRM y para las reglas de bandeja que filtran por encabezado.
+    'X-PAGA-Perfil: ' . $d['profile'],
+    'X-PAGA-Idioma: ' . $d['lang'],
+    'X-PAGA-Etiquetas: ' . implode(', ', $etiquetas),
 ];
+if ($d['project'] !== '') {
+    $encabezados[] = 'X-PAGA-Proyecto: ' . $d['project'];
+}
 
-$cuerpo = chunk_split(base64_encode($html), 76, "\r\n");
+$cuerpo = '--' . $frontera . "\r\n"
+    . "Content-Type: text/plain; charset=UTF-8\r\n"
+    . "Content-Transfer-Encoding: base64\r\n\r\n"
+    . chunk_split(base64_encode($texto), 76, "\r\n")
+    . '--' . $frontera . "\r\n"
+    . "Content-Type: text/html; charset=UTF-8\r\n"
+    . "Content-Transfer-Encoding: base64\r\n\r\n"
+    . chunk_split(base64_encode($html), 76, "\r\n")
+    . '--' . $frontera . "--\r\n";
 $para = implode(', ', $destinos);
 
 // El sobre va con el remitente del dominio, para que el SPF del dominio sea el que se revise.

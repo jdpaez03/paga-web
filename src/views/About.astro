@@ -1,18 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
 import Uniques from '../components/Uniques.astro';
-import { type Lang, company, tx, paths, figures } from '../lib/data';
-import site from '../data/site.json';
+import { type Lang, company, tx, paths, figures, showTeam as showTeamFlag, showGuarantee as showGuaranteeFlag } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
 const seo = company.seo.about;
 const g = company.guarantee;
 const f = figures();
-const showGuarantee = !g.draft || site.preview;
+const showGuarantee = showGuaranteeFlag;
 // same gate as the guarantee: the titles are marked as unconfirmed in company.json, and eight
 // people's names with a wrong title cost more credibility than the section adds
-const showTeam = !company.team.draft || site.preview;
+const showTeam = showTeamFlag;
 // in-page index, in the order a capital partner or co-developer reads the page
 const index = [
   { id: 'proceso', es: 'Proceso', en: 'Process' },

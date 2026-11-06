@@ -155,9 +155,47 @@ MX del dominio: Microsoft 365.
   <?php
   return [
       'to' => 'contacto@pagadesarrollos.com',
-      'to_by_profile' => ['terreno' => 'terrenos@pagadesarrollos.com'],
+      'to_by_profile' => [
+          'inversion' => 'inversion@pagadesarrollos.com',
+          'terreno'   => 'terrenos@pagadesarrollos.com',
+          'banco'     => 'inversion@pagadesarrollos.com',
+          'comprador' => 'ventas@pagadesarrollos.com',
+          'broker'    => 'ventas@pagadesarrollos.com',
+          'proveedor' => 'compras@pagadesarrollos.com',
+          'prensa'    => 'contacto@pagadesarrollos.com',
+          'empleo'    => 'rh@pagadesarrollos.com',
+      ],
+      'crm' => 'intake@TU-CRM.com',
   ];
   ```
+
+  Esa tabla es una propuesta: **cada buzón o alias tiene que existir en Microsoft 365 antes de
+  lanzar**, o el correo rebota y el mensaje termina en el archivo de respaldo. Los perfiles son los
+  ocho de `src/data/contact.json` y no se pueden inventar otros.
+
+- **CRM.** `crm` es la dirección de entrada del CRM y recibe copia de **todos** los mensajes,
+  además del buzón que corresponda por perfil. Vacío significa que no se manda nada. El correo
+  sale en dos partes: una de texto, que es la que leen los analizadores de los CRM, y una de HTML
+  para quien lo lea a mano. La de texto trae una línea por campo, con los identificadores sin
+  traducir para poder mapearlos:
+
+  ```
+  perfil: inversion
+  perfil_texto: Inversión / socio de capital
+  nombre: ...
+  correo: ...
+  proyecto: torre-acqua
+  proyecto_texto: Torre Acqua · Hermosillo
+  idioma: es
+  primera_pagina: /proyectos/torre-acqua/
+  llego_desde: google
+  campana_utm: utm_source=google&utm_medium=cpc
+  referencia: PAGA-XXXXXXXXXX
+  etiquetas: web, perfil-inversion, idioma-es, proyecto-torre-acqua, pide-presentacion
+  ```
+
+  Los mismos datos van también en encabezados, por si el CRM o una regla de bandeja filtra por
+  ahí: `X-PAGA-Perfil`, `X-PAGA-Idioma`, `X-PAGA-Proyecto` y `X-PAGA-Etiquetas`.
 
 - **Prueba de humo**, antes de probar el formulario completo: abre `https://www.pagadesarrollos.com/api/contact.php`
   en el navegador. Tiene que responder un JSON `{"error":"method_not_allowed",…}`. Si sale el código

@@ -7,7 +7,7 @@ import jost300 from '@fontsource/jost/files/jost-latin-300-normal.woff2?url';
 import jost400 from '@fontsource/jost/files/jost-latin-400-normal.woff2?url';
 import jost500 from '@fontsource/jost/files/jost-latin-500-normal.woff2?url';
 import '../styles/global.css';
-import { type Lang, t, paths, contactPath, offices } from '../lib/data';
+import { type Lang, t, paths, contactPath, offices, showTeam } from '../lib/data';
 import ContactCta from '../components/ContactCta.astro';
 import siteCfg from '../data/site.json';
 
@@ -100,13 +100,18 @@ const org = {
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
             <a href={paths.projects(lang)}>{ui.nav.projects}</a>
             <a href={paths.about(lang)}>{ui.nav.about}</a>
-            <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>
+            {/* mientras el equipo siga en borrador no se publica, y esta liga apuntaria a un ancla que no existe */}
+            {showTeam && <a href={`${paths.about(lang)}#equipo`}>{ui.nav.team}</a>}
             <a href={contactPath(lang)}>{lang === 'es' ? 'Contacto' : 'Contact'}</a>
           </nav>
           <div class="loc">
             <p class="fh">{lang === 'es' ? 'Presencia' : 'Locations'}</p>
             <p>{lang === 'es' ? 'Monterrey · Hermosillo · Nuevo Vallarta' : 'Monterrey · Hermosillo · Nuevo Vallarta'}<br />South Padre Island · Port Isabel · Port Aransas</p>
-            {offices.length > 0 && <address class="addr">{offices.map((o) => <span>{o.address}</span>)}</address>}
+            {offices.length > 0 && (
+              <address class="addr">{offices.map((o) => (
+                <span>{o.address ?? [o.phone, o.email].filter(Boolean).join(' · ')}</span>
+              ))}</address>
+            )}
           </div>
         </div>
         <div class="bottom">

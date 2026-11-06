@@ -33,8 +33,8 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
               <h2>{tx(contact.officesTitle, lang)}</h2>
               {offices.map((o) => (
                 <address>
-                  <strong>{tx(o.city, lang)}</strong><br />
-                  {o.address}
+                  <strong>{tx(o.city, lang)}</strong>
+                  {o.address && <><br />{o.address}</>}
                   {o.phone && <><br /><a href={`tel:${o.phone.replace(/[^\d+]/g, '')}`}>{o.phone}</a></>}
                   {o.email && <><br /><a href={`mailto:${o.email}`}>{o.email}</a></>}
                 </address>

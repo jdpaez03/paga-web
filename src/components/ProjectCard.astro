@@ -7,7 +7,9 @@ const live = p.status !== 'delivered';
 const year = p.completionYear ? (live ? `${lang === 'es' ? 'Estimado' : 'Est.'} ${p.completionYear}` : `${p.completionYear}`) : '';
 ---
 <a class="card" href={paths.project(lang, p.slug)} data-country={p.country} data-status={p.status}>
-  <div class="ph"><img src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={eager ? 'eager' : 'lazy'} decoding="async" /></div>
+  {/* Si la imagen es un render y no obra terminada, se dice. En un portafolio que mezcla
+      entregas con obra en curso es la señal de honestidad más barata que hay. */}
+  <div class="ph">{p.imagesAreRenders && <span class="render-tag">{lang === 'es' ? 'Render' : 'Rendering'}</span>}<img src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} loading={eager ? 'eager' : 'lazy'} decoding="async" /></div>
   <h3>{p.name}</h3>
   <div class="meta">
     <span>{p.city}, {p.state}</span>

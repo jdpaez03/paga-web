@@ -1,6 +1,7 @@
 import projectsData from '../data/projects.json';
 import company from '../data/company.json';
 import contact from '../data/contact.json';
+import site from '../data/site.json';
 
 export type Lang = 'es' | 'en';
 export type Project = (typeof projectsData.projects)[number];
@@ -8,6 +9,11 @@ export type Project = (typeof projectsData.projects)[number];
 export const asOf = projectsData.asOf;
 export const projects: Project[] = projectsData.projects;
 export { company };
+
+// Lo que sigue en borrador solo se ve en la vista previa. El pie de pagina y el indice de
+// Nosotros preguntan aqui, para que nunca quede una liga apuntando a una seccion que no existe.
+export const showTeam = !company.team.draft || site.preview;
+export const showGuarantee = !company.guarantee.draft || site.preview;
 
 export const t = (lang: Lang) => company.ui[lang];
 export const tx = (o: { es: string; en: string }, lang: Lang) => o[lang];
@@ -75,8 +81,9 @@ export function srcset(src: string, naturalW: number) {
 export const liveProjects = () =>
   [...projects].filter((p) => p.status !== 'delivered').sort((a, b) => (a.completionYear ?? 9999) - (b.completionYear ?? 9999));
 
-/** Offices shown on Contact and in the footer; empty until Jurídico confirms address, phone and email. */
-export type Office = { city: { es: string; en: string }; address: string; phone?: string; email?: string };
+/** Oficinas que salen en Contacto y en el pie. El domicilio es opcional: por decisión de Juan
+ *  Diego (5 nov 2026) se publican teléfono y correo, y el domicilio solo si algún día se decide. */
+export type Office = { city: { es: string; en: string }; address?: string; phone?: string; email?: string };
 export const offices: Office[] = (contact as { offices?: Office[] }).offices ?? [];
 
 export const contactPath = (l: Lang, q: Record<string, string> = {}) => {

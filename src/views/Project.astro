@@ -43,6 +43,7 @@ const asOfLabel = new Date(asOf + 'T12:00:00').toLocaleDateString(es ? 'es-MX' :
     <div class="p-media">
       <figure class="p-main">
         <img id="p-main-img" src={p.image} srcset={srcset(p.image, p.imageSize[0])} sizes="(min-width: 1400px) 620px, (min-width: 1000px) 45vw, 100vw" alt={p.name} width={p.imageSize[0]} height={p.imageSize[1]} fetchpriority="high" />
+        {p.imagesAreRenders && <figcaption class="render-note">{es ? 'Las imágenes de este desarrollo son renders, no fotografías de obra terminada.' : 'The images of this development are renderings, not photographs of the finished building.'}</figcaption>}
       </figure>
       {p.gallery.length > 0 && (
         <div class="p-thumbs" role="group" aria-label={es ? 'Galería' : 'Gallery'}>

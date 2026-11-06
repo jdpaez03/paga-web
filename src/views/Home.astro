@@ -27,7 +27,7 @@ const up = es ? '' : '../';
       <h1>{es ? '25 años' : '25 years'} <span class="accent">{es ? 'desarrollando valor.' : 'developing value.'}</span></h1>
       <div class="ctas">
         <a class="btn light arrow" href={paths.projects(lang)} data-track="cta_click" data-track-where="hero_projects">{es ? 'Proyectos' : 'Projects'}</a>
-        <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Contáctanos' : 'Contact us'}</a>
+        <a class="btn" href={contactPath(lang)} data-track="cta_click" data-track-where="hero_contact">{es ? 'Contáctenos' : 'Contact us'}</a>
       </div>
     </div>
     <button type="button" class="film-btn hero-pause" id="hero-btn" aria-pressed="false" hidden>{es ? 'Pausar' : 'Pause'}</button>
@@ -75,32 +75,16 @@ const up = es ? '' : '../';
       <div class="track-actions">
         <a class="btn light arrow" href={paths.projects(lang)}>{es ? `Ver los ${f.developments} desarrollos` : `See all ${f.developments} developments`}</a>
         <a class="btn arrow" href={`${paths.projects(lang)}#linea-del-tiempo`}>{ui.timeline}</a>
-        <a class="film-open" id="film-open" href={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} aria-controls="film-box" aria-expanded="false" data-track="video_play" data-track-where={`home_film_${lang}`}><span aria-hidden="true">▶</span> {es ? 'Ver en video' : 'Watch the film'} · 2:11</a>
       </div>
-      <div class="film-frame" id="film-box" hidden>
-        <video id="film" controls playsinline preload="none" data-poster={`${up}video/${es ? 'paga-25-anos' : 'paga-25-years'}.webp`} width="1920" height="1080" aria-label={es ? '25 años en dos minutos. Video sin audio.' : '25 years in two minutes. No sound.'}>
-          <source src={es ? '/video/paga-25-anos-720.mp4' : '/video/paga-25-years-720.mp4'} type="video/mp4" media="(max-width: 760px)" />
-          <source src={es ? '/video/paga-25-anos.mp4' : '/video/paga-25-years.mp4'} type="video/mp4" />
-        </video>
-      </div>
+      {/* Aquí estaba el video institucional de 2:11. Salió del servidor por decisión de Juan
+          Diego (5 nov 2026): eran 75 MB en un plan compartido y un visitante de escritorio
+          ocupaba un proceso de Apache 47 segundos. Queda la fotografía, que es un cuadro del
+          propio video y existe en los dos idiomas. */}
+      <figure class="track-photo">
+        <img src={es ? '/img/trayectoria-es.webp' : '/img/trayectoria-en.webp'} alt={es ? 'Las Villas, South Padre Island, Texas. Residencial de 38 unidades, entregado en 2005.' : 'Las Villas, South Padre Island, Texas. A 38-unit residential development, delivered in 2005.'} width="1600" height="900" loading="lazy" decoding="async" />
+      </figure>
     </div>
   </section>
-  <script>
-    // the film is a secondary action: it opens in place under the strip; without JS the link plays the file
-    const film = document.getElementById('film') as HTMLVideoElement | null;
-    const open = document.getElementById('film-open');
-    const box = document.getElementById('film-box');
-    if (film && open && box) {
-      open.addEventListener('click', (e) => {
-        e.preventDefault();
-        // the poster is only attached on opening: Chrome downloads it even inside a hidden element,
-        // and it cost 90 KB on every visit to the home page
-        if (film.dataset.poster) { film.poster = film.dataset.poster; delete film.dataset.poster; }
-        box.hidden = false; open.setAttribute('aria-expanded', 'true');
-        film.focus(); film.play().catch(() => {});
-      });
-    }
-  </script>
 
   <section class="section">
     <div class="wrap">

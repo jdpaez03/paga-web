@@ -181,6 +181,11 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .card .meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .tag { display: inline-block; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; padding: 4px 8px; border: 1px solid var(--line); color: var(--muted); }
 .tag.live { border-color: var(--blue); color: var(--blue); }
+/* El sello de render sobre la tarjeta y el pie de foto de la ficha. */
+.card .ph { position: relative; }
+.render-tag { position: absolute; z-index: 1; top: 12px; left: 12px; font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; padding: 4px 8px; background: rgba(11,27,51,.82); color: var(--white); }
+.render-note { margin-top: 10px; font-size: 12px; letter-spacing: .04em; color: var(--muted); }
 
 /* buttons / links */
 .btn { display: inline-flex; align-items: center; gap: 12px; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; padding: 16px 26px; border: 1px solid currentColor; transition: background .2s, color .2s; }
@@ -230,7 +235,7 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 /* project detail: image at its real size, never stretched */
 .p-top { display: grid; grid-template-columns: 1fr; gap: clamp(28px, 4vw, 64px); max-width: 1440px; margin: 0 auto; padding: clamp(24px, 4vw, 56px) clamp(16px, 2.6vw, 40px) clamp(24px, 3vw, 40px); }
 /* the frame takes the photo's own proportions: no letterbox bands */
-.p-main { margin: 0; display: flex; justify-content: center; }
+.p-main { margin: 0; display: flex; flex-direction: column; align-items: center; }
 .p-main img { display: block; width: auto; height: auto; max-width: 100%; max-height: min(78vh, 820px); object-fit: contain; }
 @media (max-width: 999px) { .p-main img { max-height: 70vh; } }
 .p-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 8px; }
@@ -406,14 +411,11 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .profiles.invalid .chip-radio span { border-color: #e2a8a3; }
 
 /* full film (home) */
-.film-frame { position: relative; background: #000; }
-.film-frame video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+/* La fotografia de Trayectoria. Estaba el video institucional y salio del servidor. */
+.track-photo { margin: 32px 0 0; }
+.track-photo img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 /* track record actions (home): two buttons and the film as a quieter text link */
 .track-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 32px; }
-.film-open { display: inline-flex; gap: 10px; align-items: center; padding: 14px 0; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; color: var(--white); border-bottom: 1px solid var(--line-dark); }
-.film-open:hover { border-color: var(--white); }
-.film-open[aria-expanded='true'] { display: none; }
-#film-box { margin-top: 32px; }
 
 /* skip link */
 .skip { position: absolute; left: 12px; top: -60px; z-index: 50; background: var(--navy); color: var(--white); padding: 10px 16px; text-decoration: none; font-size: 14px; }
