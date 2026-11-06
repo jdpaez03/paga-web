@@ -168,18 +168,36 @@ Cada mensaje de un perfil comercial crea un **lead** en `POST https://pagasuite.
 la llave en la cabecera `Authorization: Bearer`. El cliente es
 [`public/api/crm.php`](../public/api/crm.php) y la entrega la hace un cron, no el formulario.
 
-**Por qué por cron y no al momento.** La API no deduplica: dos POST del mismo mensaje crean dos
-leads distintos. Si el formulario llamara a la API y se le acabara el tiempo de espera, no habría
-forma de saber si el lead entró, y reintentar sería justamente cómo se producen los duplicados. Con
-una sola ruta de entrega hay un solo lugar donde razonar sobre eso. De paso, el visitante nunca
-espera a la API para que el formulario le conteste.
+**Por qué por cron y no al momento.** Para que el visitante no espere a la API, y para que haya un
+solo lugar donde se razone sobre los reintentos. Si el formulario llamara a la API y se le acabara
+el tiempo de espera, el visitante vería un error por algo que sí entró.
+
+**La ventana de deduplicación.** La Suite no crea un lead repetido si en los **60 minutos**
+anteriores ya entró uno con el mismo correo, o con los mismos últimos 10 dígitos del teléfono:
+contesta 200 con el `id_lead` que ya existía y `"duplicado": true`. Casa contra todos los leads,
+también los capturados a mano. Eso es lo que permite reintentar un timeout sin duplicar, y de ahí
+salen las dos condiciones del estado `revisar` más abajo.
+
+Esa ventana es una variable de entorno del lado de la Suite, y **el cliente tiene que ir en paralelo**:
+`crm_ventana_dedup` en `crm.php` (3600 s) y `crm_margen_dedup` (600 s, para no apostar al último
+segundo de la ventana). Si allá se cambia, aquí también. La regla es que la ventana debe
+ser al menos tan larga como el horizonte de reintentos: con la espera actual (2, 4, 5, 5 y 5 minutos,
+tope `crm_espera_max` = 300 s) y el cron cada cinco, los seis intentos de un lead caen a los 5, 10,
+15, 25, 35 y **45 minutos** de recibido, dentro de los 50 que deja el margen.
 
 **Lo que se manda.** Solo `nombre` es obligatorio. `fuente` va siempre en `web`.
 `nom_proyecto_interes` se traduce del slug del sitio al nombre que el CRM reconoce, y **si no hay
 uno que case, va en `null`**: la API no valida ese campo, así que un nombre inventado entraría con
-200 y después ese lead no saldría en ningún filtro. Hoy casan seis de los nueve proyectos del
-desplegable; Las Joyas (2), Las Velas (6, 7) y Marena no existen en el CRM y por eso van sin
-proyecto. La tabla está en `crm.php` y es el único lugar donde se toca.
+200 y después ese lead no saldría en ningún filtro. Hoy casan siete de los nueve proyectos del
+desplegable; Las Joyas (2) y Las Velas (6, 7) no están en el catálogo del CRM y por eso van sin
+proyecto. Marena va como `LAS PERLAS`: es el mismo desarrollo con otro nombre comercial, y la llave
+del catálogo en la Suite sigue siendo la vieja. La tabla está en `crm.php`, es estática a propósito
+—la llave de ingesta no puede leer `GET /projects`— y es el único lugar donde se toca.
+
+**Si un desarrollo está cerrado.** Un proyecto vendido y archivado rechaza leads nuevos con 403. El
+lead, en cambio, es real: se reenvía **una sola vez** sin proyecto, entra, y queda una línea
+`sin_proyecto` en `enviados.log` para que alguien lo clasifique. El otro 403 —la llave usada en una
+ruta que no es `POST /leads`— es permanente y no se reintenta. Se distinguen por el `detail`.
 
 **Lo que NO se manda.** El perfil, el mensaje, la página de entrada y la campaña: la API de leads no
 tiene dónde guardarlos y no se meten a la fuerza en otro campo. Esos datos viajan en el correo, que
@@ -207,11 +225,14 @@ intentar nada, así que no se pierde aunque se caiga el proceso. Estados:
 
 | Estado | Qué pasó | ¿Se reintenta? |
 |---|---|---|
-| `pendiente` | Aún no se entrega, o la API contestó 429 o 5xx, o no hubo red | Sí, con espera creciente |
-| `enviado` | 200 con `id_lead` | — el archivo se borra |
-| `rechazado` | 400, 401, 403 o 422 | No: reintentar con el mismo cuerpo da lo mismo |
-| `revisar` | Se acabó el tiempo de espera | **No**, a propósito: el lead pudo haberse creado |
-| `agotado` | Se acabaron los intentos | No |
+| `pendiente` | Aún no se entrega, o la API contestó 429 o 5xx, o no hubo red, o se acabó el tiempo de espera y la ventana de deduplicación cubre el reintento | Sí, con espera creciente |
+| `enviado` | 200 con `id_lead`, sea un lead nuevo o uno que el guardia reconoció | — el archivo se borra |
+| `rechazado` | 400, 401, 422, o un 403 de ruta equivocada | No: reintentar con el mismo cuerpo da lo mismo |
+| `revisar` | Se acabó el tiempo de espera **y** reintentar podría duplicar: el lead no trae correo ni teléfono de 10 dígitos, o ya salió de la ventana | **No**, a propósito: hay que capturarlo a mano |
+| `agotado` | Se acabaron los seis intentos | No |
+
+El 200 siempre es éxito, también cuando trae `"duplicado": true`: significa que el lead ya estaba y
+no se creó otro, que es exactamente lo que se buscaba. Queda anotado en `enviados.log`.
 
 Cuando un lead se entrega, **el archivo se borra** y solo queda una línea en
 `paga-leads/enviados.log` con la referencia y el `id_lead`, sin datos personales. Los otros estados
@@ -219,7 +240,9 @@ se quedan en disco para que una persona los capture a mano: son el único caso, 
 `paga-contacto-fallidos.log`, en que hay datos personales en el servidor.
 
 Topes, porque la API no tiene rate limiting y el único freno es éste: **6 intentos por lead** y
-**20 leads por corrida** (`crm_max_intentos` y `crm_max_por_corrida`).
+**20 leads por corrida** (`crm_max_intentos` y `crm_max_por_corrida`). Si se suben los intentos o
+`crm_espera_max`, hay que volver a hacer la cuenta: el último intento tiene que caber dentro de la
+ventana de deduplicación, o los últimos no corren.
 
 **Dos cosas que hay que revisar en el servidor** antes de dar esto por hecho:
 
@@ -235,7 +258,8 @@ alimente al CRM. Los leads se quedarían en la cola y habría que capturarlos a 
 
 **Lo único que hay que confirmar con un envío real:** que el teléfono se acepte. Se manda solo con
 dígitos (`528112345678`), que es el formato del contrato; si la API lo rechazara con 400, se ve en
-`--estado` y se cambia en una línea de `crm.php`.
+`--estado` y se cambia en una línea de `crm.php`. El prefijo del país no estorba para la
+deduplicación: la Suite casa por los últimos diez dígitos.
 
 - **Prueba de humo**, antes de probar el formulario completo: abre `https://www.pagadesarrollos.com/api/contact.php`
   en el navegador. Tiene que responder un JSON `{"error":"method_not_allowed",…}`. Si sale el código

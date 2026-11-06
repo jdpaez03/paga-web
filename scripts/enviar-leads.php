@@ -88,10 +88,11 @@ if ((string) ($CONFIG['crm_key'] ?? '') === '') {
 
 $cuenta = crm_drenar($CONFIG);
 printf(
-    "  intentados=%d enviados=%d pendientes=%d rechazados=%d agotados=%d esperando=%d\n",
+    "  intentados=%d enviados=%d pendientes=%d revisar=%d rechazados=%d agotados=%d esperando=%d\n",
     $cuenta['revisados'],
     $cuenta['enviados'],
     $cuenta['pendientes'],
+    $cuenta['revisar'],
     $cuenta['rechazados'],
     $cuenta['agotados'],
     $cuenta['esperando']

@@ -45,6 +45,16 @@ function crm_defectos(): array
         'crm_inline' => false,
         'crm_connect_timeout' => 5,
         'crm_timeout' => 12,
+        // La ventana del guardia anti-duplicados de la Suite, en segundos. Dentro de ella, un
+        // reintento del mismo correo o teléfono devuelve el lead que ya existe en vez de crear
+        // otro. Si allá la cambian, aquí también: de esto depende poder reintentar un timeout.
+        'crm_ventana_dedup' => 3600,
+        // Margen para no apostar al último segundo de la ventana.
+        'crm_margen_dedup' => 600,
+        // Tope de la espera entre intentos. Con 10 minutos el sexto intento caía a los 55 —fuera
+        // de la ventana— y nunca llegaba a correr. Con 5 cae a los 45 y los 6 caben. Bajarlo no
+        // aprieta a la API: el cron corre cada 5 minutos, así que esa es la separación mínima real.
+        'crm_espera_max' => 300,
         // Carpeta de la cola. Vacía = /home/<usuario>/paga-leads.
         'crm_cola' => '',
         // Solo los perfiles comerciales: prensa, proveedores y bolsa de trabajo ensucian un
@@ -74,8 +84,12 @@ const CRM_PROYECTOS_VALIDOS = [
  * De los slugs de src/data/projects.json a los nombres del CRM.
  *
  * Solo están los que de verdad casan. Los que no aparecen aquí viajan como null a propósito:
- * Las Joyas (2), Las Velas (6, 7) y Marena no existen como proyecto en el CRM, y adivinarles un
- * nombre los dejaría fuera de todos los filtros.
+ * Las Joyas (2) y Las Velas (6, 7) no existen en el catálogo del CRM, y adivinarles un nombre los
+ * dejaría fuera de todos los filtros.
+ *
+ * Marena apunta a LAS PERLAS: es el mismo desarrollo, que cambió de nombre comercial. En la Suite
+ * la llave del catálogo sigue siendo LAS PERLAS —la guardan media docena de tablas— y lo que
+ * viaja aquí es la llave, no el nombre con el que se anuncia.
  *
  * Si algún día se agrega un proyecto al CRM, se agrega aquí y en CRM_PROYECTOS_VALIDOS.
  */
@@ -89,6 +103,7 @@ const CRM_PROYECTOS = [
     'balcones-residencial' => 'BALCONES',
     'los-corales-bay-tower' => 'CORALES BAY',
     'jardin-secreto' => 'JARDIN SECRETO',
+    'marena' => 'LAS PERLAS',
     'torre-acqua' => 'SONOMA',
     'torre-fiori' => 'SONOMA',
     'torre-pietra' => 'SONOMA',
@@ -145,6 +160,38 @@ function crm_payload(array $d): array
     ];
 }
 
+/**
+ * ¿El guardia anti-duplicados de la Suite puede reconocer este lead si se manda dos veces?
+ *
+ * Casa por correo o por los últimos 10 dígitos del teléfono, nunca por el nombre solo. Un lead
+ * que no traiga ninguno de los dos SÍ se duplicaría, así que ese no se reintenta nunca después de
+ * un timeout: se queda en «revisar» para que lo vea una persona.
+ */
+function crm_reconocible(array $lead): bool
+{
+    if ((string) ($lead['correo'] ?? '') !== '') {
+        return true;
+    }
+    $tel = preg_replace('/\D+/', '', (string) ($lead['telefono'] ?? ''));
+    return is_string($tel) && strlen($tel) >= 10;
+}
+
+/**
+ * ¿Sigue dentro de la ventana en la que un reintento no duplica?
+ *
+ * Se mide desde que se creó el lead, no desde el último intento, porque la ventana de la Suite
+ * cuenta desde el lead original.
+ */
+function crm_en_ventana(array $sobre, array $cfg): bool
+{
+    $creado = strtotime((string) ($sobre['creado'] ?? ''));
+    if ($creado === false) {
+        return false;
+    }
+    $limite = (int) ($cfg['crm_ventana_dedup'] ?? 3600) - (int) ($cfg['crm_margen_dedup'] ?? 600);
+    return (time() - $creado) < $limite;
+}
+
 /** ¿Este perfil va al CRM? El módulo es de leads comerciales: prensa y bolsa de trabajo lo ensucian. */
 function crm_aplica(string $perfil, array $cfg): bool
 {
@@ -188,13 +235,31 @@ function crm_encolar(string $referencia, array $payload, array $cfg): string
 }
 
 /**
- * Guarda el resultado de un intento.
+ * Guarda el resultado de un intento y devuelve el estado con el que quedó.
+ *
+ * Devuelve el estado porque aquí se decide: un timeout llega como «revisar» y puede salir como
+ * «pendiente». Quien llama necesita el de salida, no el de entrada, o el conteo del cron miente.
  *
  * Cuando sale bien, el archivo se borra y solo queda una línea sin datos personales en el registro
  * de enviados: el aviso de privacidad dice que no guardamos datos cuando el envío es correcto.
  */
-function crm_guardar(string $ruta, array $sobre, array $resultado, array $cfg): void
+function crm_guardar(string $ruta, array $sobre, array $resultado, array $cfg): string
 {
+    // Un timeout ya no es un callejón sin salida: con el guardia anti-duplicados de la Suite,
+    // reintentar no crea otro lead, siempre que el guardia pueda reconocerlo (correo o teléfono)
+    // y que todavía estemos dentro de la ventana. Si falta cualquiera de las dos, se queda en
+    // «revisar» y lo captura una persona, que es como se comportaba antes en todos los casos.
+    if (($resultado['ambiguo'] ?? false) === true) {
+        $recuperable = crm_reconocible($sobre['lead'] ?? []) && crm_en_ventana($sobre, $cfg);
+        $resultado['estado'] = $recuperable ? CRM_PENDIENTE : CRM_REVISAR;
+        $sobre['ambiguo'] = true;
+        if (!$recuperable) {
+            $resultado['detalle'] .= crm_reconocible($sobre['lead'] ?? [])
+                ? ' (fuera de la ventana de deduplicacion)'
+                : ' (sin correo ni telefono: reintentar duplicaria)';
+        }
+    }
+
     $sobre['estado'] = $resultado['estado'];
     $sobre['intentos'] = ($sobre['intentos'] ?? 0) + 1;
     $sobre['ultimo_intento'] = gmdate('c');
@@ -204,41 +269,30 @@ function crm_guardar(string $ruta, array $sobre, array $resultado, array $cfg): 
         @unlink($ruta);
         @file_put_contents(
             dirname($ruta) . '/enviados.log',
-            gmdate('c') . ' ' . $sobre['referencia'] . ' id_lead=' . ($resultado['id_lead'] ?? '?') . "\n",
+            gmdate('c') . ' ' . $sobre['referencia'] . ' id_lead=' . ($resultado['id_lead'] ?? '?')
+                . (($resultado['duplicado'] ?? false) ? ' duplicado' : '')
+                . (($resultado['sin_proyecto'] ?? false) ? ' sin_proyecto' : '') . "\n",
             FILE_APPEND | LOCK_EX
         );
-        return;
+        return (string) $resultado['estado'];
     }
 
     @file_put_contents($ruta, json_encode($sobre, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+    return (string) $resultado['estado'];
 }
 
 /**
- * Un intento de entrega. No reintenta por dentro: quien llama decide.
- *
- * Devuelve ['estado' =>, 'http' =>, 'id_lead' =>, 'detalle' =>]. La diferencia que importa está
- * entre «el servidor contestó que no» (rechazado, no se reintenta) y «no llegamos a saber»
- * (revisar, tampoco se reintenta, porque el lead pudo haberse creado).
+ * Una petición HTTP a la API. Devuelve lo crudo; la interpretación va en crm_enviar().
  */
-function crm_enviar(array $payload, array $cfg): array
+function crm_http(array $payload, array $cfg): array
 {
-    $url = (string) ($cfg['crm_url'] ?? '');
-    $llave = (string) ($cfg['crm_key'] ?? '');
-    if ($url === '' || $llave === '') {
-        return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'sin configurar'];
-    }
-    if (!function_exists('curl_init')) {
-        return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'sin extension curl'];
-    }
-
-    $cuerpo = json_encode($payload, JSON_UNESCAPED_UNICODE);
-    $ch = curl_init($url);
+    $ch = curl_init((string) $cfg['crm_url']);
     curl_setopt_array($ch, [
         CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => $cuerpo,
+        CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $llave,
+            'Authorization: Bearer ' . (string) $cfg['crm_key'],
             'Content-Type: application/json',
             'Accept: application/json',
             'User-Agent: pagadesarrollos.com',
@@ -253,37 +307,97 @@ function crm_enviar(array $payload, array $cfg): array
     if (($cfg['crm_proxy'] ?? '') !== '') {
         curl_setopt($ch, CURLOPT_PROXY, (string) $cfg['crm_proxy']);
     }
-
     $respuesta = curl_exec($ch);
-    $errno = curl_errno($ch);
-    $http = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    $errmsg = curl_error($ch);
+    $r = [
+        'errno' => curl_errno($ch),
+        'error' => curl_error($ch),
+        'http' => (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE),
+        'cuerpo' => (string) $respuesta,
+    ];
     curl_close($ch);
+    return $r;
+}
 
-    if ($errno !== 0) {
+/**
+ * Un intento de entrega.
+ *
+ * Devuelve ['estado' =>, 'http' =>, 'id_lead' =>, 'detalle' =>] y, cuando aplica, los avisos
+ * 'duplicado', 'sin_proyecto' y 'ambiguo'. Lo que importa es de qué tipo es la falla:
+ *
+ *   - El servidor contestó que no y volverá a contestar lo mismo  → rechazado.
+ *   - El servidor contestó que no, pero por el proyecto           → se reintenta una vez sin él.
+ *   - La petición no llegó a la aplicación                        → pendiente, reintentar es seguro.
+ *   - No llegamos a saber (timeout)                               → ambiguo; lo resuelve crm_guardar()
+ *                                                                   según el guardia de duplicados.
+ */
+function crm_enviar(array $payload, array $cfg): array
+{
+    if ((string) ($cfg['crm_url'] ?? '') === '' || (string) ($cfg['crm_key'] ?? '') === '') {
+        return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'sin configurar'];
+    }
+    if (!function_exists('curl_init')) {
+        return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'sin extension curl'];
+    }
+
+    $r = crm_http($payload, $cfg);
+
+    if ($r['errno'] !== 0) {
         // Fallos en los que la petición no llegó a la aplicación: reintentar es seguro.
         $sinLlegar = [CURLE_COULDNT_RESOLVE_PROXY, CURLE_COULDNT_RESOLVE_HOST, CURLE_COULDNT_CONNECT, CURLE_SSL_CONNECT_ERROR];
-        if (in_array($errno, $sinLlegar, true)) {
-            return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'red: ' . $errmsg];
+        if (in_array($r['errno'], $sinLlegar, true)) {
+            return ['estado' => CRM_PENDIENTE, 'http' => 0, 'id_lead' => null, 'detalle' => 'red: ' . $r['error']];
         }
-        // Timeout y todo lo demás: pudo haber entrado. No se reintenta solo.
-        return ['estado' => CRM_REVISAR, 'http' => 0, 'id_lead' => null, 'detalle' => 'sin respuesta: ' . $errmsg];
+        // Timeout: la petición pudo haber entrado. Si el guardia de la Suite puede reconocer este
+        // lead y seguimos dentro de su ventana, reintentar no duplica. Eso lo decide crm_guardar().
+        return [
+            'estado' => CRM_REVISAR,
+            'ambiguo' => true,
+            'http' => 0,
+            'id_lead' => null,
+            'detalle' => 'sin respuesta: ' . $r['error'],
+        ];
     }
 
-    if ($http === 200 || $http === 201) {
-        $json = json_decode((string) $respuesta, true);
-        $id = is_array($json) ? ($json['id_lead'] ?? null) : null;
-        return ['estado' => CRM_ENVIADO, 'http' => $http, 'id_lead' => $id, 'detalle' => 'ok'];
+    if ($r['http'] === 200 || $r['http'] === 201) {
+        $json = json_decode($r['cuerpo'], true);
+        $json = is_array($json) ? $json : [];
+        // 200 siempre es éxito, también cuando el guardia devolvió un lead que ya existía.
+        return [
+            'estado' => CRM_ENVIADO,
+            'http' => $r['http'],
+            'id_lead' => $json['id_lead'] ?? null,
+            'duplicado' => ($json['duplicado'] ?? false) === true,
+            'sin_proyecto' => ($payload['nom_proyecto_interes'] ?? null) === null,
+            'detalle' => 'ok',
+        ];
     }
 
-    // El servidor contestó que no. Reintentar con el mismo cuerpo da lo mismo.
-    if (in_array($http, [400, 401, 403, 404, 422], true)) {
-        return ['estado' => CRM_RECHAZADO, 'http' => $http, 'id_lead' => null, 'detalle' => 'http ' . $http . ': ' . substr((string) $respuesta, 0, 300)];
+    // El 403 tiene dos causas. Una es permanente (la llave solo da de alta leads, cualquier otra
+    // ruta se rechaza) y la otra no: un desarrollo vendido y archivado rechaza leads nuevos. En
+    // ese caso el lead es real y la consulta también; entra sin proyecto, que es un estado válido,
+    // y alguien lo clasifica después. Un solo reintento, y solo si traía proyecto.
+    $cerrado = $r['http'] === 403 && stripos($r['cuerpo'], 'cerrado') !== false;
+    if ($cerrado && ($payload['nom_proyecto_interes'] ?? null) !== null) {
+        $proyecto = (string) $payload['nom_proyecto_interes'];
+        $payload['nom_proyecto_interes'] = null;
+        $segundo = crm_enviar($payload, $cfg);
+        $segundo['detalle'] = 'proyecto ' . $proyecto . ' cerrado; reenviado sin proyecto: ' . $segundo['detalle'];
+        return $segundo;
+    }
+
+    if (in_array($r['http'], [400, 401, 403, 404, 422], true)) {
+        return [
+            'estado' => CRM_RECHAZADO,
+            'http' => $r['http'],
+            'id_lead' => null,
+            'detalle' => 'http ' . $r['http'] . ': ' . substr($r['cuerpo'], 0, 300),
+        ];
     }
 
     // 429 y 5xx: el servidor dice que no lo procesó. Se reintenta.
-    return ['estado' => CRM_PENDIENTE, 'http' => $http, 'id_lead' => null, 'detalle' => 'http ' . $http];
+    return ['estado' => CRM_PENDIENTE, 'http' => $r['http'], 'id_lead' => null, 'detalle' => 'http ' . $r['http']];
 }
+
 
 /**
  * Vacía la cola. La corre el cron, nunca una petición web.
@@ -297,7 +411,10 @@ function crm_drenar(array $cfg): array
     $dir = crm_cola_dir($cfg);
     $maxIntentos = (int) ($cfg['crm_max_intentos'] ?? 6);
     $maxCorrida = (int) ($cfg['crm_max_por_corrida'] ?? 20);
-    $cuenta = ['revisados' => 0, 'enviados' => 0, 'pendientes' => 0, 'rechazados' => 0, 'agotados' => 0, 'esperando' => 0];
+    $cuenta = [
+        'revisados' => 0, 'enviados' => 0, 'pendientes' => 0,
+        'rechazados' => 0, 'agotados' => 0, 'esperando' => 0, 'revisar' => 0,
+    ];
 
     $archivos = glob($dir . '/*.json') ?: [];
     sort($archivos);
@@ -316,20 +433,37 @@ function crm_drenar(array $cfg): array
             $cuenta['agotados']++;
             continue;
         }
-        // Espera creciente: 2, 4, 8, 16... minutos desde el último intento.
+        // Espera creciente con tope, medida desde el último intento: 2, 4, 5, 5 y 5 minutos. Como
+        // el cron corre cada cinco, los 6 intentos de un lead caen a los 5, 10, 15, 25, 35 y 45
+        // minutos de haberse recibido, y el sexto todavía cabe dentro de la ventana de la Suite.
         $ultimo = strtotime((string) ($sobre['ultimo_intento'] ?? $sobre['creado'] ?? 'now'));
-        if ($intentos > 0 && (time() - $ultimo) < (60 * (2 ** $intentos))) {
+        $espera = min(60 * (2 ** $intentos), (int) ($cfg['crm_espera_max'] ?? 300));
+        if ($intentos > 0 && (time() - $ultimo) < $espera) {
             $cuenta['esperando']++;
+            continue;
+        }
+
+        // Si este lead viene de un timeout y ya se salio de la ventana de deduplicacion,
+        // reintentarlo si duplicaria: pasa a revisar y lo captura una persona.
+        if (($sobre['ambiguo'] ?? false) === true && !crm_en_ventana($sobre, $cfg)) {
+            $sobre['estado'] = CRM_REVISAR;
+            $sobre['detalle'] = 'timeout fuera de la ventana de deduplicacion';
+            @file_put_contents($ruta, json_encode($sobre, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+            $cuenta['revisar']++;
             continue;
         }
 
         $cuenta['revisados']++;
         $resultado = crm_enviar($sobre['lead'], $cfg);
-        crm_guardar($ruta, $sobre, $resultado, $cfg);
-        if ($resultado['estado'] === CRM_ENVIADO) {
+        // El estado de salida, no el de entrada: crm_guardar() convierte algunos timeout en
+        // «pendiente» y deja otros en «revisar», y el conteo tiene que decir cuál fue.
+        $estado = crm_guardar($ruta, $sobre, $resultado, $cfg);
+        if ($estado === CRM_ENVIADO) {
             $cuenta['enviados']++;
-        } elseif ($resultado['estado'] === CRM_RECHAZADO) {
+        } elseif ($estado === CRM_RECHAZADO) {
             $cuenta['rechazados']++;
+        } elseif ($estado === CRM_REVISAR) {
+            $cuenta['revisar']++;
         } else {
             $cuenta['pendientes']++;
         }
