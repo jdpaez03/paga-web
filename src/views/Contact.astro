@@ -25,7 +25,7 @@ const endpoint = (es ? '../' : '../../') + 'api/contact.php';
           <h2>{tx(contact.side.title, lang)}</h2>
           <ul>
             {contact.side.items[lang].map((t, i) => (
-              <li>{i === 1 ? <>{t.split(es ? 'Consulta' : 'See our')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulta nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
+              <li>{i === 1 ? <>{t.split(es ? 'Consulte' : 'See our')[0]}<a href={paths.legal(lang, 'canales-oficiales')}>{es ? 'Consulte nuestros canales oficiales.' : 'See our official channels.'}</a></> : t}</li>
             ))}
           </ul>
           {offices.length > 0 && (
