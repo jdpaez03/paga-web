@@ -224,7 +224,8 @@
   "offices": [
     {
       "city": { "es": "Monterrey", "en": "Monterrey" },
-      "phone": "+52 (81) 8363 3737"
+      "phone": "+52 (81) 8363 3737",
+      "email": "notificaciones@pagadesarrollos.com"
     }
   ],
   "profileRequired": {
