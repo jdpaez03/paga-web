@@ -1,12 +1,29 @@
 import projectsData from '../data/projects.json';
 import company from '../data/company.json';
+import contact from '../data/contact.json';
+import site from '../data/site.json';
 
 export type Lang = 'es' | 'en';
 export type Project = (typeof projectsData.projects)[number];
 
 export const asOf = projectsData.asOf;
+// Cuando se vuelven a revisar las cifras. Un banco que mira un sitio no puede saber si la
+// operacion sigue viva: decir cuando vuelve a actualizarse es la forma mas barata de decirselo.
+// Confirmado por Juan Diego el 6 de noviembre de 2026: enero de 2027. Vacio = no se publica.
+//
+// Si la fecha ya paso, la linea no se imprime. Una promesa vencida a la vista hace mas dano que
+// no haberla hecho, y este sitio se compila a mano: nadie garantiza que se recompile a tiempo.
+// Se compara por mes, en texto, para no pelearse con zonas horarias.
+const nextUpdateRaw: string = (projectsData as { nextUpdate?: string }).nextUpdate ?? '';
+const thisMonth = new Date().toISOString().slice(0, 7);
+export const nextUpdate: string = nextUpdateRaw && nextUpdateRaw >= thisMonth ? nextUpdateRaw : '';
 export const projects: Project[] = projectsData.projects;
 export { company };
+
+// Lo que sigue en borrador solo se ve en la vista previa. El pie de pagina y el indice de
+// Nosotros preguntan aqui, para que nunca quede una liga apuntando a una seccion que no existe.
+export const showTeam = !company.team.draft || site.preview;
+export const showGuarantee = !company.guarantee.draft || site.preview;
 
 export const t = (lang: Lang) => company.ui[lang];
 export const tx = (o: { es: string; en: string }, lang: Lang) => o[lang];
@@ -21,12 +38,33 @@ export function area(ft2: number, lang: Lang, round = 10) {
 export const num = (n: number, lang: Lang) => nf(lang).format(n);
 
 export const FOUNDED = 2001;
-export const years = new Date(asOf).getFullYear() - FOUNDED;
+// El año de `asOf`, leído del texto y no de un Date. `new Date('2027-01-01')` es medianoche UTC
+// y `getFullYear()` la lee en hora local: en Monterrey (UTC-6) eso cae el 31 de diciembre y el
+// año sale uno menos. Con asOf en enero —y la próxima revisión es enero de 2027— la cifra del
+// encabezado diría 25 años en lugar de 26, en todas las páginas. La fecha ya trae el año escrito.
+export const asOfYear = Number(asOf.slice(0, 4));
+export const years = asOfYear - FOUNDED;
 
+// Las cifras de la banda, todas calculadas: nunca se escribe un numero de proyecto en una pagina.
+// Lo entregado y lo que esta en curso van separados a proposito. Mezclados en un solo dato, un
+// banco descuenta el total entero porque no puede saber que parte ya existe.
 export function figures() {
   const delivered = projects.filter((p) => p.status === 'delivered');
-  const totalFt2 = projects.reduce((s, p) => s + p.builtAreaFt2, 0);
-  return { years, developments: projects.length, delivered: delivered.length, totalFt2 };
+  const pipeline = projects.filter((p) => p.status !== 'delivered');
+  const sum = (list: Project[], k: 'units' | 'builtAreaFt2') =>
+    list.reduce((s, p) => s + (p[k] ?? 0), 0);
+  return {
+    years,
+    developments: projects.length,
+    delivered: delivered.length,
+    pipeline: pipeline.length,
+    units: sum(projects, 'units'),
+    deliveredUnits: sum(delivered, 'units'),
+    pipelineUnits: sum(pipeline, 'units'),
+    totalFt2: sum(projects, 'builtAreaFt2'),
+    deliveredFt2: sum(delivered, 'builtAreaFt2'),
+    pipelineFt2: sum(pipeline, 'builtAreaFt2'),
+  };
 }
 
 export const typeLabel: Record<string, { es: string; en: string }> = {
@@ -38,11 +76,41 @@ export const typeLabel: Record<string, { es: string; en: string }> = {
 export const masterPlans: Record<string, string> = {
   sonoma: 'Sonoma Club & Residences',
   balcones: 'Balcones Residencial',
-  amara: 'Amāra',
+  amara: 'Distrito Amāra',
   'cinnamon-shore': 'Cinnamon Shore',
 };
 export const countryLabel = (c: string, lang: Lang) =>
   c === 'MX' ? t(lang).countryMX : t(lang).countryUS;
+
+// La fuente que se publica en cada ficha.
+//
+// `sources` en projects.json son notas internas de trabajo —«54 units confirmed by juan diego,
+// 2026-10-12»— y no se imprimen tal cual: traen el nombre de quien confirmo el dato y estan a
+// medias en ingles. Lo que se publica es de donde salio la cifra, que es lo que un banco quiere
+// saber, y si se reviso despues. Nunca quien la confirmo.
+const DECK = /presentaci[óo]n institucional/i;
+export function sourceLine(p: Project, lang: Lang): string {
+  const es = lang === 'es';
+  const list = ((p as { sources?: string[] }).sources ?? []).filter(Boolean);
+  const base = list.some((s) => DECK.test(s))
+    ? es
+      ? 'Presentación institucional de PAGA, junio 2026 (v6)'
+      : 'PAGA institutional presentation, June 2026 (v6)'
+    : '';
+  // Cualquier nota que no sea la presentacion es una revision posterior de la cifra.
+  const notes = list.filter((s) => !DECK.test(s));
+  if (notes.length === 0) return base;
+  const stamps = notes.map((s) => s.match(/\d{4}-\d{2}-\d{2}/)?.[0]).filter(Boolean) as string[];
+  const last = stamps.sort()[stamps.length - 1];
+  const when = last
+    ? new Date(last + 'T12:00:00').toLocaleDateString(es ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' })
+    : '';
+  const revised = es
+    ? `con cifras revisadas por Dirección${when ? ` en ${when}` : ''}`
+    : `with figures reviewed by management${when ? ` in ${when}` : ''}`;
+  if (!base) return revised.charAt(0).toUpperCase() + revised.slice(1);
+  return `${base}, ${revised}`;
+}
 
 export type LegalDoc = 'aviso-de-privacidad' | 'aviso-de-cookies' | 'terminos' | 'canales-oficiales';
 export const legalSlugs: Record<LegalDoc, { es: string; en: string }> = {
@@ -73,6 +141,11 @@ export function srcset(src: string, naturalW: number) {
 /** Projects people can still ask about (not delivered). */
 export const liveProjects = () =>
   [...projects].filter((p) => p.status !== 'delivered').sort((a, b) => (a.completionYear ?? 9999) - (b.completionYear ?? 9999));
+
+/** Oficinas que salen en Contacto y en el pie. El domicilio es opcional: por decisión de Juan
+ *  Diego (5 nov 2026) se publican teléfono y correo, y el domicilio solo si algún día se decide. */
+export type Office = { city: { es: string; en: string }; address?: string; phone?: string; email?: string };
+export const offices: Office[] = (contact as { offices?: Office[] }).offices ?? [];
 
 export const contactPath = (l: Lang, q: Record<string, string> = {}) => {
   const base = l === 'es' ? '/contacto/' : '/en/contact/';

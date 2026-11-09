@@ -1,5 +1,6 @@
 {
   "asOf": "2026-10-12",
+  "nextUpdate": "2027-01",
   "projects": [
     {
       "slug": "los-robles",
@@ -19,7 +20,8 @@
         966,
         978
       ],
-      "logo": "/img/logos/los-robles.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/los-robles.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -44,7 +46,8 @@
         1310,
         946
       ],
-      "logo": "/img/logos/las-dunas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-dunas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -69,7 +72,8 @@
         972,
         978
       ],
-      "logo": "/img/logos/los-rincones-residencial.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/los-rincones-residencial.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -94,7 +98,8 @@
         1327,
         956
       ],
-      "logo": "/img/logos/las-villas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-villas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -119,7 +124,8 @@
         1323,
         956
       ],
-      "logo": "/img/logos/las-verandas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-verandas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -144,7 +150,8 @@
         1282,
         926
       ],
-      "logo": "/img/logos/las-marinas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-marinas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -169,7 +176,8 @@
         945,
         956
       ],
-      "logo": "/img/logos/los-corales.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/los-corales.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -194,7 +202,8 @@
         950,
         956
       ],
-      "logo": "/img/logos/las-costas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-costas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -219,7 +228,8 @@
         944,
         976
       ],
-      "logo": "/img/logos/aurum.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/aurum.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -244,7 +254,8 @@
         925,
         956
       ],
-      "logo": "/img/logos/las-velas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-velas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -269,7 +280,8 @@
         1779,
         1800
       ],
-      "logo": "/img/logos/via-puerta-de-hierro.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/via-puerta-de-hierro.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -294,7 +306,8 @@
         1645,
         1664
       ],
-      "logo": "/img/logos/andenes-san-nicolas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/andenes-san-nicolas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -319,7 +332,8 @@
         1383,
         1000
       ],
-      "logo": "/img/logos/balcones-residencial.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/balcones-residencial.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -344,7 +358,8 @@
         945,
         956
       ],
-      "logo": "/img/logos/las-joyas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-joyas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -369,7 +384,8 @@
         1400,
         1012
       ],
-      "logo": "/img/logos/cinnamon-shore.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/cinnamon-shore.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -394,7 +410,8 @@
         1350,
         976
       ],
-      "logo": "/img/logos/andenes-guadalupe.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/andenes-guadalupe.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -419,7 +436,8 @@
         1169,
         845
       ],
-      "logo": "/img/logos/andenes-hermosillo.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/andenes-hermosillo.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -444,7 +462,8 @@
         1235,
         1250
       ],
-      "logo": "/img/logos/jardin-secreto.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/jardin-secreto.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -491,7 +510,8 @@
         1400,
         1007
       ],
-      "logo": "/img/logos/cinnamon-shore-five-town-center.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/cinnamon-shore-five-town-center.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -516,7 +536,8 @@
         1386,
         1009
       ],
-      "logo": "/img/logos/arcadia-guadalupe.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/arcadia-guadalupe.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -541,7 +562,8 @@
         1386,
         1018
       ],
-      "logo": "/img/logos/parkview-pitic.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/parkview-pitic.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -566,7 +588,8 @@
         1400,
         1007
       ],
-      "logo": "/img/logos/cinnamon-shore-nine-town-center.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/cinnamon-shore-nine-town-center.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -591,7 +614,8 @@
         1600,
         1200
       ],
-      "logo": "/img/logos/cinnamon-shore.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/cinnamon-shore.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -616,7 +640,8 @@
         1181,
         1600
       ],
-      "logo": "/img/logos/torre-pietra.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/torre-pietra.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "Completion 2022 confirmed by Juan Diego, 2026-10-12"
@@ -657,7 +682,8 @@
         1024,
         768
       ],
-      "logo": "/img/logos/cinnamon-shore-eight-town-center.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/cinnamon-shore-eight-town-center.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -682,7 +708,8 @@
         987,
         716
       ],
-      "logo": "/img/logos/balcones-residencial.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/balcones-residencial.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "54 units confirmed by juan diego, 2026-10-12"
@@ -708,7 +735,8 @@
         950,
         956
       ],
-      "logo": "/img/logos/las-velas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-velas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2027: Confirmed by Juan Diego, 2026-10-12"
@@ -734,7 +762,8 @@
         1476,
         811
       ],
-      "logo": "/img/logos/cinnamon-shore-six-town-center.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/cinnamon-shore-six-town-center.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "Delivered 2024: confirmed by Juan Diego, 2026-10-12"
@@ -760,7 +789,8 @@
         889,
         900
       ],
-      "logo": "/img/logos/los-corales-bay-tower.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/los-corales-bay-tower.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
@@ -786,7 +816,8 @@
         1186,
         1200
       ],
-      "logo": "/img/logos/artesanias.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/artesanias.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "Estimated completion 2026: Confirmed by Juan Diego, 2026-10-12"
@@ -834,7 +865,8 @@
         1026,
         1486
       ],
-      "logo": "/img/logos/torre-fiori.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/torre-fiori.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -864,8 +896,8 @@
       ]
     },
     {
-      "slug": "amara-centro-primera-fase",
-      "name": "Amāra Centro, primera fase",
+      "slug": "distrito-amara-primera-fase",
+      "name": "Distrito Amāra, primera fase",
       "country": "MX",
       "city": "Monterrey",
       "state": "N.L.",
@@ -876,36 +908,51 @@
       "builtAreaFt2": 821286,
       "masterPlan": "amara",
       "partners": [],
-      "image": "/img/projects/amara-centro-primera-fase.jpg",
+      "image": "/img/projects/distrito-amara-primera-fase.jpg",
       "imageSize": [
-        871,
-        882
+        1600,
+        901
       ],
-      "logo": "/img/logos/amara-centro.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/distrito-amara.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
       "salesUrl": null,
       "gallery": [
         {
-          "src": "/img/projects/gallery/amara-centro-primera-fase-1.jpg",
+          "src": "/img/projects/gallery/distrito-amara-primera-fase-1.jpg",
           "size": [
             1212,
             1226
           ]
         },
         {
-          "src": "/img/projects/gallery/amara-centro-primera-fase-2.jpg",
+          "src": "/img/projects/gallery/distrito-amara-primera-fase-2.jpg",
           "size": [
             1073,
             1080
           ]
         },
         {
-          "src": "/img/projects/gallery/amara-centro-primera-fase-3.jpg",
+          "src": "/img/projects/gallery/distrito-amara-primera-fase-3.jpg",
           "size": [
             1246,
             1254
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/distrito-amara-primera-fase-4.jpg",
+          "size": [
+            1600,
+            900
+          ]
+        },
+        {
+          "src": "/img/projects/gallery/distrito-amara-primera-fase-5.jpg",
+          "size": [
+            1600,
+            900
           ]
         }
       ]
@@ -928,7 +975,8 @@
         925,
         956
       ],
-      "logo": "/img/logos/las-joyas.png",
+      "imagesAreRenders": false,
+      "logo": "/img/logos/las-joyas.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -953,7 +1001,8 @@
         444,
         549
       ],
-      "logo": "/img/logos/marena.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/marena.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
@@ -978,7 +1027,8 @@
         1524,
         1800
       ],
-      "logo": "/img/logos/torre-acqua.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/torre-acqua.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)",
         "136 units confirmed by Juan Diego (GVI schematic)"
@@ -1029,7 +1079,8 @@
         1222,
         1769
       ],
-      "logo": "/img/logos/balcones-residencial.png",
+      "imagesAreRenders": true,
+      "logo": "/img/logos/balcones-residencial.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
       ],
