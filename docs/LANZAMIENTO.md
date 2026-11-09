@@ -54,8 +54,8 @@ En el cPanel, antes de subir nada:
 - [ ] **El SPF autoriza a este servidor.** Hoy lo hace con `+a`, que incluye la IP del hosting
       (198.59.144.118). Si TI quita `+a` (está sugerido en la revisión de correo), hay que agregar
       `ip4:198.59.144.118` al SPF, o el correo del formulario se irá a spam.
-- [ ] **Espacio en disco.** El sitio compilado pesa ~112 MB, de los cuales **79 MB son 4 archivos de
-      video**. Revisa la cuota del plan antes de subir.
+- [ ] **Espacio en disco.** El sitio compilado pesa **40 MB**, de los cuales 36 MB son imágenes y
+      2.2 MB el video del hero. Revisa la cuota del plan antes de subir.
 - [ ] Apache 2.4 (lo normal en cPanel). Si al subir el `.htaccess` el sitio responde 500, el bloque
       `Require all denied` del final es la línea a revisar: en Apache 2.2 se escribe distinto.
 
@@ -71,18 +71,18 @@ npm run build
 Queda todo en `dist/`: 89 páginas, `assets/`, `img/`, `video/`, `api/contact.php` y `.htaccess`.
 
 El `.htaccess` **no va en el zip**. Un zip armado en Windows puede traerlo en permisos 0600, y con un
-`.htaccess` en 0600 **todo el sitio responde 403** (pasó en Distrito Amara). Se crea a mano en el
+`.htaccess` en 0600 **todo el sitio responde 403** (pasó en Distrito Amāra). Se crea a mano en el
 editor del Administrador de archivos, pegando el contenido de [`public/.htaccess`](../public/.htaccess).
 
-Zip del sitio sin los videos (~33 MB, para que entre en el límite de subida del Administrador de
-archivos), en PowerShell:
+Zip del sitio completo, con el video dentro (37.6 MB medidos el 9 de noviembre), en PowerShell. Si
+el Administrador de archivos lo rechazara por tamaño, saca `video/` del paquete y súbelo aparte:
 
 ```powershell
-$stage = "$env:TEMP\paga-sitio"; Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue; Copy-Item dist $stage -Recurse; Remove-Item "$stage\video" -Recurse -Force; Remove-Item "$stage\.htaccess" -Force; Compress-Archive -Path "$stage\*" -DestinationPath "$env:USERPROFILE\Downloads\paga-sitio.zip" -Force
+$stage = "$env:TEMP\paga-sitio"; Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue; Copy-Item dist $stage -Recurse; Remove-Item "$stage\.htaccess" -Force; Compress-Archive -Path "$stage\*" -DestinationPath "$env:USERPROFILE\Downloads\paga-sitio.zip" -Force
 ```
 
-Los 5 videos de `dist/video/` se suben aparte, directo a la carpeta `video/`, uno por uno o por FTP.
-Pesan 23, 23, 14, 14 y 4.9 MB.
+Ahí va todo: `dist/video/` son 2.2 MB —el loop del hero a 720p y sus dos imágenes de respaldo—, no
+los 74 MB de los cuatro films de los 25 años que se quitaron el 5 de noviembre.
 
 ## 3. Etapa 1 — vista previa en `/nuevo/`, sin tocar el sitio actual
 
@@ -92,7 +92,8 @@ Para que Dirección revise el sitio en una dirección real, con el WordPress tod
    Revisa que aparezca con ícono de carpeta: si la carpeta no existe al extraer, cPanel escribe todo
    sobre un solo **archivo** llamado `nuevo`.
 2. Sube `paga-sitio.zip` dentro de `public_html/nuevo/`, elige **Extract** y luego borra el zip.
-3. Sube los 5 videos a `public_html/nuevo/video/`.
+3. Comprueba que quedó `nuevo/video/hero-720.mp4`: viene dentro del zip, ya no se sube aparte. Si
+   falta, el hero se ve con su imagen fija y nadie lo nota hasta que alguien pregunta por el video.
 4. Crea `public_html/nuevo/.htaccess` con **+ Archivo** y pega esto (es más corto que el del sitio:
    las redirecciones de HTTPS y de www viven en la raíz, que todavía es del WordPress):
 
@@ -129,8 +130,8 @@ Solo con las aprobaciones del punto 0 y la vista previa revisada.
    `cgi-bin/`, ni los archivos que haya creado el propio cPanel. Si aparece un `.htaccess` con
    bloques como `# php -- BEGIN cPanel-generated handler`, **conserva esos bloques**: de ellos puede
    depender la versión de PHP. (El correo no vive en `public_html`: borrar el WordPress no lo toca.)
-4. Sube `paga-sitio.zip` a `public_html/`, **Extract**, borra el zip, y sube los 5 videos a
-   `public_html/video/`.
+4. Sube `paga-sitio.zip` a `public_html/`, **Extract**, borra el zip, y comprueba que quedó
+   `public_html/video/hero-720.mp4`: viene dentro del zip.
 5. Crea `public_html/.htaccess` con el editor, pegando [`public/.htaccess`](../public/.htaccess).
 6. **Revisa permisos** en la columna *Permisos* del Administrador de archivos: archivos **0644**,
    carpetas **0755**. Especialmente `.htaccess` y `api/contact.php`. Se corrigen con **Permisos**.
@@ -310,7 +311,8 @@ curl -I https://www.pagadesarrollos.com/_headers         # 403: no tiene por qu�
 Y a mano, en escritorio y en celular:
 
 - [ ] Inicio, Nosotros, Proyectos, cada proyecto, Contacto y los 4 avisos legales, en ES y EN.
-- [ ] El video del hero y el de los 25 años se reproducen, en las dos versiones de idioma.
+- [ ] El video de fondo del hero corre en escritorio; en celular queda su imagen fija. Y en Inicio,
+      que Trayectoria muestre la fotografía, en las dos versiones de idioma.
 - [ ] El cambio de idioma lleva a la página equivalente.
 - [ ] Un mensaje de prueba del formulario por cada perfil con buzón propio.
 - [ ] Al compartir la URL en WhatsApp aparecen la imagen y el título.
@@ -356,7 +358,7 @@ sitio.
   los datos de `projects.json`, mover `nextUpdate` al siguiente corte y volver a subir. Si se
   decide no seguir publicando la promesa, se vacía `nextUpdate` y la frase desaparece sola.
 - **Cada cambio del sitio** es volver a compilar y volver a subir: `npm run build`, armar el zip del
-  punto 2 y extraerlo en `public_html`. Los videos solo se vuelven a subir si cambiaron.
+  punto 2 y extraerlo en `public_html`. El video viaja dentro del zip: no hay paso aparte.
 - **Analítica: pendiente de decidir.** Cloudflare Web Analytics ya no aplica. Hoy el sitio no mide
   nada: el `track()` de Contacto no hace nada si no hay script de analítica. Si se quiere medir, lo
   congruente con el aviso de cookies —que dice que el sitio no usa cookies de seguimiento— es algo
@@ -375,5 +377,5 @@ Cloudflare, con Resend) y `public/_headers` (encabezados y caché). En ese caso:
 **Astro**, build `npm run build`, salida `dist`, `NODE_VERSION=20`, variables `RESEND_API_KEY`,
 `CONTACT_TO` y `CONTACT_FROM`, dominio `www.pagadesarrollos.com` dado de alta **antes** de cambiar el
 DNS, y el `CNAME` de `www` apuntado a `<proyecto>.pages.dev`. El límite de Cloudflare es de 25 MiB
-por archivo: los videos de 23 MB entran, pero por poco. Eso requiere cuenta de Cloudflare a nombre de
+por archivo, y ya nada se le acerca. Eso requiere cuenta de Cloudflare a nombre de
 PAGA y tocar un registro de DNS; nada de eso hace falta en la ruta del cPanel.
