@@ -69,11 +69,15 @@ function trozos(linea: string): Trozo[] {
 
       <form id="contact-form" class="form" novalidate data-endpoint={endpoint} data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
         <p class="form-req">* {tx(contact.required, lang)}</p>
-        <fieldset class="profiles" id="f-profiles" aria-describedby="err-profile">
+        {/* aria-describedby va en cada radio, no en el fieldset: no se hereda a los controles de
+            dentro, el fieldset no es enfocable, y aria-invalid no se mapea sobre role=group. Con el
+            atributo aqui arriba, el unico campo obligatorio que no es un input estandar era tambien
+            el unico cuyo error no se anunciaba: el lector de pantalla leia la opcion y nada mas. */}
+        <fieldset class="profiles" id="f-profiles">
           <legend>{tx(F.profile, lang)} <b class="req" aria-hidden="true">*</b></legend>
           {contact.profiles.map((pr, i) => (
             <label class="chip-radio">
-              <input type="radio" name="profile" value={pr.id} required data-hint={pr.hint[lang]} />
+              <input type="radio" name="profile" value={pr.id} required aria-describedby="err-profile" data-hint={pr.hint[lang]} />
               <span>{pr[lang]}</span>
             </label>
           ))}
@@ -166,7 +170,11 @@ function trozos(linea: string): Trozo[] {
       const bad = [...form.querySelectorAll<HTMLInputElement>('input[required]:not([type=radio]), textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
       const noProfile = !form.querySelector('input[name=profile]:checked');
       const profiles = form.querySelector('.profiles')!;
-      if (noProfile) { profiles.classList.add('invalid'); profiles.setAttribute('aria-invalid', 'true'); document.getElementById('err-profile')!.classList.add('on'); }
+      if (noProfile) {
+        profiles.classList.add('invalid');
+        form.querySelectorAll('input[name=profile]').forEach((el) => el.setAttribute('aria-invalid', 'true'));
+        document.getElementById('err-profile')!.classList.add('on');
+      }
       if (bad.length || noProfile) {
         // the red border alone leaves out anyone who cannot see it: every field says what is missing
         bad.forEach((el) => {
