@@ -25,7 +25,7 @@ const index = [
   <section class="section">
     <div class="wrap">
       <p class="eyebrow">{es ? 'Nosotros' : 'About'}</p>
-      <h1 style="font-size:clamp(40px,6vw,84px);color:var(--navy);max-width:14ch">{tx(company.about.title, lang)}</h1>
+      <h1 class="page-title">{tx(company.about.title, lang)}</h1>
       <div style="display:grid;gap:24px;margin-top:56px;max-width:68ch;font-size:19px">
         {company.about.paragraphs[lang].map((para) => <p style="margin:0">{para}</p>)}
       </div>

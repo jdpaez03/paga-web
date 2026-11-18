@@ -5,23 +5,52 @@ const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const dated = projects.filter((p) => p.completionYear);
+// Balcones 200 no tiene año todavia: antes quedaba fuera de la linea entera, asi que una linea de
+// 36 desarrollos mostraba 35. Va en una fila al final, con la misma etiqueta que usa su ficha.
+const undated = projects.filter((p) => !p.completionYear);
 const yrs = [...new Set(dated.map((p) => p.completionYear as number))].sort((a, b) => a - b);
 // derived from the data's as-of date: hard-coding the year made the labels wrong every January.
 // El año sale de data.ts ya resuelto: new Date(asOf).getFullYear() devuelve el año anterior
 // cuando asOf cae el 1 de enero, y entonces un desarrollo de ese año deja de marcarse estimado.
 const nowYear = asOfYear;
+// La linea saltaba los años sin conclusiones —nueve entre 2001 y 2029: 2003, 2004, 2008, 2011,
+// 2013, 2015, 2016, 2021 y 2025— y como todas las filas van igual de separadas, el salto de 2002 a
+// 2005 se leia igual que el de 2017 a 2018. Un hueco nombrado dice el ritmo real de la operacion;
+// uno omitido lo disimula, y el lector que se da cuenta se pregunta que falta. Los años
+// consecutivos se juntan en una sola fila para no gastar nueve.
+type Row = { kind: 'year'; y: number } | { kind: 'gap'; from: number; to: number };
+const rows: Row[] = [];
+yrs.forEach((y, i) => {
+  const prev = yrs[i - 1];
+  if (prev !== undefined && y - prev > 1) rows.push({ kind: 'gap', from: prev + 1, to: y - 1 });
+  rows.push({ kind: 'year', y });
+});
 const statusLine = (p: (typeof projects)[number]) =>
   p.status === "delivered" ? `${p.city}, ${p.state}` : `${p.city}, ${p.state} · ${ui.status[p.status as keyof typeof ui.status]}`;
 ---
 <div class="tl">
+  {/* El encabezado de tres columnas solo existe de 900 px en adelante. Debajo de eso los dos
+      carriles se apilan sin nada que diga cual es Mexico y cual Estados Unidos, en un sitio cuyo
+      argumento es justamente que opera en los dos paises. Cada carril lleva su propia etiqueta,
+      visible solo donde el encabezado no esta, y solo cuando ese carril tiene algo. */}
   <div class="tl-head" aria-hidden="true"><span>{ui.countryMX}</span><span>{es ? 'Año' : 'Year'}</span><span>{ui.countryUS}</span></div>
-  {yrs.map((y) => {
+  {rows.map((r) => {
+    if (r.kind === 'gap') {
+      return (
+        <div class="tl-gap">
+          <span class="num">{r.from === r.to ? r.from : `${r.from}–${r.to}`}</span>
+          <span>{es ? 'ningún desarrollo concluido' : 'no development completed'}</span>
+        </div>
+      );
+    }
+    const y = r.y;
     const mx = dated.filter((p) => p.completionYear === y && p.country === 'MX');
     const us = dated.filter((p) => p.completionYear === y && p.country === 'US');
     return (
       <div class="tl-row">
         <div class="tl-year num">{y}{y > nowYear - 1 && <small>{y > nowYear ? (es ? 'Estimado' : 'Estimated') : (es ? 'En curso' : 'Underway')}</small>}</div>
         <div class="tl-lane mx">
+          {mx.length > 0 && <span class="tl-lane-label">{ui.countryMX}</span>}
           {mx.map((p) => (
             <a class:list={['tl-item', { future: p.status !== 'delivered' }]} href={paths.project(lang, p.slug)}>
               <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
@@ -30,6 +59,7 @@ const statusLine = (p: (typeof projects)[number]) =>
           ))}
         </div>
         <div class="tl-lane us">
+          {us.length > 0 && <span class="tl-lane-label">{ui.countryUS}</span>}
           {us.map((p) => (
             <a class:list={['tl-item', { future: p.status !== 'delivered' }]} href={paths.project(lang, p.slug)}>
               <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
@@ -40,4 +70,27 @@ const statusLine = (p: (typeof projects)[number]) =>
       </div>
     );
   })}
+  {undated.length > 0 && (
+    <div class="tl-row">
+      <div class="tl-year undated">{es ? 'Por definir' : 'To be defined'}</div>
+      <div class="tl-lane mx">
+        {undated.some((p) => p.country === 'MX') && <span class="tl-lane-label">{ui.countryMX}</span>}
+        {undated.filter((p) => p.country === 'MX').map((p) => (
+          <a class="tl-item future" href={paths.project(lang, p.slug)}>
+            <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
+            <span class="txt"><b>{p.name}</b><span>{statusLine(p)}</span></span>
+          </a>
+        ))}
+      </div>
+      <div class="tl-lane us">
+        {undated.some((p) => p.country === 'US') && <span class="tl-lane-label">{ui.countryUS}</span>}
+        {undated.filter((p) => p.country === 'US').map((p) => (
+          <a class="tl-item future" href={paths.project(lang, p.slug)}>
+            <span class="logo"><img src={p.logo} alt="" loading="lazy" /></span>
+            <span class="txt"><b>{p.name}</b><span>{statusLine(p)}</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
 </div>
