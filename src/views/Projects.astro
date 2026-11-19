@@ -142,6 +142,16 @@ const cities = cityOptions(lang);
           if (v) { state[k] = v; break; }
         }
       });
+      // La ciudad es el unico filtro cuyo valor es texto libre, y el unico que el select tiene
+      // que poder sostener. El caso que mas duele es «area:» a secas, una liga «area:monterrey»
+      // truncada al pegarla en un correo: metroOf devuelve cadena vacia para los 21 desarrollos
+      // de fuera del area, y «area:».slice(5) tambien, asi que empataban todos y Monterrey
+      // entero —15 de 36, el argumento de arraigo— desaparecia con el select en blanco y sin
+      // que nada en pantalla lo dijera. Encima paint(true) lo reescribia en la barra de
+      // direcciones, asi que el enlace mutilado se repartia. Esto cubre tambien «area:Monterrey»
+      // con la mayuscula que cualquiera copiaria de la etiqueta visible, y un municipio mal
+      // escrito. Sin opcion que lo respalde no hay filtro: se ve el portafolio completo.
+      if (state.city && !citySel.querySelector(`option[value="${CSS.escape(state.city)}"]`)) state.city = '';
     };
 
     // El valor del filtro de ciudad es un municipio («Monterrey») o un area metropolitana
