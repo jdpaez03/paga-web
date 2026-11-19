@@ -70,9 +70,10 @@ const org = {
         El icono blanco es para la pestaña en tema oscuro: el navy #13294b sobre la barra oscura
         de Chrome (#202124) da 1.11:1, o sea invisible.
 
-        Como elige Chrome entre varios candidatos, medido en Chrome 157 con un banco aislado: el
-        ganador se lee del almacen de favicons del navegador, no del log de peticiones, porque
-        Chrome descarga varios y se queda con uno. (1) `media` se honra: el que no empata queda
+        Como elige Chrome entre varios candidatos, medido en Chrome 157 con un banco aislado: perfil
+        nuevo, iconos de un color plano y nombre unico, y el ganador leido de chrome://favicon2
+        dibujado en un canvas. No del log de peticiones: Chrome descarga varios candidatos y se
+        queda con uno, asi que el log dice que bajo, no que eligio. (1) `media` se honra: el que no empata queda
         fuera. (2) Entre los que empatan gana el que trae los mapas de 16 y 32 px que la pestaña
         pide, antes que el orden. (3) Solo si tambien empatan en tamaño decide el ultimo declarado.
 
@@ -88,10 +89,15 @@ const org = {
         descarga en todas las paginas. Sin ese tercero Chrome cae al sondeo de la raiz, que tambien
         funciona —medido—, pero es comportamiento de Chrome y no una garantia.
 
-        Firefox es otra cosa: ignora `media` en rel=icon (bug 1603885, abierto desde 2019). Con el
-        atributo fuera de juego le quedan los tres candidatos y el resultado depende de como pese
-        tamaño y orden, que no es lo mismo que Chrome. No esta medido: Firefox no esta instalado en
-        esta maquina.
+        Donde `media` no se honra esto es una loteria de dos caras, y una es mala. Firefox lo ignora
+        en rel=icon (bug 1603885, abierto desde 2019), asi que ve los tres candidatos a la vez. Si
+        pesa primero el orden se queda con el navy de 84, que sobre barra clara esta bien. Si pesa
+        primero el tamaño —la regla (2) de arriba— los dos .ico empatan y gana el blanco: blanco
+        sobre la barra clara de Chrome (#dee1e6) da 1.31:1, el mismo defecto que este bloque existe
+        para arreglar, mudado de navegador. No se cual de las dos caras sale: Firefox no esta
+        instalado en esta maquina y no hay aparato Apple para Safari, que puede estar en el mismo
+        saco. En main el ultimo declarado era el webp blanco, asi que el riesgo no es nuevo; pero
+        tampoco se va con este cambio.
 
         La salida buena sigue siendo un SVG unico con la media query dentro, y arreglaria tambien a
         Firefox, porque ahi la consulta va en el CSS del archivo y no en el atributo que ignora
