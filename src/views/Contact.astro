@@ -1,13 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import contact from '../data/contact.json';
-import { type Lang, type LegalDoc, tx, paths, liveProjects, contactPath, offices, legalSlugs } from '../lib/data';
+import { type Lang, type LegalDoc, tx, paths, projects, liveProjects, contactPath, offices, legalSlugs } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const es = lang === 'es';
 const F = contact.fields;
 const live = liveProjects();
 const sales = Object.fromEntries(live.filter((p) => p.salesUrl).map((p) => [p.slug, p.salesUrl]));
+// El ?proyecto= de una ficha es procedencia, no una respuesta del visitante: el <select> solo
+// ofrece lo vigente, porque un desarrollo entregado no esta en venta. Por eso las 27 fichas
+// entregadas mandaban el lead sin decir de donde venia. El nombre de los 36 viaja aqui para
+// poder escribirlo en el correo cuando el select no puede sostener el valor.
+const projectNames = Object.fromEntries(projects.map((p) => [p.slug, `${p.name} · ${p.city}`]));
 const msgs = { ok: tx(contact.ok, lang), pending: tx(contact.pending, lang), error: tx(contact.error, lang), sendError: tx(contact.sendError, lang), salesHint: tx(contact.salesHint, lang) };
 // The form posts to the PHP connector of the cPanel (public/api/contact.php). The path is relative
 // to this page — /contacto/ is one level deep, /en/contact/ two — so the site also works from a
@@ -67,13 +72,17 @@ function trozos(linea: string): Trozo[] {
         </aside>
       </div>
 
-      <form id="contact-form" class="form" novalidate data-endpoint={endpoint} data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-lang={lang}>
+      <form id="contact-form" class="form" novalidate data-endpoint={endpoint} data-ok={msgs.ok} data-pending={msgs.pending} data-error={msgs.error} data-send-error={msgs.sendError} data-sales-hint={msgs.salesHint} data-sales={JSON.stringify(sales)} data-projects={JSON.stringify(projectNames)} data-lang={lang}>
         <p class="form-req">* {tx(contact.required, lang)}</p>
-        <fieldset class="profiles" id="f-profiles" aria-describedby="err-profile">
+        {/* aria-describedby va en cada radio, no en el fieldset: no se hereda a los controles de
+            dentro, el fieldset no es enfocable, y aria-invalid no se mapea sobre role=group. Con el
+            atributo aqui arriba, el unico campo obligatorio que no es un input estandar era tambien
+            el unico cuyo error no se anunciaba: el lector de pantalla leia la opcion y nada mas. */}
+        <fieldset class="profiles" id="f-profiles">
           <legend>{tx(F.profile, lang)} <b class="req" aria-hidden="true">*</b></legend>
           {contact.profiles.map((pr, i) => (
             <label class="chip-radio">
-              <input type="radio" name="profile" value={pr.id} required data-hint={pr.hint[lang]} />
+              <input type="radio" name="profile" value={pr.id} required aria-describedby="err-profile" data-hint={pr.hint[lang]} />
               <span>{pr[lang]}</span>
             </label>
           ))}
@@ -123,6 +132,9 @@ function trozos(linea: string): Trozo[] {
     const salesBox = document.getElementById('sales-link')!;
     const sales = JSON.parse(form.dataset.sales || '{}');
     const projSel = document.getElementById('f-project') as HTMLSelectElement;
+    const projectNames = JSON.parse(form.dataset.projects || '{}');
+    // la ficha de la que salio el visitante, cuando el select no la ofrece porque esta entregada
+    let fromProject = '';
     // a visitor who arrives from a project page keeps that project in view whatever profile they choose
     let keepProject = false;
     const track = (name: string, data: Record<string, string> = {}) => (window as any).va?.('event', { name, data });
@@ -150,7 +162,15 @@ function trozos(linea: string): Trozo[] {
     const pre = q.get('perfil') || q.get('profile');
     if (pre) { const r = form.querySelector<HTMLInputElement>(`input[name=profile][value="${CSS.escape(pre)}"]`); if (r) r.checked = true; }
     const proj = q.get('proyecto') || q.get('project');
-    if (proj) { projSel.value = proj; keepProject = projSel.value === proj; }
+    // Asignar un valor sin <option> que lo respalde deja el select en cadena vacia, asi que de las
+    // 36 fichas solo las 9 vigentes sobrevivian: en las otras 27 el bloque seguia oculto y el campo
+    // se borraba del envio. Se guarda aparte y se repone al enviar. El mapa tambien hace de filtro:
+    // un slug inventado en la barra de direcciones no entra.
+    if (proj) {
+      projSel.value = proj;
+      keepProject = projSel.value === proj;
+      if (!keepProject && projectNames[proj]) fromProject = proj;
+    }
     apply(); showSales();
     form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'profile') { apply(); showSales(); track('route_select', { profile: t.value }); } if (t.name === 'project') showSales(); });
     let started = false;
@@ -166,7 +186,11 @@ function trozos(linea: string): Trozo[] {
       const bad = [...form.querySelectorAll<HTMLInputElement>('input[required]:not([type=radio]), textarea[required]')].filter((el) => !el.closest('[hidden]') && !el.checkValidity());
       const noProfile = !form.querySelector('input[name=profile]:checked');
       const profiles = form.querySelector('.profiles')!;
-      if (noProfile) { profiles.classList.add('invalid'); profiles.setAttribute('aria-invalid', 'true'); document.getElementById('err-profile')!.classList.add('on'); }
+      if (noProfile) {
+        profiles.classList.add('invalid');
+        form.querySelectorAll('input[name=profile]').forEach((el) => el.setAttribute('aria-invalid', 'true'));
+        document.getElementById('err-profile')!.classList.add('on');
+      }
       if (bad.length || noProfile) {
         // the red border alone leaves out anyone who cannot see it: every field says what is missing
         bad.forEach((el) => {
@@ -183,6 +207,7 @@ function trozos(linea: string): Trozo[] {
       data.lang = form.dataset.lang; data.page = location.pathname;
       // the slug alone ("torre-acqua") says little in the email: send the name as it reads on screen
       if (data.project) data.projectName = (projSel.selectedOptions[0]?.textContent || '').trim();
+      else if (fromProject) { data.project = fromProject; data.projectName = projectNames[fromProject]; }
       try { const src = JSON.parse(sessionStorage.getItem('paga_src') || '{}'); data.srcLanding = src.landing || ''; data.srcRef = src.ref || ''; data.srcUtm = src.utm || ''; } catch { /* no session storage */ }
       btn.disabled = true; status.textContent = '…';
       try {

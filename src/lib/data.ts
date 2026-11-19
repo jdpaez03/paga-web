@@ -134,6 +134,43 @@ export function cityOptions(lang: Lang): CityOption[] {
   return out.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
 }
 
+// De donde se recorta la fotografia en la tarjeta del portafolio.
+//
+// La tarjeta tiene un marco de 4:3 y diecinueve de las 36 fotografias son verticales, asi que en
+// esas el marco se queda con una franja. Por omision el navegador toma la del centro, y en una
+// torre eso es justo lo que no sirve: se publica el cuerpo y se pierde la corona. `imageFocus` dice
+// que franja se queda. Es un dato de presentacion de la imagen, como `imagesAreRenders`, no un dato
+// del desarrollo; no cambia ninguna cifra ni ningun hecho.
+//
+// El valor entra tal cual en `object-position`, en la forma «<horizontal>% <vertical>%». 0 % toma
+// la franja de arriba, 100 % la de abajo, y sin valor se queda el centro, que es lo que habia.
+//
+// Se valida al cargar el modulo, o sea al compilar: un valor mal escrito no se ve: el navegador
+// descarta la declaracion y la imagen vuelve al centro sin avisar. Mejor que se caiga el build.
+//
+// El rango es 0-100 y no 0-999. Un porcentaje mayor que 100 es CSS valido —el navegador no lo
+// descarta— y empuja la foto entera fuera del marco: «950%» por un «50%» mal tecleado pasaba el
+// guardia y publicaba la tarjeta como un rectangulo gris vacio, peor que el fallo que previene.
+const FOCUS_RE = /^(100|\d{1,2})% (100|\d{1,2})%$/;
+export const imageFocus = (p: Project): string | undefined => {
+  const v = (p as { imageFocus?: string | null }).imageFocus;
+  // null es «sin encuadre», como el resto de los campos vacios de projects.json, no un error
+  return v == null ? undefined : v;
+};
+for (const p of projects) {
+  // El cast de arriba le quita la vista a TypeScript, y aqui no corre astro check, asi que una
+  // llave mal escrita —«imagefocus» en minuscula— no la notaba nadie: el encuadre se ignoraba en
+  // silencio, que es justo el fallo que esta validacion existe para evitar.
+  const mal = Object.keys(p).filter((k) => k !== 'imageFocus' && k.toLowerCase() === 'imagefocus');
+  if (mal.length > 0) {
+    throw new Error(`«${p.slug}» escribe «${mal[0]}»; la llave es «imageFocus»`);
+  }
+  const v = imageFocus(p);
+  if (v !== undefined && !FOCUS_RE.test(v)) {
+    throw new Error(`imageFocus de «${p.slug}» no tiene la forma «50% 15%», con 0-100 en cada eje: «${v}»`);
+  }
+}
+
 // La fuente que se publica en cada ficha.
 //
 // `sources` en projects.json son notas internas de trabajo —«54 units confirmed by juan diego,
