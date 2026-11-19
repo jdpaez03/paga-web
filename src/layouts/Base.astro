@@ -91,23 +91,29 @@ const org = {
         descarga en todas las paginas. Sin ese tercero Chrome cae al sondeo de la raiz, que tambien
         funciona —medido—, pero es comportamiento de Chrome y no una garantia.
 
-        Donde `media` no se honra esto es una loteria de dos caras, y una es mala. Firefox lo ignora
-        en rel=icon (bug 1603885, abierto desde 2019), asi que ve los tres candidatos a la vez. Si
-        pesa primero el orden se queda con el navy de 84, que sobre barra clara esta bien. Si pesa
-        primero el tamaño —la regla (2) de arriba— los dos .ico empatan y gana el blanco: blanco
-        sobre la barra clara de Chrome (#dee1e6) da 1.31:1, el mismo defecto que este bloque existe
-        para arreglar, mudado de navegador. No se cual de las dos caras sale: Firefox no esta
-        instalado en esta maquina y no hay aparato Apple para Safari, que puede estar en el mismo
-        saco. En main el ultimo declarado era el webp blanco, asi que el riesgo no es nuevo; pero
-        tampoco se va con este cambio.
+        Donde `media` no se honra manda el orden, y de ahi sale el de estas tres lineas. Firefox lo
+        ignora en rel=icon (bug 1603885, abierto desde 2019) y ve los tres candidatos a la vez: el
+        webp de 84 pierde por tamaño, los dos .ico empatan, y se queda con el ultimo.
+
+        Medido en Firefox 160 con el mismo banco, sirviendo los archivos reales bajo rutas unicas.
+        Aqui el log si decide, y se comprobo en vez de suponerlo: Firefox pide UN solo icono, no
+        varios como Chrome. Con el blanco declarado al final daba blanco en los dos esquemas, o sea
+        invisible sobre la barra clara —1.31:1 sobre #dee1e6—; con el navy al final da navy en los
+        dos, que es exactamente lo que hacia main. Asi que el navy va al final.
+
+        En Chrome el orden no cambia nada, porque las dos ramas nunca empatan a la vez: tambien
+        medido, invirtiendolas y repitiendo los cinco casos. Safari no esta medido, no hay aparato
+        Apple; si ignora `media` como Firefox, cae del mismo lado.
 
         La salida buena sigue siendo un SVG unico con la media query dentro, y arreglaria tambien a
         Firefox, porque ahi la consulta va en el CSS del archivo y no en el atributo que ignora
         —eso ultimo es inferencia, no medicion—. Funciona en Chrome 157, medido. WebKit en cambio la
         ignora (bug 309949, abierto), asi que seguiria necesitando respaldo raster. Falta fuente
         vectorial de la marca, pendiente de Direccion. */}
-    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" media="(prefers-color-scheme: light)" />
+    {/* El orden de estos tres no es cosmetico: lo decide el ultimo parrafo de arriba. El navy va
+        despues del blanco a proposito. */}
     <link rel="icon" href="/img/paga-icon-white.ico" sizes="16x16 32x32 48x48" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/webp" href="/img/paga-icon-navy.webp" />
     {/* iOS descarta el canal alfa al guardar el sitio en la pantalla de inicio: sin este archivo
         ponia una captura de la página. Fondo papel opaco, con el margen que el sistema espera. */}
