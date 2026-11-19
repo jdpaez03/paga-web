@@ -1082,7 +1082,7 @@
       "state": "N.L.",
       "type": "residencial",
       "status": "planning",
-      "completionYear": null,
+      "completionYear": 2029,
       "units": 116,
       "builtAreaFt2": 274479,
       "masterPlan": "balcones",
