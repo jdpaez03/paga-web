@@ -105,7 +105,9 @@ else {
 // ——— 3. Marca del encabezado y del pie —————————————————————————————
 // Los dos salen en todas las páginas. Los PNG miden 160 y 600 px de ancho y se dibujan a 42 y 120:
 // basta el doble para una pantalla retina. El PNG de origen se conserva: paga-logo-navy.png es el
-// que declara el JSON-LD de la organización y paga-icon-navy.png sigue siendo el favicon.
+// que declara el JSON-LD de la organización. paga-icon-navy.png es la marca del encabezado, que
+// se dibuja a 42 px; ya dejo de declararse como favicon, eso lo cubre favicon.ico con sus mapas
+// de 16, 32 y 48 px reales.
 const marca = [
   { src: 'paga-icon-navy.png', w: 84 },
   { src: 'paga-logo-white.png', w: 240 },

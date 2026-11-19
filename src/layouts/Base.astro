@@ -61,30 +61,40 @@ const org = {
     <link rel="alternate" hreflang="es-MX" href={esUrl} />
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={esUrl} />
-    {/* El navegador pide /favicon.ico aunque no se declare, y recibia un 404. Lleva 16, 32 y 48 px,
-        que son los tres tamaños que de verdad se usan, y asi se declaran: un navegador que honre
-        `sizes` no lo consideraba para un hueco de 48 px porque decia solo 32.
+    {/* El navegador pide /favicon.ico aunque no se declare, y recibia un 404. Lleva 16, 32 y 48 px
+        reales, verificado leyendo el archivo, y asi se declaran: con `sizes="32x32"` un navegador
+        que honre el atributo no lo consideraba para un hueco de 48.
 
         El icono blanco es para la pestaña en tema oscuro: el navy #13294b sobre la barra oscura
         de Chrome (#202124) da 1.11:1, o sea invisible.
 
-        Lo importante es que el .ico lleve tambien su media query. Medido en Chromium 156 con un
-        banco aislado —iconos de nombre unico y un servidor que registra que archivo pide el
-        selector, para no confundirlo con el sondeo automatico de /favicon.ico—: un candidato
-        SIN media le gana a los que si empatan la media query, sin importar el orden ni `sizes`.
-        Con el .ico incondicional, Chrome servia el navy en los dos esquemas y el blanco no se
-        usaba nunca: el arreglo del tema oscuro no llegaba a ocurrir. Con las dos ramas acotadas,
-        claro da el .ico y oscuro da el blanco.
+        Como elige Chrome entre varios candidatos, medido en Chrome 157 con un banco aislado: el
+        ganador se lee del almacen de favicons del navegador, no del log de peticiones, porque
+        Chrome descarga varios y se queda con uno. (1) `media` se honra: el que no empata queda
+        fuera. (2) Entre los que empatan gana el que trae los mapas de 16 y 32 px que la pestaña
+        pide, antes que el orden. (3) Solo si tambien empatan en tamaño decide el ultimo declarado.
 
-        No queda hueco al quitar el incondicional: si ninguna rama empata —un navegador que honre
-        `media` pero no `prefers-color-scheme` deja la query en `not all`— el navegador cae al
-        sondeo de /favicon.ico en la raiz, que existe y es navy. Medido tambien.
+        Por eso en main el navy ganaba en los dos esquemas y el blanco no llegaba a usarse: el .ico
+        lleva 16/32/48 reales y el blanco es un solo mapa de 84 px. Perdia por tamaño, no por ser
+        el otro incondicional. Acotar el .ico a `(light)` lo saca del esquema oscuro y deja pasar al
+        blanco: medido, claro da el .ico y oscuro da el blanco.
 
-        El navy de 84 px dejo de declararse como favicon: en claro el .ico da 16, 32 y 48 reales
-        en vez de reescalar uno solo. El archivo se queda, que es el logotipo del encabezado.
+        Queda una arista: en oscuro el blanco es el webp de 84 px, que el navegador reescala a 16.
+        Un .ico blanco con 16/32/48 lo arreglaria y ademas dejaria volver a declarar un candidato
+        incondicional sin que le robe la eleccion, porque perderia por tamaño; tambien medido.
 
-        La salida buena sigue siendo un SVG unico con la media query dentro, que no depende de
-        nada de esto; falta fuente vectorial de la marca, pendiente de Direccion. */}
+        Si ninguna rama empata, Chrome cae al sondeo de /favicon.ico en la raiz, que existe y es
+        navy: medido. Firefox es otra cosa: ignora `media` en rel=icon (bug 1603885, abierto desde
+        2019), asi que se queda con el ultimo declarado sea cual sea el esquema, o sea el blanco en
+        los dos. Es lo que ya hacia main, donde el blanco tambien iba al final, asi que esto no lo
+        empeora; no esta medido aqui, Firefox no esta instalado en esta maquina.
+
+        El navy de 84 px dejo de declararse como favicon: nunca ganaba la eleccion, y en claro el
+        .ico da 16, 32 y 48 reales. El archivo se queda, que es el logotipo del encabezado.
+
+        La salida buena sigue siendo un SVG unico con la media query dentro. Funciona en Chrome 157
+        (medido), pero WebKit la ignora (bug 309949, abierto), asi que seguiria necesitando respaldo
+        raster. Falta fuente vectorial de la marca, pendiente de Direccion. */}
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/webp" href="/img/paga-icon-white.webp" media="(prefers-color-scheme: dark)" />
     {/* iOS descarta el canal alfa al guardar el sitio en la pantalla de inicio: sin este archivo
