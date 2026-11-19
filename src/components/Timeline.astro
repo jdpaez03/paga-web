@@ -5,8 +5,10 @@ const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const dated = projects.filter((p) => p.completionYear);
-// Balcones 200 no tiene año todavia: antes quedaba fuera de la linea entera, asi que una linea de
-// 36 desarrollos mostraba 35. Va en una fila al final, con la misma etiqueta que usa su ficha.
+// Un desarrollo sin año de conclusion no cabe en ninguna fila de año, y dejarlo fuera hacia que la
+// linea mostrara uno menos de los que hay. Va en una fila al final, con la misma etiqueta que usa
+// su ficha. Hoy esa fila no se pinta: Balcones 200 era el unico sin año y quedo en 2029. La guarda
+// se queda porque un desarrollo nuevo suele entrar sin año, y entonces la fila vuelve sola.
 const undated = projects.filter((p) => !p.completionYear);
 const yrs = [...new Set(dated.map((p) => p.completionYear as number))].sort((a, b) => a - b);
 // derived from the data's as-of date: hard-coding the year made the labels wrong every January.
