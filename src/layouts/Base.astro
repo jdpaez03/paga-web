@@ -19,9 +19,13 @@ interface Props {
   alt?: string; // path of this page in the other language
   image?: string; // og:image path
   hideCta?: boolean;
+  /* slug del proyecto de esta pagina, si lo hay: viaja a la banda de contacto y de ahi al
+     formulario como ?proyecto=. Sin esto, las 36 fichas mandaban el lead sin decir de que
+     desarrollo venia, y es el campo que crm.php ya sabe traducir contra el catalogo de la Suite. */
+  ctaProject?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
-const { lang, title, description, current, alt, image, hideCta, jsonLd } = Astro.props;
+const { lang, title, description, current, alt, image, hideCta, ctaProject, jsonLd } = Astro.props;
 const ui = t(lang);
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const altHref = alt ?? paths.home(other);
@@ -57,7 +61,17 @@ const org = {
     <link rel="alternate" hreflang="es-MX" href={esUrl} />
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={esUrl} />
-    <link rel="icon" type="image/png" href="/img/paga-icon-navy.png" />
+    {/* El navegador pide /favicon.ico aunque no se declare, y recibia un 404. Lleva 16, 32 y 48 px,
+        que son los tres tamaños que de verdad se usan. El icono blanco, que ya estaba en el
+        repositorio sin usarse, va para la pestaña en tema oscuro: el navy #13294b sobre la barra
+        oscura de Chrome (#202124) da 1.11:1, o sea invisible. El soporte de `media` en rel=icon es
+        parcial; donde no lo haya, se sirve el navy de siempre, que es lo que pasaba antes. */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/webp" href="/img/paga-icon-navy.webp" />
+    <link rel="icon" type="image/webp" href="/img/paga-icon-white.webp" media="(prefers-color-scheme: dark)" />
+    {/* iOS descarta el canal alfa al guardar el sitio en la pantalla de inicio: sin este archivo
+        ponia una captura de la página. Fondo papel opaco, con el margen que el sistema espera. */}
+    <link rel="apple-touch-icon" href="/img/paga-touch-icon.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -65,6 +79,9 @@ const org = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PAGA Desarrollos" />
+    {/* sin og:site_name, la tarjeta compartida encabeza con el dominio pelado */}
+    <meta property="og:site_name" content="PAGA Desarrollos" />
     <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#0B1B33" />
@@ -89,14 +106,16 @@ const org = {
     </header>
     <main id="main" tabindex="-1">
       <slot />
-      {!hideCta && <ContactCta lang={lang} />}
+      {!hideCta && <ContactCta lang={lang} project={ctaProject} />}
     </main>
     <footer class="site-footer">
       <div class="wrap">
         <div class="top">
           <div>
             <a href={paths.home(lang)} aria-label={lang === 'es' ? 'PAGA Desarrollos, ir al inicio' : 'PAGA Desarrollos, go to home'}>
-              <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="108" loading="lazy" decoding="async" />
+              {/* 120x107, no 120x108: el maestro es 600x537, asi que 108 estiraba el logotipo medio
+                  punto porcentual en vertical. El archivo se declara con la proporcion que tiene. */}
+              <img class="logo" src="/img/paga-logo-white.webp" alt="PAGA Desarrollos" width="120" height="107" loading="lazy" decoding="async" />
             </a>
           </div>
           <nav aria-label={lang === 'es' ? 'Sitio' : 'Site'}>
