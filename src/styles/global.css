@@ -136,6 +136,11 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .page-index { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
 .page-index a { padding: 12px 0; text-decoration: none; color: var(--blue); border-bottom: 1px solid transparent; }
 .page-index a:hover { border-color: var(--blue); }
+/* El titulo de una pagina interior. Estaba escrito tres veces y con tres escalas distintas —tope
+   de 80, 84 y 84 px, minimo de 40 y 44, medida de 14 y 16 ch—, dos de ellas en un atributo style
+   dentro de la vista. Es la misma intencion con ruido: tres paginas hermanas no pueden encabezar
+   con tres tamaños. Una sola regla. */
+.page-title { font-size: clamp(40px, 6vw, 84px); color: var(--navy); max-width: 16ch; }
 .section-head { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: clamp(40px, 6vw, 72px); }
 .section-head h2 { font-size: clamp(32px, 4.4vw, 56px); max-width: 18ch; }
 .section-head p { color: var(--muted); max-width: 56ch; font-size: 18px; margin: 0; }
@@ -143,15 +148,29 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 @media (min-width: 900px) { .section-head.split { grid-template-columns: 1fr 1fr; align-items: end; } }
 
 /* figures */
-.figures { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
-.figure { padding: 28px 0 8px; border-bottom: 1px solid var(--line); }
-.figure:nth-child(odd) { padding-right: 16px; }
-.figure strong { display: block; font-size: clamp(40px, 5.4vw, 72px); font-weight: 300; line-height: 1; color: var(--navy); }
+/* Las cuatro cifras tienen que medir lo mismo. Antes no: todas llevaban 24 px de relleno a la
+   derecha y solo las siguientes 24 a la izquierda, asi que la primera era 24 px mas ancha que sus
+   vecinas. Con pies de linea largos —«desarrollos en Mexico y Estados Unidos: 27 entregados y 9 en
+   obra, permisos o planeacion»— esa diferencia cambia donde rompe el texto, y la banda se lee
+   despareja. Ahora la separacion la da el gap y la regla divisoria cuelga dentro de el: las cuatro
+   columnas miden exactamente 1fr y las de los extremos quedan al filo del contenedor, alineadas
+   con el titulo de arriba. */
+.figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 4vw, 40px); border-top: 1px solid var(--line); }
+.figure { position: relative; container-type: inline-size; padding: 28px 0 8px; border-bottom: 1px solid var(--line); }
+/* `1fr` es `minmax(auto, 1fr)`: una columna cuyo contenido no cabe se queda con su ancho minimo y
+   le roba el resto a las demas. Con 410,000 a 72 px la cuarta medi­a 267 px y las otras tres 244,
+   asi que las reglas divisorias no caian en los cuartos de la banda. `minmax(0, 1fr)` iguala las
+   columnas, y entonces la cifra tiene que caber en la suya: se mide contra el ancho de su propia
+   columna, no contra el de la ventana. Importa para adelante, no solo hoy: los metros cuadrados
+   crecen y el dia que pasen del millon la cifra gana dos caracteres. */
+/* La primera declaracion es para un navegador sin consultas de contenedor: ahi se cae la
+   segunda y queda lo de antes, que es exactamente lo que habia. */
+.figure strong { display: block; font-size: clamp(40px, 5.4vw, 72px); font-size: min(72px, calc(100cqw / var(--fig-em, 4.7))); font-weight: 300; line-height: 1; color: var(--navy); }
 .figure span { display: block; margin-top: 12px; font-size: 14px; color: var(--muted); letter-spacing: .02em; }
 @media (min-width: 900px) {
-  .figures { grid-template-columns: repeat(4, 1fr); }
-  .figure { padding: 32px 24px 8px 0; border-bottom: 0; }
-  .figure + .figure { padding-left: 24px; border-left: 1px solid var(--line); }
+  .figures { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 48px; }
+  .figure { padding: 32px 0 8px; border-bottom: 0; }
+  .figure + .figure::before { content: ''; position: absolute; top: 32px; bottom: 8px; left: -24px; border-left: 1px solid var(--line); }
 }
 .asof { font-size: 12px; color: var(--muted); margin-top: 20px; letter-spacing: .04em; }
 
@@ -160,19 +179,21 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 
 /* uniques */
 .uniques { display: grid; gap: 0; grid-template-columns: 1fr; border-top: 1px solid var(--line-dark); }
-.unique { padding: 32px 0; border-bottom: 1px solid var(--line-dark); }
+.unique { position: relative; padding: 32px 0; border-bottom: 1px solid var(--line-dark); }
 .unique b { display: block; font-size: 13px; letter-spacing: .2em; color: var(--accent); font-weight: 500; margin-bottom: 18px; }
 .unique h3 { font-size: 26px; margin-bottom: 14px; }
 .unique p { color: rgba(255,255,255,.74); margin: 0; }
 /* light version (About) */
-.on-white .uniques, .on-white .unique, .on-white .unique + .unique { border-color: var(--line); }
+.on-white .uniques, .on-white .unique, .on-white .unique + .unique::before { border-color: var(--line); }
 .on-white .unique b { color: var(--blue); }
 .on-white .unique h3 { color: var(--navy); }
 .on-white .unique p { color: var(--muted); }
 @media (min-width: 900px) {
-  .uniques { grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line-dark); }
-  .unique { padding: 40px 32px 40px 0; border-bottom: 0; }
-  .unique + .unique { padding-left: 32px; border-left: 1px solid var(--line-dark); }
+  /* La misma correccion que en la banda de cifras: las tres columnas miden 1fr y la regla
+     divisoria va en el gap, no en el relleno de una sola de ellas. */
+  .uniques { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 64px; border-bottom: 1px solid var(--line-dark); }
+  .unique { padding: 40px 0; border-bottom: 0; }
+  .unique + .unique::before { content: ''; position: absolute; top: 40px; bottom: 40px; left: -32px; border-left: 1px solid var(--line-dark); }
 }
 
 /* project cards */
@@ -208,8 +229,16 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 .tl-row { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 28px 0; border-top: 1px solid var(--line-dark); }
 .tl-year { font-size: 40px; font-weight: 300; line-height: 1; color: var(--white); }
 .tl-year small { display: block; font-size: 11px; letter-spacing: .18em; color: var(--accent); text-transform: uppercase; margin-top: 8px; }
+/* el desarrollo que todavia no tiene año de conclusion: texto, no cifra */
+.tl-year.undated { font-size: 19px; line-height: 1.3; letter-spacing: .02em; color: rgba(255,255,255,.7); }
 .tl-lane { display: flex; flex-wrap: wrap; gap: 12px; }
-.tl-lane-label { display: none; }
+/* Debajo de 900 px no hay encabezado de columnas, asi que cada carril dice su pais. El ancho
+   completo fuerza el salto de linea dentro del flex del carril. Esta regla existia apagada desde
+   el principio, sin marcado que la usara. */
+.tl-lane-label { display: block; width: 100%; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+/* Un año sin conclusiones, nombrado en lugar de omitido: la fila va fina y sin entradas. */
+.tl-gap { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line-dark); font-size: 13px; color: rgba(255,255,255,.52); }
+.tl-gap .num { font-size: 19px; font-weight: 300; color: rgba(255,255,255,.66); }
 .tl-item { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--white); padding: 12px 16px 12px 12px; border: 1px solid var(--line-dark); min-width: 0; flex: 1 1 260px; max-width: 420px; transition: background .2s, border-color .2s; }
 .tl-item:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.4); }
 .tl-item .logo { width: 92px; height: 48px; flex: none; display: grid; place-items: center; }
@@ -228,6 +257,13 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
   .tl-year { text-align: center; order: 2; }
   .tl-lane.mx { order: 1; justify-content: flex-end; }
   .tl-lane.us { order: 3; }
+  /* de aqui en adelante lo dice el encabezado de columnas */
+  .tl-lane-label { display: none; }
+  /* el hueco usa la misma reticula que las demas filas, para que el año caiga justo donde caen
+     todos los años y la nota empiece donde empieza el carril de la derecha */
+  .tl-gap { display: grid; grid-template-columns: 1fr 140px 1fr; gap: 32px; }
+  .tl-gap .num { grid-column: 2; text-align: center; }
+  .tl-gap .num + span { grid-column: 3; }
 }
 .tl-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
 
@@ -371,7 +407,7 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 /* contact page */
 .contact-grid { display: grid; gap: clamp(40px, 6vw, 96px); grid-template-columns: 1fr; }
 @media (min-width: 1000px) { .contact-grid { grid-template-columns: 5fr 7fr; } }
-.contact h1 { font-size: clamp(44px, 6vw, 84px); color: var(--navy); }
+/* el tamaño lo pone .page-title, igual que en Nosotros y en Proyectos */
 .contact .lead { font-size: 19px; color: var(--muted); max-width: 40ch; margin-top: 20px; }
 .contact-side { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
 .contact-side h2 { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; color: var(--blue); margin-bottom: 16px; }

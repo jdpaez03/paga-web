@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Timeline from '../components/Timeline.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Figures from '../components/Figures.astro';
-import { type Lang, company, tx, t, paths, projects, typeLabel } from '../lib/data';
+import { type Lang, company, tx, t, paths, projects, typeLabel, cityOptions } from '../lib/data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
@@ -18,13 +18,15 @@ const lastName = byYear[byYear.length - 1]?.name ?? '';
 // Las opciones de los filtros salen del propio listado: si manana entra un desarrollo en una
 // ciudad nueva, el filtro la trae solo.
 const types = [...new Set(projects.map((p) => p.type))].sort();
-const cities = [...new Set(projects.map((p) => p.city))].sort((x, y) => x.localeCompare(y, 'es'));
+// Agrupadas por area metropolitana y con el numero de desarrollos de cada una: ver `cityOptions`
+// en src/lib/data.ts, donde esta la razon.
+const cities = cityOptions(lang);
 ---
 <Base lang={lang} title={tx(seo.title, lang)} description={tx(seo.description, lang)} current="projects" alt={paths.projects(es ? 'en' : 'es')}>
   <section class="section tight">
     <div class="wrap">
       <p class="eyebrow">{ui.nav.projects}</p>
-      <h1 style="font-size:clamp(40px,6vw,80px);color:var(--navy);max-width:16ch">{es ? 'Veinticinco años, dos países, una trayectoria.' : 'Twenty-five years, two countries, one track record.'}</h1>
+      <h1 class="page-title">{es ? 'Veinticinco años, dos países, una trayectoria.' : 'Twenty-five years, two countries, one track record.'}</h1>
       <div style="margin-top:56px"><Figures lang={lang} /></div>
     </div>
   </section>
@@ -81,7 +83,14 @@ const cities = [...new Set(projects.map((p) => p.city))].sort((x, y) => x.locale
           <label class="flabel" for="f-ciudad">{es ? 'Ciudad' : 'City'}</label>
           <select id="f-ciudad" class="fselect" data-k="city">
             <option value="">{es ? 'Todas' : 'All'}</option>
-            {cities.map((c) => <option value={c}>{c}</option>)}
+            {cities.map((c) => c.kind === 'city'
+              ? <option value={c.value}>{c.label} ({c.count})</option>
+              : (
+                <optgroup label={c.label}>
+                  <option value={c.value}>{es ? `Toda el área (${c.count})` : `Whole area (${c.count})`}</option>
+                  {c.cities.map((m) => <option value={m.value}>{m.label} ({m.count})</option>)}
+                </optgroup>
+              ))}
           </select>
         </div>
       </div>
@@ -133,12 +142,31 @@ const cities = [...new Set(projects.map((p) => p.city))].sort((x, y) => x.locale
           if (v) { state[k] = v; break; }
         }
       });
+      // La ciudad es el unico filtro cuyo valor es texto libre, y el unico que el select tiene
+      // que poder sostener. El caso que mas duele es «area:» a secas, una liga «area:monterrey»
+      // truncada al pegarla en un correo: metroOf devuelve cadena vacia para los 21 desarrollos
+      // de fuera del area, y «area:».slice(5) tambien, asi que empataban todos y Monterrey
+      // entero —15 de 36, el argumento de arraigo— desaparecia con el select en blanco y sin
+      // que nada en pantalla lo dijera. Encima paint(true) lo reescribia en la barra de
+      // direcciones, asi que el enlace mutilado se repartia. Esto cubre tambien «area:Monterrey»
+      // con la mayuscula que cualquiera copiaria de la etiqueta visible, y un municipio mal
+      // escrito. Sin opcion que lo respalde no hay filtro: se ve el portafolio completo.
+      if (state.city && !citySel.querySelector(`option[value="${CSS.escape(state.city)}"]`)) state.city = '';
     };
+
+    // El valor del filtro de ciudad es un municipio («Monterrey») o un area metropolitana
+    // completa («area:monterrey»). El prefijo es lo que distingue uno de otro, y deja intactas
+    // las ligas que ya circulan con ?ciudad=Monterrey.
+    const AREA = 'area:';
+    const cityOk = (c: HTMLElement) =>
+      state.city.startsWith(AREA)
+        ? c.dataset.metro === state.city.slice(AREA.length)
+        : c.dataset.city === state.city;
 
     const matches = (c: HTMLElement) =>
       (!state.country || c.dataset.country === state.country) &&
       (!state.type || c.dataset.type === state.type) &&
-      (!state.city || c.dataset.city === state.city) &&
+      (!state.city || cityOk(c)) &&
       (!state.status ||
         (state.status === 'live' ? c.dataset.status !== 'delivered' : c.dataset.status === state.status));
 

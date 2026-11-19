@@ -12,6 +12,21 @@ const nextLabel = nextUpdate
 // Sin unidad, para que el numero grande no se parta: la unidad va en el pie de cada cifra.
 const bare = (ft2: number) => area(ft2, lang, 1000).replace(/ (m²|ft²)$/, '');
 const unit = es ? 'm²' : 'ft²';
+// Cuanto mide, en ems, la mas larga de las cuatro cifras. La hoja de estilos la usa para que el
+// numero quepa en su columna: el tamaño sale del ancho de la columna dividido entre esto.
+//
+// Hace falta porque las dos versiones no miden lo mismo. En español la cifra mayor es «410,000»
+// y en ingles la misma superficie en pies cuadrados es «4,410,000», dos caracteres mas: a 360 px
+// se salia 22 px de su columna y la pagina en ingles arrastraba 6 px de barra horizontal. CSS no
+// puede saber cuantos caracteres trae un numero; aqui si se sabe.
+//
+// Los anchos son los de Jost 300 medidos en el navegador: el digito mas ancho es el cero, 0.58em,
+// y la coma 0.295em. Tomar 0.58 para todos sobra un poco y nunca falta. Si algun dia cambia la
+// tipografia de las cifras, hay que volver a medir.
+const emWidth = (s: string) => [...s].reduce((w, ch) => w + (ch === ',' ? 0.295 : 0.58), 0);
+const figEm = Math.max(
+  ...[String(f.years), String(f.developments), num(f.units, lang), bare(f.deliveredFt2)].map(emWidth),
+).toFixed(2);
 ---
 {/* Lo entregado y lo que esta en curso van en cifras distintas. Mezclados en un solo dato, quien
     evalua a PAGA descuenta el total entero porque no puede saber que parte ya existe.
@@ -21,7 +36,7 @@ const unit = es ? 'm²' : 'ft²';
     que son es obra, permisos y planeacion. Decir «y 9 en obra, permisos o planeacion» cuesta una
     linea y cierra la pregunta (dicho por Juan Diego, 6 de noviembre de 2026). Los tres numeros
     salen de projects.json, nunca escritos a mano. */}
-<div class="figures num">
+<div class="figures num" style={`--fig-em: ${figEm}`}>
   <div class="figure"><strong>{f.years}</strong><span>{es ? 'años desde 2001' : 'years, since 2001'}</span></div>
   <div class="figure">
     <strong>{f.developments}</strong>

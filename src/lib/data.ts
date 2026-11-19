@@ -82,6 +82,58 @@ export const masterPlans: Record<string, string> = {
 export const countryLabel = (c: string, lang: Lang) =>
   c === 'MX' ? t(lang).countryMX : t(lang).countryUS;
 
+// El filtro de ciudad ofrece municipios, que es el dato real de cada desarrollo. El problema es
+// que el area metropolitana de Monterrey esta repartida en cinco de ellos, asi que quien elegia
+// «Monterrey» veia 8 de los 15 desarrollos que PAGA tiene ahi, y los otros 7 quedaban escondidos
+// detras de nombres que un visitante de fuera no relaciona. Ahora el area completa es una opcion
+// y cada municipio sigue siendo la suya, dentro de ella.
+//
+// La tabla es explicita a proposito. Deducirla del estado —«todo Nuevo Leon es Monterrey»—
+// agruparia mal el dia que PAGA desarrolle en Linares o en Montemorelos, que tambien son Nuevo
+// Leon y no son el area metropolitana. Si entra un municipio nuevo del area, se agrega aqui.
+const METRO_OF: Record<string, string> = {
+  Monterrey: 'monterrey',
+  'San Pedro Garza García': 'monterrey',
+  Guadalupe: 'monterrey',
+  'San Nicolás de los Garza': 'monterrey',
+  'Valle Poniente': 'monterrey',
+};
+const METRO_LABEL: Record<string, { es: string; en: string }> = {
+  monterrey: { es: 'Monterrey y su área metropolitana', en: 'Monterrey metropolitan area' },
+};
+export const metroOf = (city: string) => METRO_OF[city] ?? '';
+// El prefijo distingue un area de un municipio en el valor del filtro, y deja intactas las ligas
+// que ya circulan con ?ciudad=Monterrey: ese valor sigue siendo el municipio.
+export const AREA_PREFIX = 'area:';
+
+export type CityOption =
+  | { kind: 'city'; value: string; label: string; count: number }
+  | { kind: 'metro'; value: string; label: string; count: number; cities: { value: string; label: string; count: number }[] };
+
+// Con el numero de desarrollos al lado. Un filtro que ofrece una opcion esta prometiendo
+// resultados; decir cuantos antes de elegir ahorra el viaje de ida y vuelta.
+export function cityOptions(lang: Lang): CityOption[] {
+  const count = (fn: (p: Project) => boolean) => projects.filter(fn).length;
+  const cities = [...new Set(projects.map((p) => p.city))];
+  const loose = cities.filter((c) => !metroOf(c)).sort((a, b) => a.localeCompare(b, 'es'));
+  const keys = [...new Set(cities.map(metroOf).filter(Boolean))];
+  const out: CityOption[] = [
+    ...keys.map((k): CityOption => ({
+      kind: 'metro',
+      value: AREA_PREFIX + k,
+      label: METRO_LABEL[k][lang],
+      count: count((p) => metroOf(p.city) === k),
+      cities: cities
+        .filter((c) => metroOf(c) === k)
+        .map((c) => ({ value: c, label: c, count: count((p) => p.city === c) }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es')),
+    })),
+    ...loose.map((c): CityOption => ({ kind: 'city', value: c, label: c, count: count((p) => p.city === c) })),
+  ];
+  // Donde hay mas obra, primero: el orden alfabetico abria el filtro por Guadalupe, con dos.
+  return out.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
+}
+
 // De donde se recorta la fotografia en la tarjeta del portafolio.
 //
 // La tarjeta tiene un marco de 4:3 y diecinueve de las 36 fotografias son verticales, asi que en
