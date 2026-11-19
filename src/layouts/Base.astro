@@ -62,13 +62,25 @@ const org = {
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={esUrl} />
     {/* El navegador pide /favicon.ico aunque no se declare, y recibia un 404. Lleva 16, 32 y 48 px,
-        que son los tres tamaños que de verdad se usan. El icono blanco, que ya estaba en el
-        repositorio sin usarse, va para la pestaña en tema oscuro: el navy #13294b sobre la barra
-        oscura de Chrome (#202124) da 1.11:1, o sea invisible. El soporte de `media` en rel=icon es
-        parcial; donde no lo haya, se sirve el navy de siempre, que es lo que pasaba antes. */}
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/webp" href="/img/paga-icon-navy.webp" />
+        que son los tres tamaños que de verdad se usan, y asi se declaran: un navegador que honre
+        `sizes` no lo consideraba para un hueco de 48 px porque decia solo 32.
+
+        El icono blanco va para la pestaña en tema oscuro: el navy #13294b sobre la barra oscura
+        de Chrome (#202124) da 1.11:1, o sea invisible.
+
+        El orden importa, y por eso el navy va al final y con su propia media query. El soporte de
+        `media` en rel=icon es parcial —Firefox no lo implementa—, y un navegador que lo ignora se
+        queda con el ultimo declarado. Con el blanco al final, ese navegador pintaba blanco sobre
+        la barra clara (#f1f3f4): 1.12:1, el espejo exacto del problema que esto viene a arreglar,
+        y en el modo que usa mas gente. Con el navy al final se queda como estaba antes, que es lo
+        peor que puede pasarle, mientras los que si honran `media` conservan el arreglo: la media
+        query filtra los candidatos primero y el orden solo desempata entre los que quedan.
+
+        La salida buena es un SVG unico con la media query dentro, pero no hay fuente vectorial de
+        la marca todavia: esta pendiente de Direccion. */}
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="icon" type="image/webp" href="/img/paga-icon-white.webp" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/webp" href="/img/paga-icon-navy.webp" media="(prefers-color-scheme: light)" />
     {/* iOS descarta el canal alfa al guardar el sitio en la pantalla de inicio: sin este archivo
         ponia una captura de la página. Fondo papel opaco, con el margen que el sistema espera. */}
     <link rel="apple-touch-icon" href="/img/paga-touch-icon.png" />
