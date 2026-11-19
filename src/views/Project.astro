@@ -92,11 +92,15 @@ const src = sourceLine(p, lang);
       <p class="asof">{es ? `Datos a ${asOfLabel}.` : `Data as of ${asOfLabel}.`}{src && <><br />{es ? 'Fuente' : 'Source'}: {src}</>}</p>
       {/* Este bloque vivia dentro de `live`, asi que las 27 fichas entregadas no ofrecian ninguna
           salida: quien terminaba de leer Aurum —32,560 m² de oficinas— no tenia por donde preguntar.
-          Lo entregado es justo lo que mira un socio de capital, y era lo unico sin boton. De paso
-          se publican los dos sitios de venta que estaban capturados y nunca se dibujaban, los de
-          Torre Pietra y Balcones 600. */}
+          Lo entregado es justo lo que mira un socio de capital, y era lo unico sin boton.
+
+          El sitio de venta, en cambio, sigue siendo cosa de lo vigente. Por la decision del 13 de
+          octubre de 2026 las llamadas a la accion de las fichas se quedan institucionales, y en un
+          desarrollo entregado un sitio de compradores como boton dominante es justo lo contrario:
+          quien lee Torre Pietra hoy es un socio de capital, no alguien buscando departamento. Los
+          dos sitios capturados (Torre Pietra y Balcones 600) siguen sin dibujarse. */}
       <div class="p-actions">
-        {p.salesUrl ? (
+        {live && p.salesUrl ? (
           <>
             <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={p.slug}>{es ? 'Ir al sitio del proyecto' : 'Go to project website'}</a>
             <a class="btn" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`project_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>
@@ -123,14 +127,15 @@ const src = sourceLine(p, lang);
       </nav>
     </div>
   </section>
-  {live && (
-    <div class="p-sticky" role="region" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
-      <span>{p.name}</span>
-      {p.salesUrl
-        ? <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
-        : <a class="btn solid" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
-    </div>
-  )}
+  {/* La condicion de arriba estaba escrita dos veces y solo se actualizo una. Por CSS esta barra
+      es la unica llamada a la accion visible mientras uno recorre la ficha en telefono, asi que en
+      las 27 entregadas el visitante movil veia el boton del encabezado y despues nada. */}
+  <div class="p-sticky" role="region" aria-label={es ? 'Acciones del proyecto' : 'Project actions'}>
+    <span>{p.name}</span>
+    {live && p.salesUrl
+      ? <a class="btn solid arrow-out" href={p.salesUrl} target="_blank" rel="noopener" data-track="outbound_sales_site" data-track-where={`sticky_${p.slug}`}>{es ? 'Sitio del proyecto' : 'Project website'}</a>
+      : <a class="btn solid" href={contactPath(lang, { proyecto: p.slug })} data-track="cta_click" data-track-where={`sticky_${p.slug}`}>{es ? 'Solicitar información' : 'Request information'}</a>}
+  </div>
   <script>
     const main = document.getElementById('p-main-img') as HTMLImageElement | null;
     document.querySelectorAll<HTMLButtonElement>('.p-thumb').forEach((b, _i, all) => b.addEventListener('click', () => {

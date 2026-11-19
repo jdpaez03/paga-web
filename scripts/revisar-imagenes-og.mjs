@@ -11,9 +11,14 @@
 
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import data from '../src/data/projects.json' with { type: 'json' };
 
-const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+// fileURLToPath y no `.pathname`: el pathname de una URL viene percent-encoded, asi que una ruta
+// con espacio o acento —C:\Users\Juan Diego\paga web— llegaba como C:/Users/Juan%20Diego/paga%20web
+// y existsSync no la encontraba nunca. Como esto corre antes de astro build, el build moria
+// diciendo que faltaban las 36 imagenes estando las 36 en su lugar.
+const root = fileURLToPath(new URL('..', import.meta.url));
 const dir = path.join(root, 'public', 'img', 'og');
 
 const faltan = data.projects.map((p) => p.slug).filter((slug) => !existsSync(path.join(dir, `${slug}.jpg`)));
