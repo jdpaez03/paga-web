@@ -181,7 +181,8 @@ section[id] { scroll-margin-top: 77px; } /* in-page anchors land below the stick
 @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 .card { text-decoration: none; color: inherit; display: block; }
 .card .ph { aspect-ratio: 4 / 3; overflow: hidden; background: #d8d4cb; }
-.card .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+/* El encuadre lo pone cada desarrollo con --focus; sin el, el centro, que es lo de siempre. */
+.card .ph img { width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50% 50%); transition: transform .6s ease; }
 .card:hover .ph img { transform: scale(1.03); }
 .card h3 { font-size: 22px; font-weight: 400; margin: 18px 0 6px; }
 .card .meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
