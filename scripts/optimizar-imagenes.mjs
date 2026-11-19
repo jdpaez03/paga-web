@@ -10,13 +10,17 @@
 // untouched. Lo segundo importa: antes solo se miraba si el archivo existia, asi que cambiar la
 // foto de un proyecto —misma ruta, imagen nueva— dejaba publicadas las variantes de la anterior.
 
-import { readdir, stat, writeFile, mkdir } from 'node:fs/promises';
+import { readdir, stat, writeFile, readFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
 import data from '../src/data/projects.json' with { type: 'json' };
 
-const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+// fileURLToPath y no `.pathname`, el mismo arreglo que lleva revisar-imagenes-og.mjs: el pathname
+// de una URL viene percent-encoded, asi que una ruta con espacio o acento —C:\Users\Juan Diego\paga
+// web— llegaba como C:/Users/Juan%20Diego/paga%20web y ningun existsSync la encontraba.
+const root = fileURLToPath(new URL('..', import.meta.url));
 const pub = path.join(root, 'public');
 const THUMB_W = 256;
 
@@ -105,13 +109,17 @@ else {
 // ——— 3. Marca del encabezado y del pie —————————————————————————————
 // Los dos salen en todas las páginas. Los PNG miden 160 y 600 px de ancho y se dibujan a 42 y 120:
 // basta el doble para una pantalla retina. El PNG de origen se conserva: paga-logo-navy.png es el
-// que declara el JSON-LD de la organización y paga-icon-navy.png sigue siendo el favicon.
+// que declara el JSON-LD de la organización. paga-icon-navy.png sirve para dos cosas a la vez: su
+// webp de 84 px es la marca del encabezado, que se dibuja a 42, y es tambien el tercer candidato
+// de favicon, el que no lleva media query —ver el bloque de iconos de src/layouts/Base.astro—. Un
+// solo archivo cubre las dos, asi que el respaldo del favicon no cuesta bytes aparte.
+//
+// La variante blanca ya no sale de aqui. El icono del tema oscuro es ahora paga-icon-white.ico,
+// que se arma mas abajo desde el PNG; el webp blanco que estaba en esta lista no lo referenciaba
+// nadie, se generaba y se publicaba para nada.
 const marca = [
   { src: 'paga-icon-navy.png', w: 84 },
   { src: 'paga-logo-white.png', w: 240 },
-  // la variante blanca ya estaba en el repositorio sin que nadie la usara: es la que va en la
-  // pestana cuando el navegador esta en tema oscuro, donde el navy da 1.11:1 y desaparece
-  { src: 'paga-icon-white.png', w: 84 },
 ];
 for (const m of marca) {
   const input = path.join(pub, 'img', m.src);
@@ -135,25 +143,78 @@ for (const m of marca) {
 // Los tres se resuelven con archivos, sin tocar la marca.
 const icoSizes = [16, 32, 48];
 const iconSrc = path.join(pub, 'img', 'paga-icon-navy.png');
-const icoParts = await Promise.all(
-  icoSizes.map((s) => sharp(iconSrc).resize(s, s, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toBuffer()),
-);
+
 // ICO: cabecera de 6 bytes, una entrada de 16 por imagen, y los PNG enteros como carga util.
-const head = Buffer.alloc(6);
-head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(icoSizes.length, 4);
-let offset = 6 + 16 * icoSizes.length;
-const dir = icoSizes.map((s, i) => {
-  const e = Buffer.alloc(16);
-  e.writeUInt8(s === 256 ? 0 : s, 0); e.writeUInt8(s === 256 ? 0 : s, 1);
-  e.writeUInt8(0, 2); e.writeUInt8(0, 3);
-  e.writeUInt16LE(1, 4); e.writeUInt16LE(32, 6);
-  e.writeUInt32LE(icoParts[i].length, 8); e.writeUInt32LE(offset, 12);
-  offset += icoParts[i].length;
-  return e;
-});
-const ico = Buffer.concat([head, ...dir, ...icoParts]);
-await writeFile(path.join(pub, 'favicon.ico'), ico);
-console.log(`icono: favicon.ico ${kb(ico.length)} (${icoSizes.join(', ')} px)`);
+// Son dos: el navy para el tema claro y el blanco para el oscuro. El blanco era antes un solo PNG
+// de 84 px y por eso no llegaba a usarse nunca: Chrome elige entre los <link rel=icon> por tamaño
+// antes que por orden —medido, y documentado en src/layouts/Base.astro—, asi que los 16/32/48
+// reales del .ico navy le ganaban en los dos esquemas. Con los dos en .ico la comparacion es justa.
+const FIRMA_PNG = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+async function armarIco(src, destino) {
+  const partes = await Promise.all(
+    icoSizes.map((s) => sharp(src).resize(s, s, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toBuffer()),
+  );
+  const head = Buffer.alloc(6);
+  head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(icoSizes.length, 4);
+  let offset = 6 + 16 * icoSizes.length;
+  const dir = icoSizes.map((s, i) => {
+    const e = Buffer.alloc(16);
+    e.writeUInt8(s === 256 ? 0 : s, 0); e.writeUInt8(s === 256 ? 0 : s, 1);
+    e.writeUInt8(0, 2); e.writeUInt8(0, 3);
+    e.writeUInt16LE(1, 4); e.writeUInt16LE(32, 6);
+    e.writeUInt32LE(partes[i].length, 8); e.writeUInt32LE(offset, 12);
+    offset += partes[i].length;
+    return e;
+  });
+  const ico = Buffer.concat([head, ...dir, ...partes]);
+
+  // Tres comprobaciones antes de escribir, y cada una ve algo que las otras no. La primera version
+  // de esto solo releia los bytes del directorio y los comparaba contra icoSizes, que es de donde
+  // acababan de salir: pasaba con payloads de 17/33/49 px y con los offsets corridos.
+  //
+  // 1. Los tamaños REALES de los PNG de dentro, leidos de su cabecera IHDR. Es lo que el `sizes`
+  //    del <link> afirma, y lo unico que de verdad lo respalda.
+  partes.forEach((p, i) => {
+    const w = p.readUInt32BE(16), h = p.readUInt32BE(20);
+    if (w !== icoSizes[i] || h !== icoSizes[i]) {
+      throw new Error(`${path.basename(destino)}: el mapa ${i} mide ${w}x${h} y deberia medir ${icoSizes[i]}`);
+    }
+  });
+  // 2. Que cada offset del directorio caiga en el inicio de un PNG. Si la aritmetica se rompe, el
+  //    archivo queda ilegible y el directorio sigue pareciendo correcto.
+  for (let i = 0; i < icoSizes.length; i++) {
+    const o = ico.readUInt32LE(6 + 16 * i + 12);
+    if (!ico.subarray(o, o + 8).equals(FIRMA_PNG)) {
+      throw new Error(`${path.basename(destino)}: el offset de la entrada ${i} no cae en un PNG`);
+    }
+  }
+  // 3. Y el directorio, que es lo poco que la version anterior si cubria: un error al escribirlo.
+  const dentro = Array.from({ length: ico.readUInt16LE(4) }, (_, i) => ico[6 + 16 * i] || 256);
+  if (dentro.join(',') !== icoSizes.join(',')) {
+    throw new Error(`${path.basename(destino)}: el directorio dice ${dentro.join('/')} px y deberia decir ${icoSizes.join('/')}`);
+  }
+
+  await writeFile(destino, ico);
+  console.log(`icono: ${path.basename(destino)} ${kb(ico.length)} (${dentro.join(', ')} px)`);
+}
+
+// El navy va en la raiz porque el navegador sondea /favicon.ico por su cuenta aunque no se declare.
+// El blanco no necesita estar ahi: se declara explicitamente, y vive con el resto de los iconos.
+await armarIco(iconSrc, path.join(pub, 'favicon.ico'));
+await armarIco(path.join(pub, 'img', 'paga-icon-white.png'), path.join(pub, 'img', 'paga-icon-white.ico'));
+
+// Lo que ninguna de las tres comprobaciones puede ver desde dentro de armarIco: que el `sizes` que
+// declara el <link> se separe de estos tamaños. Son dos literales en dos archivos y si derivan, un
+// navegador que honre el atributo descarta el icono para el hueco que pide, sin que se note en
+// ninguna parte. Se revisa solo lo que exista: cuando llegue la salida buena —un SVG unico con la
+// media query dentro— aqui dejara de haber .ico declarados y esto se queda callado.
+const layout = await readFile(path.join(root, 'src', 'layouts', 'Base.astro'), 'utf8');
+const esperado = icoSizes.map((s) => `${s}x${s}`).join(' ');
+for (const [, declarado] of layout.matchAll(/<link[^>]*rel="icon"[^>]*\.ico"[^>]*sizes="([^"]+)"/g)) {
+  if (declarado !== esperado) {
+    throw new Error(`Base.astro declara sizes="${declarado}" y los .ico llevan ${esperado}`);
+  }
+}
 
 // Fondo opaco en papel: iOS descarta el canal alfa y, con transparencia, la P queda sobre negro.
 const touch = await sharp(iconSrc)
