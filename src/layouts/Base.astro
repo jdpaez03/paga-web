@@ -73,9 +73,11 @@ const org = {
         Como elige Chrome entre varios candidatos, medido en Chrome 157 con un banco aislado: perfil
         nuevo, iconos de un color plano y nombre unico, y el ganador leido de chrome://favicon2
         dibujado en un canvas. No del log de peticiones: Chrome descarga varios candidatos y se
-        queda con uno, asi que el log dice que bajo, no que eligio. (1) `media` se honra: el que no empata queda
-        fuera. (2) Entre los que empatan gana el que trae los mapas de 16 y 32 px que la pestaña
-        pide, antes que el orden. (3) Solo si tambien empatan en tamaño decide el ultimo declarado.
+        queda con uno, asi que el log dice que bajo, no que eligio.
+          (1) `media` se honra: el que no empata queda fuera.
+          (2) Entre los que empatan gana el que trae los mapas de 16 y 32 px que la pestaña pide,
+              antes que el orden.
+          (3) Solo si tambien empatan en tamaño decide el ultimo declarado.
 
         Por eso en main el blanco no llegaba a usarse: era un solo mapa de 84 px contra el .ico con
         16/32/48 reales, y perdia por tamaño, no por ser el otro incondicional. Ahora el blanco
