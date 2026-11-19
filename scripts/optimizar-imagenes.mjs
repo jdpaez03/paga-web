@@ -12,11 +12,12 @@
 
 import { readdir, stat, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
 import data from '../src/data/projects.json' with { type: 'json' };
 
-const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const root = fileURLToPath(new URL('..', import.meta.url));
 const pub = path.join(root, 'public');
 const THUMB_W = 256;
 
@@ -137,25 +138,43 @@ for (const m of marca) {
 // Los tres se resuelven con archivos, sin tocar la marca.
 const icoSizes = [16, 32, 48];
 const iconSrc = path.join(pub, 'img', 'paga-icon-navy.png');
-const icoParts = await Promise.all(
-  icoSizes.map((s) => sharp(iconSrc).resize(s, s, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toBuffer()),
-);
+
 // ICO: cabecera de 6 bytes, una entrada de 16 por imagen, y los PNG enteros como carga util.
-const head = Buffer.alloc(6);
-head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(icoSizes.length, 4);
-let offset = 6 + 16 * icoSizes.length;
-const dir = icoSizes.map((s, i) => {
-  const e = Buffer.alloc(16);
-  e.writeUInt8(s === 256 ? 0 : s, 0); e.writeUInt8(s === 256 ? 0 : s, 1);
-  e.writeUInt8(0, 2); e.writeUInt8(0, 3);
-  e.writeUInt16LE(1, 4); e.writeUInt16LE(32, 6);
-  e.writeUInt32LE(icoParts[i].length, 8); e.writeUInt32LE(offset, 12);
-  offset += icoParts[i].length;
-  return e;
-});
-const ico = Buffer.concat([head, ...dir, ...icoParts]);
-await writeFile(path.join(pub, 'favicon.ico'), ico);
-console.log(`icono: favicon.ico ${kb(ico.length)} (${icoSizes.join(', ')} px)`);
+// Son dos: el navy para el tema claro y el blanco para el oscuro. El blanco era antes un solo PNG
+// de 84 px y por eso no llegaba a usarse nunca: Chrome elige entre los <link rel=icon> por tamaño
+// antes que por orden —medido, y documentado en src/layouts/Base.astro—, asi que los 16/32/48
+// reales del .ico navy le ganaban en los dos esquemas. Con los dos en .ico la comparacion es justa.
+async function armarIco(src, destino) {
+  const partes = await Promise.all(
+    icoSizes.map((s) => sharp(src).resize(s, s, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toBuffer()),
+  );
+  const head = Buffer.alloc(6);
+  head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(icoSizes.length, 4);
+  let offset = 6 + 16 * icoSizes.length;
+  const dir = icoSizes.map((s, i) => {
+    const e = Buffer.alloc(16);
+    e.writeUInt8(s === 256 ? 0 : s, 0); e.writeUInt8(s === 256 ? 0 : s, 1);
+    e.writeUInt8(0, 2); e.writeUInt8(0, 3);
+    e.writeUInt16LE(1, 4); e.writeUInt16LE(32, 6);
+    e.writeUInt32LE(partes[i].length, 8); e.writeUInt32LE(offset, 12);
+    offset += partes[i].length;
+    return e;
+  });
+  const ico = Buffer.concat([head, ...dir, ...partes]);
+  // El `sizes` del <link> afirma 16, 32 y 48 px. Una afirmacion sin comprobar es justo lo que ya
+  // fallo una vez en ese bloque, asi que el generador se revisa a si mismo antes de escribir.
+  const dentro = Array.from({ length: ico.readUInt16LE(4) }, (_, i) => ico[6 + 16 * i] || 256);
+  if (dentro.join(',') !== icoSizes.join(',')) {
+    throw new Error(`${path.basename(destino)} quedo con ${dentro.join('/')} px y se esperaban ${icoSizes.join('/')}`);
+  }
+  await writeFile(destino, ico);
+  console.log(`icono: ${path.basename(destino)} ${kb(ico.length)} (${dentro.join(', ')} px)`);
+}
+
+// El navy va en la raiz porque el navegador sondea /favicon.ico por su cuenta aunque no se declare.
+// El blanco no necesita estar ahi: se declara explicitamente, y vive con el resto de los iconos.
+await armarIco(iconSrc, path.join(pub, 'favicon.ico'));
+await armarIco(path.join(pub, 'img', 'paga-icon-white.png'), path.join(pub, 'img', 'paga-icon-white.ico'));
 
 // Fondo opaco en papel: iOS descarta el canal alfa y, con transparencia, la P queda sobre negro.
 const touch = await sharp(iconSrc)
