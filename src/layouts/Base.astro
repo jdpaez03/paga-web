@@ -65,22 +65,28 @@ const org = {
         que son los tres tamaños que de verdad se usan, y asi se declaran: un navegador que honre
         `sizes` no lo consideraba para un hueco de 48 px porque decia solo 32.
 
-        El icono blanco va para la pestaña en tema oscuro: el navy #13294b sobre la barra oscura
+        El icono blanco es para la pestaña en tema oscuro: el navy #13294b sobre la barra oscura
         de Chrome (#202124) da 1.11:1, o sea invisible.
 
-        El orden importa, y por eso el navy va al final y con su propia media query. El soporte de
-        `media` en rel=icon es parcial —Firefox no lo implementa—, y un navegador que lo ignora se
-        queda con el ultimo declarado. Con el blanco al final, ese navegador pintaba blanco sobre
-        la barra clara (#f1f3f4): 1.12:1, el espejo exacto del problema que esto viene a arreglar,
-        y en el modo que usa mas gente. Con el navy al final se queda como estaba antes, que es lo
-        peor que puede pasarle, mientras los que si honran `media` conservan el arreglo: la media
-        query filtra los candidatos primero y el orden solo desempata entre los que quedan.
+        Lo importante es que el .ico lleve tambien su media query. Medido en Chromium 156 con un
+        banco aislado —iconos de nombre unico y un servidor que registra que archivo pide el
+        selector, para no confundirlo con el sondeo automatico de /favicon.ico—: un candidato
+        SIN media le gana a los que si empatan la media query, sin importar el orden ni `sizes`.
+        Con el .ico incondicional, Chrome servia el navy en los dos esquemas y el blanco no se
+        usaba nunca: el arreglo del tema oscuro no llegaba a ocurrir. Con las dos ramas acotadas,
+        claro da el .ico y oscuro da el blanco.
 
-        La salida buena es un SVG unico con la media query dentro, pero no hay fuente vectorial de
-        la marca todavia: esta pendiente de Direccion. */}
-    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+        No queda hueco al quitar el incondicional: si ninguna rama empata —un navegador que honre
+        `media` pero no `prefers-color-scheme` deja la query en `not all`— el navegador cae al
+        sondeo de /favicon.ico en la raiz, que existe y es navy. Medido tambien.
+
+        El navy de 84 px dejo de declararse como favicon: en claro el .ico da 16, 32 y 48 reales
+        en vez de reescalar uno solo. El archivo se queda, que es el logotipo del encabezado.
+
+        La salida buena sigue siendo un SVG unico con la media query dentro, que no depende de
+        nada de esto; falta fuente vectorial de la marca, pendiente de Direccion. */}
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/webp" href="/img/paga-icon-white.webp" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/webp" href="/img/paga-icon-navy.webp" media="(prefers-color-scheme: light)" />
     {/* iOS descarta el canal alfa al guardar el sitio en la pantalla de inicio: sin este archivo
         ponia una captura de la página. Fondo papel opaco, con el margen que el sistema espera. */}
     <link rel="apple-touch-icon" href="/img/paga-touch-icon.png" />
