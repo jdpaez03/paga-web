@@ -95,13 +95,27 @@ export const countryLabel = (c: string, lang: Lang) =>
 //
 // Se valida al cargar el modulo, o sea al compilar: un valor mal escrito no se ve: el navegador
 // descarta la declaracion y la imagen vuelve al centro sin avisar. Mejor que se caiga el build.
-const FOCUS_RE = /^\d{1,3}% \d{1,3}%$/;
-export const imageFocus = (p: Project): string | undefined =>
-  (p as { imageFocus?: string }).imageFocus;
+//
+// El rango es 0-100 y no 0-999. Un porcentaje mayor que 100 es CSS valido —el navegador no lo
+// descarta— y empuja la foto entera fuera del marco: «950%» por un «50%» mal tecleado pasaba el
+// guardia y publicaba la tarjeta como un rectangulo gris vacio, peor que el fallo que previene.
+const FOCUS_RE = /^(100|\d{1,2})% (100|\d{1,2})%$/;
+export const imageFocus = (p: Project): string | undefined => {
+  const v = (p as { imageFocus?: string | null }).imageFocus;
+  // null es «sin encuadre», como el resto de los campos vacios de projects.json, no un error
+  return v == null ? undefined : v;
+};
 for (const p of projects) {
+  // El cast de arriba le quita la vista a TypeScript, y aqui no corre astro check, asi que una
+  // llave mal escrita —«imagefocus» en minuscula— no la notaba nadie: el encuadre se ignoraba en
+  // silencio, que es justo el fallo que esta validacion existe para evitar.
+  const mal = Object.keys(p).filter((k) => k !== 'imageFocus' && k.toLowerCase() === 'imagefocus');
+  if (mal.length > 0) {
+    throw new Error(`«${p.slug}» escribe «${mal[0]}»; la llave es «imageFocus»`);
+  }
   const v = imageFocus(p);
   if (v !== undefined && !FOCUS_RE.test(v)) {
-    throw new Error(`imageFocus de «${p.slug}» no tiene la forma «50% 15%»: «${v}»`);
+    throw new Error(`imageFocus de «${p.slug}» no tiene la forma «50% 15%», con 0-100 en cada eje: «${v}»`);
   }
 }
 

@@ -1093,6 +1093,7 @@
         1769
       ],
       "imagesAreRenders": true,
+      "imageFocus": "50% 0%",
       "logo": "/img/logos/balcones-residencial.webp",
       "sources": [
         "Presentación institucional, junio 2026 (v6)"
